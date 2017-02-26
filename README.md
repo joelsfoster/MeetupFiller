@@ -1,17 +1,5 @@
-# The Meteor Chef - Base
-A starting point for Meteor apps.
+# PickupSoccer by Joel Foster
 
-<table>
-  <tbody>
-    <tr>
-      <th>Base Version</th>
-      <td>v4.11.1</td>
-    </tr>
-    <tr>
-      <th>Meteor Version</th>
-      <td>v1.4.2.3</td>
-    </tr>
-  </tbody>
-</table>
+The scaffolding for this app came from Base, by The Meteor Chef:
 
 [Read the Documentation](http://themeteorchef.com/base)
