@@ -1,14 +1,14 @@
 {
-  "name": "application-name",
+  "name": "PickupBaller",
   "version": "1.0.0",
-  "description": "Application description.",
+  "description": "An app made by Joel Foster.",
   "scripts": {
     "start": "meteor --settings settings-development.json",
     "test": "meteor test --driver-package practicalmeteor:mocha --port 5000",
     "chimp-watch": "chimp --ddp=http://localhost:3000 --watch --mocha --path=tests",
     "chimp-test": "chimp --ddp=http://localhost:3000 --mocha --path=tests",
     "staging": "meteor deploy staging.meteor.com --settings settings-development.json",
-    "production": "meteor deploy production.meteor.com --settings settings-production.json"
+    "production": "DEPLOY_HOSTNAME=us-east-1.galaxy-deploy.meteor.com meteor deploy pickupballer.com --settings settings-production.json"
   },
   "devDependencies": {
     "chimp": "^0.41.2",
