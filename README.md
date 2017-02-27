@@ -1,4 +1,4 @@
-# PickupSoccer by Joel Foster
+# PickupBaller by Joel Foster
 
 The scaffolding for this app came from Base, by The Meteor Chef:
 
