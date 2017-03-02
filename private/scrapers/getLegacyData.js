@@ -25,7 +25,10 @@ event_urls.forEach( (url) => {
 let all_get_requests = [];
 event_ids.forEach( (event_id) => {
   let url = 'https://api.meetup.com/playsoccer2give/events/' + event_id + '/rsvps?&sign=true&photo-host=public&fields=answers&omit=created,updated,response,guests,event.id,event.yes_rsvp_count,event.utc_offset,member.bio,member.photo,group,member.role,member.event_context,member.title,venue,answers.question_id,answers.updated,answers.question&key=282a2c7858483325b5b6c5510422e5b';
-  all_get_requests.push(url);
+  all_get_requests.push({
+    url: url,
+    event_id: event_id
+  });
 });
 console.log('We now know which games to grab data from.');
 
@@ -37,25 +40,27 @@ let all_members = [];
 let api_counter = 0;
 
 // This HTTP call loops through each URL and saves the data to all_members
-let http_call = (url) => {
+let http_call = (url_with_event_id) => {
   api_counter += 1;
-  let member_data = HTTP('GET', url);
+  let member_data = HTTP('GET', url_with_event_id.url);
   let member_json = JSON.parse(member_data.getBody('utf-8'));
+  let event_id = url_with_event_id.event_id;
   member_json.forEach((member) => {
+    member.event_id = event_id;
     all_members.push(member);
   });
   console.log("Scrape #" + api_counter + " of " + all_get_requests.length + " was successful! Total member count is now " + all_members.length);
 }
 
 // Nest the HTTP call function inside this delay function so the delay happens between each loop iteration
-let delayed_call = (url, api_counter) => {
-  setTimeout(http_call, 3000 * api_counter, url);
+let delayed_call = (url_with_event_id, api_counter) => {
+  setTimeout(http_call, 3000 * api_counter, url_with_event_id);
 }
 
 // This is the loop mentioned above, which calls for a delayed export after the loop finishes
 let loop_function = () => {
-  all_get_requests.forEach((url, api_counter) => {
-    delayed_call(url, api_counter);
+  all_get_requests.forEach((url_with_event_id, api_counter) => {
+    delayed_call(url_with_event_id, api_counter);
   });
   delayed_export();
 }
@@ -80,7 +85,7 @@ let export_to_csv = () => {
   jsonexport(all_members, (err, data) => {
     if(err) return console.log(err);
     // Export the data into a csv file
-    fs.writeFile('Meetup Data' + '.csv', data, (err) => {
+    fs.writeFile('Legacy Data Dump' + '.csv', data, (err) => {
       if (err) throw err;
       console.log('File saved!');
     });

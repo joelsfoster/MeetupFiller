@@ -7,6 +7,7 @@ if (!Meteor.isProduction) {
   const users = [{
     email: 'joelsfoster@gmail.com',
     password: 'test1234',
+    /*
     organization: 'PS2G',
     profile: {
       name: { first: 'Joel', last: 'Foster' },
@@ -27,14 +28,15 @@ if (!Meteor.isProduction) {
       }],
       payment_info: {},
     },
+    */
     roles: ['admin'],
   }];
 
-  users.forEach(({ email, password, organization, profile, roles }) => {
+  users.forEach(({ email, password, /* organization, profile,*/ roles }) => {
     const userExists = Meteor.users.findOne({ 'emails.address': email });
 
     if (!userExists) {
-      const userId = Accounts.createUser({ email, password, organization, profile });
+      const userId = Accounts.createUser({ email, password/*, organization, profile*/ });
       Roles.addUsersToRoles(userId, roles);
     }
   });
