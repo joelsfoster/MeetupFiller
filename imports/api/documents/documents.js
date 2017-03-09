@@ -5,7 +5,6 @@ import { Factory } from 'meteor/dburles:factory';
 const Documents = new Mongo.Collection('Documents');
 export default Documents;
 
-/*
 Documents.allow({
   insert: () => false,
   update: () => false,
@@ -17,7 +16,6 @@ Documents.deny({
   update: () => true,
   remove: () => true,
 });
-*/
 
 Documents.schema = new SimpleSchema({
   title: {

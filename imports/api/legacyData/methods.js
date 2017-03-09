@@ -3,7 +3,6 @@ import { Email } from 'meteor/email';
 // For testing, uncomment this:
 //process.env.MAIL_URL = [GET THIS FROM settings-production.json];
 
-
 export const sendTestEmail = (recipient) => {
   Email.send({
     to: recipient,
@@ -16,3 +15,19 @@ export const sendTestEmail = (recipient) => {
 
 // For testing, uncomment this:
 // sendTestEmail("joelsfoster@gmail.com");
+
+export const seedConfirmation = (recipient) => {
+  if (!Meteor.isProduction) {
+    let environment = "staging";
+  } else {
+    let environment = "production";
+  }
+
+  Email.send({
+    to: recipient,
+    from: "PickupBaller <donotreply@pickupballer.com>",
+    replyTo: "Joel Foster <joelsfoster@gmail.com>",
+    subject: "Database seeding successful",
+    html: "<p>Hi there,</p><p>The database has successfully been seeded on " + environment + ".</p><p>Regards,</ br>PickupBaller</p>",
+  });
+};
