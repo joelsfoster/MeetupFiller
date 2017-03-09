@@ -4,10 +4,10 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { Meteor } from 'meteor/meteor';
-import App from '../../ui/layouts/App.js'; // Layout = main app
+import App from '../../ui/layouts/App.js'; // Layout = main app that pages sit on top of
 import Documents from '../../ui/pages/Documents.js'; // Pages = individual web pages
 import NewDocument from '../../ui/pages/NewDocument.js';
-import EditDocument from '../../ui/containers/EditDocument.js'; // Containers = essentially, React components
+import EditDocument from '../../ui/containers/EditDocument.js'; // Containers = data layer wrapped around React components
 import ViewDocument from '../../ui/containers/ViewDocument.js';
 import Index from '../../ui/pages/Index.js';
 import Login from '../../ui/pages/Login.js';
