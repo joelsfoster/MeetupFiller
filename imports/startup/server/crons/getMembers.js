@@ -71,8 +71,6 @@ let scrapeSince = (date) => { // Must be in format "YYYY-MM-DD"
 };
 
 
-SyncedCron.config({ log: true, utc: true });
-
 SyncedCron.add({
   name: "getMembers",
   schedule(parser) {

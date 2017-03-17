@@ -41,8 +41,6 @@ let getTodaysEventLinks = (organizationID) => {
 };
 
 
-SyncedCron.config({ log: true, utc: true });
-
 SyncedCron.add({
   name: "getTodaysEventLinks",
   schedule(parser) {

@@ -3,4 +3,7 @@ import './getTodaysEventLinks';
 import './getMembers';
 import './thankYouComeAgain';
 
+
+SyncedCron.config({ log: true, utc: true });
+
 SyncedCron.start();
