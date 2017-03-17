@@ -5,7 +5,7 @@ const fs = require('fs');
 // Get event data of past games and store in JSON
 const count_of_games_to_scrape = 200;
 const OFFSET = 0; // Doesn't work conveniently, just leave it as 0
-const lookback_date = '2015-18-08'; // YYYY-MM-DD Make sure to overlap by one day later than the last run so as to not miss anything
+const lookback_date = '2015-08-18'; // YYYY-MM-DD Make sure to overlap by one day later than the last run so as to not miss anything
 const get_past_game_ids = 'https://api.meetup.com/playsoccer2give/events?&sign=true&photo-host=public&page=' + count_of_games_to_scrape + '&desc=true&scroll=since:' + lookback_date + 'T19:45:00.000-04:00&status=past&offset=' + OFFSET + '&omit=name,created,duration,fee,id,rsvp_limit,status,time,updated,utc_offset,waitlist_count,yes_rsvp_count,venue,group,description,how_to_find_us,visibility&key=282a2c7858483325b5b6c5510422e5b';
 const event_data = HTTP('GET', get_past_game_ids);
 const event_json = JSON.parse(event_data.getBody('utf-8'));
