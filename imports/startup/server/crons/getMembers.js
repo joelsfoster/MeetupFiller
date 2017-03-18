@@ -1,4 +1,3 @@
-import Meteor from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 import { MEETUP_API_KEY } from '../environment-variables';
 import { SyncedCron } from 'meteor/percolate:synced-cron'; // http://bunkat.github.io/later/parsers.html#text
@@ -28,6 +27,17 @@ let getMembers = (organizationID, eventID) => {
           "askedEmail": askedEmail,
         };
 
+        // Log the member as having attended this event if not already logged
+        let logAttendance = () => {
+          Events.update( { "organizationID": organizationID, "eventID": eventID }, { $addToSet: {eventMemberIDs: userID} }, (error, response) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log(organizationID + ":\"" + record["userName"] + "\" was logged as having attended eventID:" + eventID);
+            }
+          });
+        };
+
         // Add the member to the database if he/she doesn't already exist
         if (!Members.findOne( { "organizationID": organizationID, "userID": userID } )) {
           Members.insert(record, (error, response) => {
@@ -35,20 +45,13 @@ let getMembers = (organizationID, eventID) => {
               console.log(error);
             } else {
               console.log(organizationID + ":\"" + record["userName"] + "\" has been added to the Members collection as _id:" + response);
+              logAttendance();
             }
           });
+        } else {
+          logAttendance();
         };
 
-        // Log the member as having attended this event if not already logged
-        Events.update(record["_id"], { $addToSet: {eventMemberIDs: userID} }, (error, response) => {
-          if (error) {
-            console.log(error);
-          } else {
-            if (response !== 0) {
-              console.log(organizationID + ":\"" + record["userName"] + "\" was logged as having attended eventID:" + eventID);
-            }
-          }
-        });
       });
     };
   });

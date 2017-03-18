@@ -1,28 +1,40 @@
 import { SyncedCron } from 'meteor/percolate:synced-cron'; // http://bunkat.github.io/later/parsers.html#text
 import { thankYouComeAgain } from '../../../notifications/thankYouComeAgain';
+import Events from '../../../api/events/events';
+import Members from '../../../api/members/members';
+import moment from 'moment';
 
 
-/*
+let sendEmails = () => {
+  let todayUnix = moment(moment().format("YYYY-MM-DD")).format("x");
+  let unixDay = 86400000;
+  let yesterdayUnix = parseInt(todayUnix) - parseInt(unixDay);
+
+  let yesterdaysEvents = Events.find(
+    { "eventTime": { $gte : parseInt(yesterdayUnix), $lt: parseInt(todayUnix) } },
+    { fields: { "eventMemberIDs": 1 } }
+  ).fetch();
+
+  yesterdaysEvents.forEach( (object) => {
+    object["eventMemberIDs"].forEach( (userID) => {
+      let askedEmail = Members.findOne( { "userID": userID } )["askedEmail"];
+
+      if (askedEmail !== undefined) {
+        console.log("Test result: email would've been sent to " + askedEmail);
+      }
+    });
+  });
+};
+
+
 SyncedCron.config({ log: true, utc: true });
 
 SyncedCron.add({
-  name: "Send members who played yesterday a re-book notification.",
+  name: "thankYouComeAgain",
   schedule(parser) {
-    // return parser.text('every 2 mins');
     return parser.text('at 2:00 pm'); // This is UTC time -> 10:00am EST
   },
   job() {
-    let recipients = ["joelsfoster@gmail.com"]; // Add the list of emails here
-    recipients.forEach( (recipient) => {
-      thankYouComeAgain(recipient);
-    });
+    sendEmails();
   },
 });
-
-SyncedCron.start();
-*/
-
-
-// let timeStamp = moment(unixTimeStamp).format("YYYY-MM-DD");
-// let todaysDate = moment().format("YYYY-MM-DD");
-// if (timeStamp === todaysDate) then...
