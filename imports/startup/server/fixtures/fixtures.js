@@ -24,6 +24,7 @@ users.forEach(({ email, password, profile, roles }) => {
   }
 });
 
+
 /*
 // Seed legacy data
 const seedLegacyData = () => {

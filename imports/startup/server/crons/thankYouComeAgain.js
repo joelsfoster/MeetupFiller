@@ -21,6 +21,7 @@ let sendEmails = () => {
 
       if (askedEmail !== undefined) {
         console.log("Test result: email would've been sent to " + askedEmail);
+        // thankYouComeAgain(askedEmail); 
       }
     });
   });

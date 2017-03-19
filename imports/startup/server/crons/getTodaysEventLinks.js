@@ -6,9 +6,9 @@ import Events from '../../../api/events/events';
 
 
 let getTodaysEventLinks = (organizationID) => {
-  const MAX_SCRAPES = 50; // Meetup's max is 200. If this number exceeds count of games today, it will continue into the past.
-  let this_moment = moment().format("YYYY-MM-DDTHH:mm:ss.0Z"); // Note that this is based off server time, which is EST. This is the format Meetup stubbornly requires. https://momentjs.com/docs/#/parsing/
-  let url = 'https://api.meetup.com/' + organizationID + '/events?&sign=true&photo-host=public&page=' + MAX_SCRAPES + '&desc=true&scroll=since:' + this_moment + '&status=past&offset=0&omit=manual_attendance_count,created,duration,fee,id,rsvp_limit,status,updated,utc_offset,waitlist_count,yes_rsvp_count,venue,group,description,how_to_find_us,visibility&key=' + MEETUP_API_KEY;
+  const MAX_SCRAPES = 200; // Meetup's max is 200. If this number exceeds count of games today, it will continue into the past.
+  // let this_moment = moment().format("YYYY-MM-DDTHH:mm:ss.0Z"); // Note that this is based off server time, which is EST. This is the format Meetup stubbornly requires. https://momentjs.com/docs/#/parsing/
+  let url = 'https://api.meetup.com/' + organizationID + '/events?&sign=true&photo-host=public&page=' + MAX_SCRAPES + '&desc=true&status=past&offset=0&omit=manual_attendance_count,created,duration,fee,id,rsvp_limit,status,updated,utc_offset,waitlist_count,yes_rsvp_count,venue,group,description,how_to_find_us,visibility&key=' + MEETUP_API_KEY;
 
   HTTP.call( 'GET', url, {}, function( error, response ) {
     if ( error ) {
@@ -51,4 +51,9 @@ SyncedCron.add({
       getTodaysEventLinks(organization);
     });
   },
+});
+
+let organizations = [ "playsoccer2give" ]; // Change this to include all organizations to pull data from. Note that we have to account for eventID parsing and new API keys when this happens!!
+organizations.forEach( (organization) => {
+  getTodaysEventLinks(organization);
 });
