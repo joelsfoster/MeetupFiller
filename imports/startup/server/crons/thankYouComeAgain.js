@@ -6,13 +6,17 @@ import moment from 'moment';
 
 
 let sendEmails = () => {
-  let todayUnix = moment(moment().format("YYYY-MM-DD")).format("x");
+  let estOffset = 14400000;
   let unixDay = 86400000;
-  let yesterdayUnix = parseInt(todayUnix) - parseInt(unixDay);
+  let nowUnix = moment.utc().format("x");
+  let nowEST = parseInt(nowUnix) - parseInt(estOffset);
+  let yesterdayUnix = parseInt(nowUnix) - parseInt(unixDay);
+  let yesterdayEST = parseInt(yesterdayUnix) - parseInt(estOffset);
 
+  // Note: Grabs all events with a start time within the last 24 hours of the moment run
   let yesterdaysEvents = Events.find(
-    { "eventTime": { $gte : parseInt(yesterdayUnix), $lt: parseInt(todayUnix) } },
-    { fields: { "eventMemberIDs": 1 } }
+    { "eventTime": { $gte : parseInt(yesterdayEST), $lt: parseInt(nowEST) } },
+    { fields: { "eventName": 1, "eventTime": 1, "eventMemberIDs": 1 } }
   ).fetch();
 
   yesterdaysEvents.forEach( (object) => {
@@ -20,20 +24,20 @@ let sendEmails = () => {
       let askedEmail = Members.findOne( { "userID": userID } )["askedEmail"];
 
       if (askedEmail !== undefined) {
-        console.log("Test result: email would've been sent to " + askedEmail);
-        // thankYouComeAgain(askedEmail); 
+        console.log("thankYouComeAgain email sent! Event: " + object["eventName"] + " --> " + askedEmail);
+        // thankYouComeAgain(askedEmail);
       }
     });
   });
 };
 
-
+// Add the cron to the scheduler
 SyncedCron.config({ log: true, utc: true });
 
 SyncedCron.add({
   name: "thankYouComeAgain",
   schedule(parser) {
-    return parser.text('at 2:00 pm'); // This is UTC time -> 10:00am EST
+    return parser.text('at 6:00 pm'); // This is UTC time -> 4:00pm EST
   },
   job() {
     sendEmails();
