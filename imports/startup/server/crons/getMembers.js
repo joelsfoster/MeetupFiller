@@ -1,85 +1,131 @@
-import Meteor from 'meteor/meteor';
+import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 import { MEETUP_API_KEY } from '../environment-variables';
 import { SyncedCron } from 'meteor/percolate:synced-cron'; // http://bunkat.github.io/later/parsers.html#text
-import moment from 'moment';
 import Events from '../../../api/events/events';
 import Members from '../../../api/members/members';
+import moment from 'moment';
 
-
-let getMembers = (organizationID, eventID) => {
-  let url = 'https://api.meetup.com/' + organizationID + '/events/' + eventID + '/rsvps?&sign=true&response=yes&photo-host=public&fields=answers&omit=created,updated,response,guests,event,member.bio,member.photo,group,member.role,member.event_context,member.title,venue,answers.question_id,answers.updated,answers.question&key=' + MEETUP_API_KEY;
+// Get all the members from a specific event that a specific organization hosted and log it in the DB
+const getMembers = (organizationID, eventID) => {
+  const url = 'https://api.meetup.com/' + organizationID + '/events/' + eventID + '/rsvps?&sign=true&response=yes&photo-host=public&fields=answers&omit=created,updated,response,guests,event,member.bio,member.photo,group,member.role,member.event_context,member.title,venue,answers.question_id,answers.updated,answers.question&key=' + MEETUP_API_KEY;
+  // https://api.meetup.com/playsoccer2give/events/238454295/rsvps?&sign=true&response=yes&photo-host=public&fields=answers&omit=created,updated,response,guests,event,member.bio,member.photo,group,member.role,member.event_context,member.title,venue,answers.question_id,answers.updated,answers.question&key=
 
   HTTP.call( 'GET', url, {}, function( error, response ) {
     if ( error ) {
       console.log( error );
     } else {
-      let data = response.data;
+      const data = response.data;
       console.log("getMembers GET for " + organizationID + "/" + eventID + ": Success!");
 
       data.forEach( (object) => {
-        let userID = parseInt(object["member"]["id"]);
-        let userName = object["member"]["name"];
-        let askedEmail = object["answers"][0]["answer"]; // Does this work for all permutations of data returned???
-        let record = {
+        const userID = parseInt(object["member"]["id"]);
+        const userName = object["member"]["name"].trim(); // If we don't .trim(), records that have whitespace will duplicate on insert
+        const askedEmail = object["answers"] ? object["answers"][0]["answer"].split(" ")[0] : undefined; // If we don't .split(" ")[0], records with whitespace will not be valid emails
+        let event = { "organizationID": organizationID, "eventID": eventID };
+        let eventTime = Events.findOne( event )["eventTime"];
+
+        // Format and define each uniquely identifiable record using the raw data above (note that "dateAdded" and "askedEmail" are defined below, so as not to accidentally create duplicate records)
+        const record = {
           "organizationID": organizationID,
           "userID": userID,
-          "userName": userName,
-          "askedEmail": askedEmail,
+          "userName": userName
         };
 
-        // Add the member to the database if he/she doesn't already exist
-        if (!Members.findOne( { "organizationID": organizationID, "userID": userID } )) {
-          Members.insert(record, (error, response) => {
+        // Log the member as having attended this event if not already logged, and update the member's lastSeen date
+        const logAttendance = () => {
+          let eventHasMembers = Events.findOne( { "organizationID": organizationID, "eventID": eventID, "eventMemberIDs": { $in: [ userID ] } } );
+
+          if (!eventHasMembers) {
+            Events.update( event, { $addToSet: { eventMemberIDs: userID } }, (error, response) => {
+              if (error) {
+                console.log(error);
+              }
+            });
+
+            if (eventTime > Members.findOne( record )["lastSeen"]) {
+              Members.update( record, { $set: { "lastEvent": eventID, "lastSeen": eventTime } }, (error, response) => {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log(organizationID + ":\"" + userName + "\" was last seen at eventID --> " + eventID + ":" + eventTime);
+                }
+              });
+            }
+
+          } else {
+            console.log("Error: " + userName + " already was logged as having attended eventID:" + eventID);
+          }
+        };
+
+        // If the member doesn't exist, add them to the DB and log their attendance
+        if (!Members.findOne( record )) {
+          Members.insert( {
+            "organizationID": organizationID,
+            "userID": userID,
+            "userName": userName,
+            "askedEmail": askedEmail,
+            "dateAdded": moment.utc().format("x"),
+            "lastEvent": eventID,
+            "lastSeen": eventTime
+          }, (error, response) => {
             if (error) {
               console.log(error);
             } else {
-              console.log(organizationID + ":\"" + record["userName"] + "\" has been added to the Members collection as _id:" + response);
+              console.log("New member added --> " + organizationID + ":\"" + userName + "\"");
+              logAttendance();
             }
           });
-        };
 
-        // Log the member as having attended this event if not already logged
-        Events.update(record["_id"], { $addToSet: {eventMemberIDs: userID} }, (error, response) => {
-          if (error) {
-            console.log(error);
-          } else {
-            if (response !== 0) {
-              console.log(organizationID + ":\"" + record["userName"] + "\" was logged as having attended eventID:" + eventID);
-            }
-          }
-        });
+        } else { // If member exists, log their attendance, then update their email address if it was previously blank
+
+          logAttendance();
+
+          let emailGiven = !(askedEmail === "" || askedEmail === undefined);
+          let noEmailOnRecord = !Members.findOne( record )["askedEmail"];
+
+          if (noEmailOnRecord && emailGiven) {
+            Members.update( record, { $set: { "askedEmail": askedEmail } }, (error, response) => {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log(organizationID + ":\"" + userName + "\" has a new email address: " + Members.findOne(record)["askedEmail"]);
+              }
+            });
+          };
+
+        };
       });
     };
   });
 };
 
-
-let scrapeSince = (date) => { // Must be in format "YYYY-MM-DD"
-  let startDate = moment(date).format("x");
-  let unixDay = 86400000;
-  let endOfStartDateUnix = parseInt(startDate) + parseInt(unixDay);
-
-  let eventArray = Events.find(
-    { "eventTime": { $gte : parseInt(startDate), $lt: parseInt(endOfStartDateUnix) }},
+// This function gathers all events that don't have players logged as having attended them, and runs getMembers on them
+export const backfillData = () => {
+  const eventArray = Events.find(
+    { "eventMemberIDs": undefined }, // Will have to put smarter logic around this in the future!!
     { fields: { "organizationID": 1, "eventID": 1 }}
   ).fetch();
 
+  let api_counter = 0;
+
   eventArray.forEach((object) => {
-    getMembers(object["organizationID"], object["eventID"]);
+    const delayedFunction = () => {
+      getMembers(object["organizationID"], object["eventID"]);
+    };
+
+    api_counter += 1;
+    Meteor.setTimeout(delayedFunction, 1000 * api_counter);
   });
-};
+}
 
-
-SyncedCron.config({ log: true, utc: true });
-
+// Add the cron to the scheduler
 SyncedCron.add({
-  name: "getMembers",
+  name: "getMembers & backfillData",
   schedule(parser) {
-    return parser.text('at 3:45 am'); // This is UTC time -> 11:45pm EST
+    return parser.text('at 3:50 am'); // This ('at 3:50 am') is UTC time -> 11:50pm EST
   },
   job() {
-    let date = moment().format("YYYY-MM-DD"); // WARNING: Only scrape one day at a time or else the API will be throttled!!!
-    scrapeSince(date);
+    backfillData();
   },
 });

@@ -32,6 +32,10 @@ Members.schema = new SimpleSchema({
     type: String,
     label: "userName",
   },
+  "dateAdded": {
+    type: Number,
+    label: "dateAdded",
+  },
   "askedEmail": {
     type: String,
     label: "askedEmail",
@@ -41,6 +45,14 @@ Members.schema = new SimpleSchema({
     type: String,
     label: "paymentEmail",
     optional: true,
+  },
+  "lastEvent": {
+    type: Number,
+    label: "lastEvent",
+  },
+  "lastSeen": {
+    type: Number,
+    label: "lastSeen",
   }
 });
 

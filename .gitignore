@@ -1,6 +1,6 @@
 .DS_Store
 settings-production.json
 npm-debug.log
-node_modules/
+
 private/scrapers/
 imports/startup/server/fixtures/LegacyData.json
