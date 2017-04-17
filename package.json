@@ -1,17 +1,13 @@
 {
-  "name": "PickupBaller",
+  "name": "MeetupFiller",
   "version": "1.0.0",
   "description": "An app made by Joel Foster.",
   "scripts": {
     "start": "meteor --settings settings-development.json",
-    "test": "meteor test --driver-package practicalmeteor:mocha --port 5000",
-    "chimp-watch": "chimp --ddp=http://localhost:3000 --watch --mocha --path=tests",
-    "chimp-test": "chimp --ddp=http://localhost:3000 --mocha --path=tests",
     "staging": "meteor deploy staging.meteor.com --settings settings-development.json",
-    "production": "DEPLOY_HOSTNAME=us-east-1.galaxy-deploy.meteor.com meteor deploy pickupballer.com --settings settings-production.json"
+    "production": "DEPLOY_HOSTNAME=us-east-1.galaxy-deploy.meteor.com meteor deploy www.meetupfiller.com --settings settings-production.json"
   },
   "devDependencies": {
-    "chimp": "^0.41.2",
     "eslint": "^3.8.1",
     "eslint-config-airbnb": "^12.0.0",
     "eslint-plugin-import": "^1.16.0",
