@@ -2,6 +2,6 @@
   "public": {},
   "private": {
     "MAIL_URL": "smtp://postmaster@sandbox5574fb0faad84074a27df5cfbbba8692.mailgun.org:3985c556b02c94a9c18ab1bac41c3d78@smtp.mailgun.org:587",
-    "MEETUP_API_KEY": "TOP SECRET"
+    "MEETUP_API_KEY": "282a2c7858483325b5b6c5510422e5b"
   }
 }

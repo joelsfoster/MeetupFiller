@@ -26,7 +26,7 @@ users.forEach(({ email, password, profile, roles }) => {
   }
 });
 
-// Seed on startup
+// Clear data then re-seed upon staging and localdev startup
 if (!Meteor.isProduction) {
 
   const clearData = () => {
