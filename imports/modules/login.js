@@ -15,9 +15,16 @@ const login = () => {
 
   Meteor.loginWithPassword(email, password, (error) => { // Need to learn more about basic Meteor login functionality
     if (error) {
-      Bert.alert(error.reason, 'warning'); // Not working currently. Manually update?
+      Bert.alert({
+        title: "Whoops! Try again, friend.",
+        message: error.reason + ".",
+        type: 'warning',
+      });
     } else {
-      Bert.alert('Logged in!', 'success'); // Not working currently. Manually update?
+      Bert.alert({
+        title: "Successfully logged in!",
+        type: 'success',
+      });
 
       const { location } = component.props; // What do the brackets indicate?
       if (location.state && location.state.nextPathname) {
@@ -47,7 +54,7 @@ const validate = () => {
         email: "That's definitely not a legit email address...",
       },
       password: {
-        required: "Hint: 'Open Sesame' won't get you anywhere", 
+        required: "Can't let you in without your password.",
       },
     },
     submitHandler() { login(); }, // On submitting the loginForm, run the login function above

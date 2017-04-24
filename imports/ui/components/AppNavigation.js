@@ -14,7 +14,6 @@ const AppNavigation = ({ hasUser }) => (
   <Navbar>
     <Navbar.Header>
       <Navbar.Brand>
-        { /* can replace link with a company logo... cool! */ }
         <Link to="/">MeetupFiller</Link>
       </Navbar.Brand>
       <Navbar.Toggle />

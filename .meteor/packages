@@ -26,7 +26,6 @@ fourseven:scss
 aldeed:collection2
 alanning:roles
 react-meteor-data
-themeteorchef:bert
 static-html
 mdg:validated-method
 force-ssl@1.0.14
@@ -37,3 +36,4 @@ percolate:synced-cron
 http@1.2.12
 froatsnook:sleep
 dburles:factory
+themeteorchef:bert
