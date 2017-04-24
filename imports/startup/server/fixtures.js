@@ -5,6 +5,7 @@ import { getEvents } from './crons/getEvents';
 import { backfillData } from './crons/getMembers';
 import Events from '../../api/events/events';
 import Members from '../../api/members/members';
+import NotificationLog from '../../api/notificationLog/notificationLog';
 
 // Seed admin user
 const users = [{
@@ -27,8 +28,22 @@ users.forEach(({ email, password, profile, roles }) => {
 
 // Seed on startup
 if (!Meteor.isProduction) {
-  // Events.remove({});
-  // Members.remove({});
+
+  const clearData = () => {
+    Events.remove({});
+    Members.remove({});
+    NotificationLog.remove({});
+  }
+
+  const seedData = () => {
+    getEvents("playsoccer2give");
+    Meteor.setTimeout(backfillData, 3000);
+  }
+
+  const reset = () => {
+    clearData();
+    Meteor.setTimeout(seedData, 3000);
+  }
+
+  // reset();
 }
-getEvents("playsoccer2give");
-Meteor.setTimeout(backfillData, 5000);

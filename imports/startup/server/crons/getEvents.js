@@ -1,6 +1,5 @@
 import { HTTP } from 'meteor/http';
 import { MEETUP_API_KEY } from '../environment-variables';
-import { SyncedCron } from 'meteor/percolate:synced-cron'; // http://bunkat.github.io/later/parsers.html#text
 import Events from '../../../api/events/events';
 
 // Capture the past 200 events hosted by this organization and log it in the DB
@@ -37,17 +36,3 @@ export const getEvents = (organizationID) => {
     };
   });
 };
-
-// Add the cron to the scheduler
-SyncedCron.add({
-  name: "getEvents",
-  schedule(parser) {
-    return parser.text('at 3:40 am'); // This is UTC time -> 11:40pm EST
-  },
-  job() {
-    let organizations = [ "playsoccer2give" ]; // Change this to include all organizations to pull data from. Note that we have to account for eventID parsing and new API keys when this happens!!
-    organizations.forEach( (organization) => {
-      getEvents(organization);
-    });
-  },
-});

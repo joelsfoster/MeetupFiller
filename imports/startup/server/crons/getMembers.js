@@ -1,10 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 import { MEETUP_API_KEY } from '../environment-variables';
-import { SyncedCron } from 'meteor/percolate:synced-cron'; // http://bunkat.github.io/later/parsers.html#text
 import Events from '../../../api/events/events';
 import Members from '../../../api/members/members';
 import moment from 'moment';
+import findEmailsInString from 'find-emails-in-string';
 
 // Get all the members from a specific event that a specific organization hosted and log it in the DB
 const getMembers = (organizationID, eventID) => {
@@ -18,12 +18,20 @@ const getMembers = (organizationID, eventID) => {
       const data = response.data;
       console.log("getMembers GET for " + organizationID + "/" + eventID + ": Success!");
 
-      data.forEach( (object) => {
-        const userID = parseInt(object["member"]["id"]);
-        const userName = object["member"]["name"].trim(); // If we don't .trim(), records that have whitespace will duplicate on insert
-        const askedEmail = object["answers"] ? object["answers"][0]["answer"].split(" ")[0] : undefined; // If we don't .split(" ")[0], records with whitespace will not be valid emails
-        let event = { "organizationID": organizationID, "eventID": eventID };
-        let eventTime = Events.findOne( event )["eventTime"];
+      // Define what the event was and what time it was held, for use elsewhere in the function
+      const event = { "organizationID": organizationID, "eventID": eventID };
+      const eventTime = Events.findOne( event )["eventTime"];
+
+      // Loop through each member that attended this event
+      data.forEach( (member) => {
+        const userID = parseInt(member["member"]["id"]);
+        const userName = member["member"]["name"].trim(); // If we don't .trim(), records that have whitespace will duplicate on insert
+
+        // First check if there was an email given. Then clean up any "\n" separations.
+        const askedEmailCheck = member["answers"] ? member["answers"][0]["answer"] : undefined; // If answer exists, use answer
+        const askedEmailArray = askedEmailCheck ? askedEmailCheck.split("\n") : undefined; // Split text according to "\n"
+        const askedEmailString = askedEmailArray ? askedEmailArray.join(" ") : undefined; // Replace "\n" with " "
+        const askedEmail = askedEmailString ? findEmailsInString(askedEmailString)[0] : undefined; // Now we can extract the email
 
         // Format and define each uniquely identifiable record using the raw data above (note that "dateAdded" and "askedEmail" are defined below, so as not to accidentally create duplicate records)
         const record = {
@@ -32,9 +40,9 @@ const getMembers = (organizationID, eventID) => {
           "userName": userName
         };
 
-        // Log the member as having attended this event if not already logged, and update the member's lastSeen date
+        // Function to log the member as having attended this event if not already logged, and update the member's lastSeen date
         const logAttendance = () => {
-          let eventHasMembers = Events.findOne( { "organizationID": organizationID, "eventID": eventID, "eventMemberIDs": { $in: [ userID ] } } );
+          const eventHasMembers = Events.findOne( { "organizationID": organizationID, "eventID": eventID, "eventMemberIDs": { $in: [ userID ] } } );
 
           if (!eventHasMembers) {
             Events.update( event, { $addToSet: { eventMemberIDs: userID } }, (error, response) => {
@@ -78,7 +86,6 @@ const getMembers = (organizationID, eventID) => {
           });
 
         } else { // If member exists, log their attendance, then update their email address if it was previously blank
-
           logAttendance();
 
           let emailGiven = !(askedEmail === "" || askedEmail === undefined);
@@ -93,8 +100,8 @@ const getMembers = (organizationID, eventID) => {
               }
             });
           };
-
         };
+
       });
     };
   });
@@ -109,23 +116,12 @@ export const backfillData = () => {
 
   let api_counter = 0;
 
-  eventArray.forEach((object) => {
+  eventArray.forEach((event) => {
     const delayedFunction = () => {
-      getMembers(object["organizationID"], object["eventID"]);
+      getMembers(event["organizationID"], event["eventID"]);
     };
 
     api_counter += 1;
-    Meteor.setTimeout(delayedFunction, 1000 * api_counter);
+    Meteor.setTimeout(delayedFunction, 550 * api_counter);
   });
-}
-
-// Add the cron to the scheduler
-SyncedCron.add({
-  name: "getMembers & backfillData",
-  schedule(parser) {
-    return parser.text('at 3:50 am'); // This ('at 3:50 am') is UTC time -> 11:50pm EST
-  },
-  job() {
-    backfillData();
-  },
-});
+};
