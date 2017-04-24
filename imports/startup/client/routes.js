@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
@@ -16,8 +14,9 @@ import RecoverPassword from '../../ui/pages/RecoverPassword.js';
 import ResetPassword from '../../ui/pages/ResetPassword.js';
 import Signup from '../../ui/pages/Signup.js';
 
+// Function to authenticate when loading private pages. Redirects to login page if "Meteor.userId" doesn't detect a user
 const authenticate = (nextState, replace) => {
-  if (!Meteor.loggingIn() && !Meteor.userId()) {
+  if (!Meteor.loggingIn() && !Meteor.userId()) { 
     replace({
       pathname: '/login',
       state: { nextPathname: nextState.location.pathname },
@@ -25,8 +24,10 @@ const authenticate = (nextState, replace) => {
   }
 };
 
+// When Meteor starts up, it renders the following self-explanatory things.
 Meteor.startup(() => {
   render(
+    /* How does browserHistory work? */
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute name="index" component={ Index } />

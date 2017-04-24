@@ -1,7 +1,9 @@
 import React from 'react';
-import { Grid } from 'react-bootstrap';
-import AppNavigation from '../containers/AppNavigation.js';
+import { Grid } from 'react-bootstrap'; // Need to learn more about this!
+import AppNavigation from '../components/AppNavigation.js';
 
+// The App displays the navigation bar (which is ever-present),
+// and a bootstrap grid is given children (is that an object??) to display...
 const App = ({ children }) => (
   <div>
     <AppNavigation />
@@ -11,6 +13,7 @@ const App = ({ children }) => (
   </div>
 );
 
+// ... which are "node"-types. What the heck does that mean? 
 App.propTypes = {
   children: React.PropTypes.node,
 };
