@@ -1,9 +1,7 @@
 import { Accounts } from 'meteor/accounts-base';
 
-const name = 'PS2G';
-// Change 'name' to be a variable equal to the account's organization
-const email = '<donotreply@ps2g.com>';
-// Change the '@ps2g' to be pickupballer
+const name = 'MeetupFiller';
+const email = '<donotreply@meetupfiller.com>';
 const from = `${name} ${email}`;
 const emailTemplates = Accounts.emailTemplates;
 
@@ -21,6 +19,6 @@ emailTemplates.resetPassword = {
     return `Whoops! Don't worry, we all forget our passwords from time to time :).
     A password reset has been requested for ${userEmail}. To reset your password, please visit the following link:
     \n\n${urlWithoutHash}\n\n If you did not request this reset, please ignore this email.
-    If you have a sneaking suspicion that something is amiss, please contact one of the game leaders.`;
+    If you have a sneaking suspicion that something is amiss, please contact Joel at <joelsfoster@gmail.com> (yes, the CEO answers support requests).`;
   },
 };

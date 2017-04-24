@@ -1,12 +1,12 @@
 import { HTTP } from 'meteor/http';
 import { MEETUP_API_KEY } from '../environment-variables';
-import { SyncedCron } from 'meteor/percolate:synced-cron'; // http://bunkat.github.io/later/parsers.html#text
 import Events from '../../../api/events/events';
 
 // Capture the past 200 events hosted by this organization and log it in the DB
 export const getEvents = (organizationID) => {
   const MAX_SCRAPES = 200; // Meetup's max is 200. If this number exceeds count of games today, it will continue into the past. If you want to try implementing "scroll", this is the <moment.js> format required: "YYYY-MM-DDTHH:mm:ss.0Z"
   const url = 'https://api.meetup.com/' + organizationID + '/events?&sign=true&photo-host=public&page=' + MAX_SCRAPES + '&desc=true&status=past&offset=0&omit=manual_attendance_count,created,duration,fee,id,rsvp_limit,status,updated,utc_offset,waitlist_count,yes_rsvp_count,venue,group,description,how_to_find_us,visibility&key=' + MEETUP_API_KEY;
+  // https://api.meetup.com/playsoccer2give/events?&sign=true&photo-host=public&page=200&desc=true&status=past&offset=0&omit=manual_attendance_count,created,duration,fee,id,rsvp_limit,status,updated,utc_offset,waitlist_count,yes_rsvp_count,venue,group,description,how_to_find_us,visibility&key=282a2c7858483325b5b6c5510422e5b
 
   HTTP.call( 'GET', url, {}, function( error, response ) {
     if ( error ) {
@@ -36,17 +36,3 @@ export const getEvents = (organizationID) => {
     };
   });
 };
-
-// Add the cron to the scheduler
-SyncedCron.add({
-  name: "getEvents",
-  schedule(parser) {
-    return parser.text('at 3:40 am'); // This is UTC time -> 11:40pm EST
-  },
-  job() {
-    let organizations = [ "playsoccer2give" ]; // Change this to include all organizations to pull data from. Note that we have to account for eventID parsing and new API keys when this happens!!
-    organizations.forEach( (organization) => {
-      getEvents(organization);
-    });
-  },
-});

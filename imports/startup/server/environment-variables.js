@@ -5,3 +5,5 @@ if (!Meteor.isProduction) {
 }
 
 export const MEETUP_API_KEY = Meteor.settings.private.MEETUP_API_KEY;
+
+// Will have to re-architect this when we expand to other customers

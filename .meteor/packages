@@ -28,11 +28,7 @@ alanning:roles
 react-meteor-data
 themeteorchef:bert
 static-html
-xolvio:cleaner
-practicalmeteor:mocha
-xolvio:backdoor
 mdg:validated-method
-dburles:factory
 force-ssl@1.0.13
 mdg:seo
 email@1.1.18
@@ -40,3 +36,4 @@ fortawesome:fontawesome
 percolate:synced-cron
 http@1.2.12
 froatsnook:sleep
+dburles:factory
