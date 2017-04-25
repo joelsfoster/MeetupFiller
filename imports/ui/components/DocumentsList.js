@@ -1,6 +1,11 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import { ListGroup, ListGroupItem, Alert } from 'react-bootstrap';
+import { composeWithTracker } from 'react-komposer';
+import { Meteor } from 'meteor/meteor';
+import Documents from '../../api/documents/documents.js';
+import Loading from './Loading.js';
+
 
 const handleNav = (_id) => {
   browserHistory.push(`/documents/${_id}`);
@@ -21,4 +26,12 @@ DocumentsList.propTypes = {
   documents: React.PropTypes.array,
 };
 
-export default DocumentsList;
+const composer = (params, onData) => {
+  const subscription = Meteor.subscribe('documents.list');
+  if (subscription.ready()) {
+    const documents = Documents.find().fetch();
+    onData(null, { documents });
+  }
+};
+
+export default composeWithTracker(composer, Loading)(DocumentsList);

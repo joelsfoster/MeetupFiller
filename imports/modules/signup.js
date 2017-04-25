@@ -5,6 +5,7 @@ import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
 import './validation.js';
 
+
 let component;
 
 const getUserData = () => ({
@@ -46,23 +47,23 @@ const validate = () => {
       },
       password: {
         required: true,
-        minlength: 6,
+        minlength: 8,
       },
     },
     messages: {
       firstName: {
-        required: 'First name?',
+        required: "Whoops! Don't forget this. We're friendly around here.",
       },
       lastName: {
-        required: 'Last name?',
+        required: "Whoops! Don't forget this (even though we're on a first-name basis).",
       },
       emailAddress: {
-        required: 'Need an email address here.',
-        email: 'Is this email address legit?',
+        required: "Whoops! Don't forget this, you can't log in without it!",
+        email: "That's definitely not a legit email address...",
       },
       password: {
-        required: 'Need a password here.',
-        minlength: 'Use at least six characters, please.',
+        required: "You're going to need a password. You don't want just anyone all up in here, do you?",
+        minlength: "Please use at least 8 characters. It's much safer, believe us.",
       },
     },
     submitHandler() { signup(); },

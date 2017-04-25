@@ -3,6 +3,11 @@ import { ButtonToolbar, ButtonGroup, Button } from 'react-bootstrap';
 import { browserHistory } from 'react-router';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { removeDocument } from '../../api/documents/methods.js';
+import { Meteor } from 'meteor/meteor';
+import { composeWithTracker } from 'react-komposer';
+import Documents from '../../api/documents/documents.js';
+import Loading from '../components/Loading.js';
+
 
 const handleEdit = (_id) => {
   browserHistory.push(`/documents/${_id}/edit`);
@@ -40,4 +45,13 @@ ViewDocument.propTypes = {
   doc: React.PropTypes.object,
 };
 
-export default ViewDocument;
+const composer = ({ params }, onData) => {
+  const subscription = Meteor.subscribe('documents.view', params._id);
+
+  if (subscription.ready()) {
+    const doc = Documents.findOne();
+    onData(null, { doc });
+  }
+};
+
+export default composeWithTracker(composer, Loading)(ViewDocument);

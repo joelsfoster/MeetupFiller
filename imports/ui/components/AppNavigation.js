@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navbar } from 'react-bootstrap'; // Need to get more familiar with this (and .Header, .Brand, .Toggle, and .Collapse)
 import { Link } from 'react-router';
+import { composeWithTracker } from 'react-komposer';
+import { Meteor } from 'meteor/meteor';
 import PublicNavigation from './PublicNavigation.js';
 import AuthenticatedNavigation from './AuthenticatedNavigation.js';
-import { composeWithTracker } from 'react-komposer'; // Added after combining the container file with this one
-import { Meteor } from 'meteor/meteor'; // Added after combining the container file with this one
 
 // This function dictates what type of navigation component is displayed. It uses "hasUser" (see below)...
 const renderNavigation = hasUser => (hasUser ? <AuthenticatedNavigation /> : <PublicNavigation />);

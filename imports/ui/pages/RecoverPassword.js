@@ -2,9 +2,10 @@ import React from 'react';
 import { Row, Col, Alert, FormGroup, FormControl, Button } from 'react-bootstrap';
 import handleRecoverPassword from '../../modules/recover-password';
 
+
 export default class RecoverPassword extends React.Component {
   componentDidMount() {
-    handleRecoverPassword({ component: this });
+    handleRecoverPassword({ component: this }); // Feeds component.props to recover-password.js
   }
 
   handleSubmit(event) {
@@ -18,7 +19,7 @@ export default class RecoverPassword extends React.Component {
           <Col xs={ 12 } sm={ 6 } md={ 4 }>
             <h4 className="page-header">Recover Password</h4>
             <Alert bsStyle="info">
-              Enter your email address below to receive a link to reset your password.
+              Enter your email address below, and we'll send you a link to reset your password.
             </Alert>
             <form
               ref={ form => (this.recoverPasswordForm = form) }

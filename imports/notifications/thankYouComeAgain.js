@@ -15,11 +15,11 @@ export const thankYouComeAgain = (recipient, userID) => {
 
   if (!Meteor.isProduction) {
     if (recipient === "joelsfoster@gmail.com") {
-      email(recipient);
+      email(recipient, userID);
     } else {
       console.log("WARNING! thankYouComeAgain recipient is not authorized to recieve emails outside Production: " + recipient);
     }
   } else {
-    email(recipient);
+    email(recipient, userID);
   }
 };

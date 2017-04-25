@@ -2,11 +2,11 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { Meteor } from 'meteor/meteor';
-import App from '../../ui/layouts/App.js'; // Layout = main app that pages sit on top of
-import Documents from '../../ui/pages/Documents.js'; // Pages = individual web pages
+import App from '../../ui/layouts/App.js';
+import Documents from '../../ui/pages/Documents.js';
 import NewDocument from '../../ui/pages/NewDocument.js';
-import EditDocument from '../../ui/containers/EditDocument.js'; // Containers = data layer wrapped around React components
-import ViewDocument from '../../ui/containers/ViewDocument.js';
+import EditDocument from '../../ui/pages/EditDocument.js'; //
+import ViewDocument from '../../ui/pages/ViewDocument.js';
 import Index from '../../ui/pages/Index.js';
 import Login from '../../ui/pages/Login.js';
 import NotFound from '../../ui/pages/NotFound.js';
@@ -16,7 +16,7 @@ import Signup from '../../ui/pages/Signup.js';
 
 // Function to authenticate when loading private pages. Redirects to login page if "Meteor.userId" doesn't detect a user
 const authenticate = (nextState, replace) => {
-  if (!Meteor.loggingIn() && !Meteor.userId()) { 
+  if (!Meteor.loggingIn() && !Meteor.userId()) { // Need to learn more about Meteor methods
     replace({
       pathname: '/login',
       state: { nextPathname: nextState.location.pathname },
@@ -24,10 +24,9 @@ const authenticate = (nextState, replace) => {
   }
 };
 
-// When Meteor starts up, it renders the following self-explanatory things.
+
 Meteor.startup(() => {
   render(
-    /* How does browserHistory work? */
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute name="index" component={ Index } />
