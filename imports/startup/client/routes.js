@@ -5,7 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import App from '../../ui/layouts/App.js';
 import Documents from '../../ui/pages/Documents.js';
 import NewDocument from '../../ui/pages/NewDocument.js';
-import EditDocument from '../../ui/pages/EditDocument.js'; //
+import EditDocument from '../../ui/pages/EditDocument.js';
 import ViewDocument from '../../ui/pages/ViewDocument.js';
 import Index from '../../ui/pages/Index.js';
 import Login from '../../ui/pages/Login.js';
@@ -13,6 +13,7 @@ import NotFound from '../../ui/pages/NotFound.js';
 import RecoverPassword from '../../ui/pages/RecoverPassword.js';
 import ResetPassword from '../../ui/pages/ResetPassword.js';
 import Signup from '../../ui/pages/Signup.js';
+import RsvpPayment from '../../ui/pages/RsvpPayment.js';
 
 // Function to authenticate when loading private pages. Redirects to login page if "Meteor.userId" doesn't detect a user
 const authenticate = (nextState, replace) => {
@@ -30,6 +31,7 @@ Meteor.startup(() => {
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute name="index" component={ Index } />
+        <Route name="rsvp-payment" path="/rsvp-payment" component={ RsvpPayment } />
         <Route name="documents" path="/documents" component={ Documents } onEnter={ authenticate } />
         <Route name="newDocument" path="/documents/new" component={ NewDocument } onEnter={ authenticate } />
         <Route name="editDocument" path="/documents/:_id/edit" component={ EditDocument } onEnter={ authenticate } />
