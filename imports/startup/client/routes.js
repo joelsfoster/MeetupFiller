@@ -15,6 +15,7 @@ import ResetPassword from '../../ui/pages/ResetPassword.js';
 import Signup from '../../ui/pages/Signup.js';
 import RsvpPayment from '../../ui/pages/RsvpPayment.js';
 
+
 // Function to authenticate when loading private pages. Redirects to login page if "Meteor.userId" doesn't detect a user
 const authenticate = (nextState, replace) => {
   if (!Meteor.loggingIn() && !Meteor.userId()) { // Need to learn more about Meteor methods

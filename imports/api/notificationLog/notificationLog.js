@@ -48,7 +48,17 @@ NotificationLog.schema = new SimpleSchema({
   "emailAddress": {
     type: String,
     label: "emailAddress",
-  }
+  },
+  "discountedPrice": {
+    type: Number,
+    label: "discountedPrice offered in lastMinuteDiscount emails",
+    optional: true,
+  },
+  "discountUsed": {
+    type: Boolean,
+    label: "discountUsed",
+    optional: true,
+  },
 });
 
 // Attach the schema to the collection so that it is applied. This is actually a Collection2 method.

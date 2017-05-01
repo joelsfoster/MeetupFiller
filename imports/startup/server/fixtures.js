@@ -6,6 +6,7 @@ import { backfillData } from './crons/getMembers';
 import Events from '../../api/events/events';
 import Members from '../../api/members/members';
 import NotificationLog from '../../api/notificationLog/notificationLog';
+import AccountSettings from '../../api/accountSettings/accountSettings';
 
 // Seed admin user
 const users = [{
