@@ -18,11 +18,15 @@ AccountSettings.deny({
   remove: () => true,
 });
 
-// Define the schema as a property of the collection
+// CHANGE THIS TO JUST HOLD THE PAYOUT ADDRESS INSTEAD OF PAYPAL IDS 
 AccountSettings.schema = new SimpleSchema({
   "organizationID": {
     type: String,
     label: "organizationID",
+  },
+  "organizationName": {
+    type: String,
+    label: "organizationName",
   },
   "payPalClientID": {
     type: String,

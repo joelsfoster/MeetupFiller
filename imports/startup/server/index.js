@@ -5,10 +5,10 @@ import './api';
 import './environment-variables';
 import './crons/index';
 
-// import '../../modules/paypal-payment';
-
 /*
-accountSettings database holds the discount settings
-
+discountSettings database holds the discount settings for each event for each account
+the cron sends a link to the discount and logs the email was sent
+the link goes to my page, which runs scripts to check availability and redirect to payment portal
+...
 
 */
