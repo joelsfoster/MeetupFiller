@@ -18,7 +18,7 @@ AccountSettings.deny({
   remove: () => true,
 });
 
-// CHANGE THIS TO JUST HOLD THE PAYOUT ADDRESS INSTEAD OF PAYPAL IDS 
+// Put all discount configuration settings here as well
 AccountSettings.schema = new SimpleSchema({
   "organizationID": {
     type: String,
@@ -28,13 +28,10 @@ AccountSettings.schema = new SimpleSchema({
     type: String,
     label: "organizationName",
   },
-  "payPalClientID": {
+  "payPalPayoutID": {
     type: String,
-    label: "payPalClientID",
-  },
-  "payPalClientSecret": {
-    type: String,
-    label: "payPalClientSecret",
+    label: "payPalPayoutID",
+    optional: true
   },
 });
 

@@ -74,9 +74,9 @@ const callPaypal = () => {
 
         paypal.payment.create(create_payment_json, function (error, payment) {
           if (error) {
-            reject(error); // This passes to the .catch() method below.
+            reject(error);
           } else {
-            resolve(payment); // This passed to the .then() method below.
+            resolve(payment);
           }
         });
       }
@@ -87,21 +87,14 @@ const callPaypal = () => {
 // This method calls the function that houses the promise
 Meteor.methods({
   generatePaypalPortal(params) {
-    check(params, {
-      /*
-      spicy: Boolean,
-      protein: String,
-      guacamole: Boolean,
-      orderSize: Number,
-      */
-    });
+    check(params, {});
 
     return callPaypal()
     .then((response) => {
-      return response["links"][1]["href"]; // Accessible via the response argument on the Meteor.call callback
+      return response["links"][1]["href"];
     })
     .catch((error) => {
-      throw new Meteor.Error('500', error); // Accessible via the error argument on the Meteor.call callback
+      throw new Meteor.Error('500', error);
     });
   }
 });

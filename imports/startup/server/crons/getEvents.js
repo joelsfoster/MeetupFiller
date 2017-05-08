@@ -17,7 +17,7 @@ export const getEvents = (organizationID) => {
       data.forEach( (object) => {
         const record = {
           "organizationID": organizationID,
-          "eventID": parseInt(object["link"].slice(46, 55)), // Update this when we start scraping other websites!!
+          "eventID": parseInt(object["link"].slice(46, 55)), // UPDATE THIS WHEN WE START SCRAPING OTHER WEBSITES!!
           "eventName": object["name"],
           "eventTime": parseInt(object["time"])
         };

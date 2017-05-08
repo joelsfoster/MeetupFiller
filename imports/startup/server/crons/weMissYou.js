@@ -15,12 +15,12 @@ export const sendWeMissYou = () => {
   // Grab all events with a start time within a 24 hour window of runtime, "TRIGGER_DAYS" ago
   let members = Members.find(
     { "lastSeen": { $gte : parseInt(lowerRangeYesterday), $lt: parseInt(upperRangeYesterday) } },
-    { fields: { "userName": 1, "userID": 1, "lastEvent": 1, "askedEmail": 1, "paymentEmail": 1, "organizationID": 1, "lastEvent": 1 } }
+    { fields: { "userName": 1, "userID": 1, "lastEvent": 1, "askedEmail": 1, "paymentEmail": 1, "organizationID": 1 } }
   ).fetch();
 
   console.log("Starting weMissYou for " + members.length + " members who last played " + TRIGGER_DAYS + " days ago...");
 
-  // If that event had attendees, loop through each attendee
+  // If at least one member meets this criteria, loop through each attendee
   if (members.length > 0) {
     members.forEach( (object) => {
       let organizationID = object["organizationID"];

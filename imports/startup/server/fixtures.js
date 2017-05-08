@@ -7,6 +7,7 @@ import Events from '../../api/events/events';
 import Members from '../../api/members/members';
 import NotificationLog from '../../api/notificationLog/notificationLog';
 import AccountSettings from '../../api/accountSettings/accountSettings';
+import DiscountLog from '../../api/discountLog/discountLog';
 
 // Seed admin user
 const users = [{
@@ -27,6 +28,20 @@ users.forEach(({ email, password, profile, roles }) => {
   }
 });
 
+// Seed AccountSettings if not already present
+if (!AccountSettings.findOne({"organizationID": "playsoccer2give"})) {
+  AccountSettings.insert({
+    "organizationID": "playsoccer2give",
+    "organizationName": "Play Soccer 2 Give",
+  }, (error, response) => {
+    if (error) {
+      console.log(error)
+    } else {
+      console.log("Play Soccer 2 Give was seeded to the db");
+    }
+  });
+}
+
 // Clear data then re-seed upon staging and localdev startup
 if (!Meteor.isProduction) {
 
@@ -34,6 +49,7 @@ if (!Meteor.isProduction) {
     Events.remove({});
     Members.remove({});
     NotificationLog.remove({});
+    DiscountLog.remove({});
   }
 
   const seedData = () => {
