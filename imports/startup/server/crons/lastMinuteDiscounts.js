@@ -11,6 +11,7 @@ import moment from 'moment';
 
 export const sendLastMinuteDiscounts = () => {
   const accountOrganizationIDs = AccountSettings.find({}, {fields: {"_id": 0, "organizationID": 1} }).fetch();
+  let emailsSent = 0;
 
   // For each organization...
   accountOrganizationIDs.forEach( (accountOrganizationID) => {
@@ -30,27 +31,29 @@ export const sendLastMinuteDiscounts = () => {
           const nowUnix = moment.utc().format("x");
           const tomorrowUnix = parseInt(nowUnix) + parseInt(unixDay);
 
-          // ...and if the game starts within the next 24 hours...
+          // ...and if a game starts within the next 24 hours...
           if (object["time"] <= tomorrowUnix) {
 
-            // ...and if the game has open spots...
+            // ...and if that game has open spots...
             if (object["yes_rsvp_count"] < object["rsvp_limit"]) {
 
               // ...then find the members of this organization who have been away for at least 11 days...
               const TRIGGER_DAYS = 11; // "7" will mean a week before yesterday (if today's Saturday, "7" will include games last Friday)
               const beenAwayTime = parseInt(nowUnix) - (parseInt(TRIGGER_DAYS) * parseInt(unixDay));
               const members = Members.find(
-                { "lastSeen": { $gte : parseInt(beenAwayTime) } },
+                { "lastSeen": { $lte : parseInt(beenAwayTime) } },
                 { fields: { "userName": 1, "userID": 1, "lastEvent": 1, "askedEmail": 1, "paymentEmail": 1, "organizationID": 1 } }
               ).fetch();
 
               // ENSURE EMAILS DONT GET SENT OUT TO PEOPLE ALREADY ATTENDING
               // (Don't worry, this will make HTTP calls only for games that are tomorrow that aren't full)
 
-              // ...and log the discount that is offered to them (if it wasn't already offered)...
+              // ...and log the discount that will be offered to them...
               members.forEach( (member) => {
-                const discountAmount = object["fee"]["amount"].toFixed(2) * .66; // HARD-CODED TO 66% FOR NOW
+                const originalPrice = object["fee"]["amount"].toFixed(2);
+                const discountAmount = (originalPrice * .33).toFixed(2); // HARD-CODED TO 33% OFF FOR NOW
                 const eventID = parseInt(object["link"].slice(46, 55)); // UPDATE THIS WHEN SCRAPING OTHER WEBSITES!!
+                const eventName = object["name"];
                 const userID = member["userID"];
                 const userName = member["userName"];
                 const askedEmail = member["askedEmail"];
@@ -61,16 +64,17 @@ export const sendLastMinuteDiscounts = () => {
                   DiscountLog.insert( {
                     "organizationID": organizationID,
                     "eventID": eventID,
+                    "eventName": eventName,
                     "userID": userID,
-                    "originalPrice": object["fee"]["amount"].toFixed(2),
-                    "discountAmount": discountAmount.toFixed(2),
+                    "originalPrice": originalPrice,
+                    "discountAmount": discountAmount,
                   }, (error, response) => {
                     if (error) {
                       console.log(error);
                     } else {
 
-                      // ...and log that the discount was offered, and send the email.
-                      if (emailAddress !== undefined) {
+                      // ...and log that the discount email was sent (after sending the email).
+                      if (!(emailAddress === "" || emailAddress === undefined)) {
                         let notificationRecord = {
                           "notificationName": "lastMinuteDiscounts",
                           "organizationID": organizationID,
@@ -80,7 +84,6 @@ export const sendLastMinuteDiscounts = () => {
                         };
 
                         if (!NotificationLog.findOne(notificationRecord) ) {
-                          const eventName = Events.findOne({"organizationID": organizationID, "eventID": eventID})["eventName"];
 
                           NotificationLog.insert( {
                             "notificationName": "lastMinuteDiscounts",
@@ -95,6 +98,7 @@ export const sendLastMinuteDiscounts = () => {
                               console.log(error);
                             } else {
                               const discountID = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];
+                              emailsSent += 1;
                               lastMinuteDiscounts(emailAddress, eventName, discountID);
                             }
                           });
@@ -115,4 +119,11 @@ export const sendLastMinuteDiscounts = () => {
 
   // Here, sometime in the future, consider adding a script that cleans up old DiscountLog records if they linger too long
 
+  const announceEmailSendCount = () => {
+    if (emailsSent > 0) {
+      console.log("lastMinuteDiscounts emails sent: " + emailsSent);
+    }
+  }
+
+  Meteor.setTimeout(announceEmailSendCount, 30000);
 }

@@ -18,7 +18,7 @@ DiscountLog.deny({
   remove: () => true,
 });
 
-// Logged at the time of RSVP completion, post-payment
+// Define the schema
 DiscountLog.schema = new SimpleSchema({
   "organizationID": {
     type: String,
@@ -27,6 +27,10 @@ DiscountLog.schema = new SimpleSchema({
   "eventID": {
     type: Number,
     label: "eventID",
+  },
+  "eventName": {
+    type: String,
+    label: "eventName",
   },
   "userID": {
     type: Number,

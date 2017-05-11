@@ -16,4 +16,16 @@ export const lastMinuteDiscounts = (recipient, eventName, discountID) => {
   if (recipient === "joelsfoster@gmail.com") {
     email(recipient, eventName, discountID);
   }
+
+  /*
+  if (!Meteor.isProduction) {
+    if (recipient === "joelsfoster@gmail.com") {
+      email(recipient, eventName, discountID);
+    } else {
+      console.log("WARNING! lastMinuteDiscounts recipient is not authorized to recieve emails outside Production: " + recipient);
+    }
+  } else {
+    email(recipient, eventName, discountID);
+  }
+  */
 };

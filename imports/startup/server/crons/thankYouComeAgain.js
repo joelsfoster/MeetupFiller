@@ -33,7 +33,7 @@ export const sendThankYouComeAgain = () => {
         let emailAddress = paymentEmail ? paymentEmail : askedEmail;
 
         // If an attendee has an email address...
-        if (emailAddress !== undefined) {
+        if (!(emailAddress === "" || emailAddress === undefined)) {
           let notificationRecord = {
             "notificationName": "thankYouComeAgain",
             "organizationID": organizationID,
