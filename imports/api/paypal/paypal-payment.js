@@ -18,7 +18,7 @@ Meteor.methods({
     const organizationName = AccountSettings.findOne({"organizationID": organizationID})["organizationName"];
     const eventID = discountRecord["eventID"];
     const eventName = discountRecord["eventName"];
-    const gameURL = "https://www.meetup.com/" + organizationID + "/events/" + eventID;
+    const gameURL = "https://www.meetup.com/" + organizationID + "/events/" + eventID + "/";
 
     // Create the display profile of the Paypal portal
     const create_web_profile_json = {
@@ -46,8 +46,8 @@ Meteor.methods({
             "payment_method": "paypal"
         },
         "redirect_urls": {
-            "return_url": gameURL,
-            "cancel_url": gameURL
+            "return_url": gameURL + "?success=ticket_paid",
+            "cancel_url": gameURL + "?success=ticket_aborted"
         },
         "transactions": [{
             "item_list": {

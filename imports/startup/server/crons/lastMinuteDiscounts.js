@@ -84,7 +84,6 @@ export const sendLastMinuteDiscounts = () => {
                         };
 
                         if (!NotificationLog.findOne(notificationRecord) ) {
-
                           NotificationLog.insert( {
                             "notificationName": "lastMinuteDiscounts",
                             "notificationTime": moment.utc().format("x"),
@@ -98,8 +97,10 @@ export const sendLastMinuteDiscounts = () => {
                               console.log(error);
                             } else {
                               const discountID = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];
+                              const price = (originalPrice - discountAmount).toFixed(2);
+
+                              lastMinuteDiscounts(emailAddress, price, eventName, discountID);
                               emailsSent += 1;
-                              lastMinuteDiscounts(emailAddress, eventName, discountID);
                             }
                           });
                         } else {
@@ -119,11 +120,11 @@ export const sendLastMinuteDiscounts = () => {
 
   // Here, sometime in the future, consider adding a script that cleans up old DiscountLog records if they linger too long
 
+  // Report back on how many were sent
   const announceEmailSendCount = () => {
     if (emailsSent > 0) {
       console.log("lastMinuteDiscounts emails sent: " + emailsSent);
     }
   }
-
   Meteor.setTimeout(announceEmailSendCount, 30000);
 }

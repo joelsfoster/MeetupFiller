@@ -6,14 +6,14 @@ import AppNavigation from '../components/AppNavigation.js';
 // and a bootstrap grid is given children (is that an object??) to display...
 const App = ({ children }) => (
   <div>
-    <AppNavigation />
+    { /* <AppNavigation /> */ }
     <Grid>
       { children }
     </Grid>
   </div>
 );
 
-// ... which are "node"-types. What the heck does that mean? 
+// ... which are "node"-types. What the heck does that mean?
 App.propTypes = {
   children: React.PropTypes.node,
 };
