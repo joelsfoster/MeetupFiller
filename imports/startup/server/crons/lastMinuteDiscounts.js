@@ -41,9 +41,12 @@ export const sendLastMinuteDiscounts = () => {
               const TRIGGER_DAYS = 11; // "7" will mean a week before yesterday (if today's Saturday, "7" will include games last Friday)
               const beenAwayTime = parseInt(nowUnix) - (parseInt(TRIGGER_DAYS) * parseInt(unixDay));
               const members = Members.find(
-                { "lastSeen": { $lte : parseInt(beenAwayTime) } },
+                { "lastSeen": { $lte : parseInt(beenAwayTime) }, "askedEmail": { $ne: "" || undefined } },
                 { fields: { "userName": 1, "userID": 1, "lastEvent": 1, "askedEmail": 1, "paymentEmail": 1, "organizationID": 1 } }
               ).fetch();
+
+              const eventID = parseInt(object["link"].slice(46, 55)); // UPDATE THIS WHEN SCRAPING OTHER WEBSITES!!
+              console.log("Starting lastMinuteDiscounts for " + organizationID + ":" + eventID + " --> " + members.length + " recipients.");
 
               // ENSURE EMAILS DONT GET SENT OUT TO PEOPLE ALREADY ATTENDING
               // (Don't worry, this will make HTTP calls only for games that are tomorrow that aren't full)
@@ -52,7 +55,6 @@ export const sendLastMinuteDiscounts = () => {
               members.forEach( (member) => {
                 const originalPrice = object["fee"]["amount"].toFixed(2);
                 const discountAmount = (originalPrice * .33).toFixed(2); // HARD-CODED TO 33% OFF FOR NOW
-                const eventID = parseInt(object["link"].slice(46, 55)); // UPDATE THIS WHEN SCRAPING OTHER WEBSITES!!
                 const eventName = object["name"];
                 const userID = member["userID"];
                 const userName = member["userName"];
@@ -109,6 +111,8 @@ export const sendLastMinuteDiscounts = () => {
                       }
                     }
                   });
+                } else {
+                  console.log("Error: Did not lastMinuteDiscounts, DiscountLog indicates it was already logged");
                 }
               })
             }
