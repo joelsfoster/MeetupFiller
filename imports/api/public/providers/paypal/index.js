@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
-import { chargeSucceeded } from './charge-succeeded.js';
+import { paymentSaleCompleted } from './paymentSaleCompleted.js';
 
 const scenarios = {
-  'charge.succeeded': chargeSucceeded,
+  'PAYMENT.SALE.COMPLETED': paymentSaleCompleted,
 };
 
 const handler = ({ body }) => {

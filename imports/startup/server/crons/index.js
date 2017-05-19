@@ -58,6 +58,6 @@ SyncedCron.add({
     return parser.text('at 3:55 am'); // This is UTC time -> 11:55pm EST
   },
   job() {
-    sendLastMinuteDiscounts();
+    // sendLastMinuteDiscounts();
   },
 });

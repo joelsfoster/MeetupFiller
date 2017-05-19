@@ -6,7 +6,7 @@ import Members from '../../../api/members/members';
 import moment from 'moment';
 import findEmailsInString from 'find-emails-in-string';
 
-// Get all the members from a specific event that a specific organization hosted and log it in the DB
+// Get all the members from a specific event that a specific organization hosted
 const getMembers = (organizationID, eventID) => {
   const url = 'https://api.meetup.com/' + organizationID + '/events/' + eventID + '/rsvps?&sign=true&response=yes&photo-host=public&fields=answers&omit=created,updated,response,guests,event,member.bio,member.photo,group,member.role,member.event_context,member.title,venue,answers.question_id,answers.updated,answers.question&key=' + MEETUP_API_KEY;
   // https://api.meetup.com/playsoccer2give/events/238454295/rsvps?&sign=true&response=yes&photo-host=public&fields=answers&omit=created,updated,response,guests,event,member.bio,member.photo,group,member.role,member.event_context,member.title,venue,answers.question_id,answers.updated,answers.question&key=
@@ -42,9 +42,9 @@ const getMembers = (organizationID, eventID) => {
 
         // Function to log the member as having attended this event if not already logged, and update the member's lastSeen date
         const logAttendance = () => {
-          const eventHasMembers = Events.findOne( { "organizationID": organizationID, "eventID": eventID, "eventMemberIDs": { $in: [ userID ] } } );
+          const memberAttendedEvent = Events.findOne( { "organizationID": organizationID, "eventID": eventID, "eventMemberIDs": { $in: [ userID ] } } );
 
-          if (!eventHasMembers) {
+          if (!memberAttendedEvent) {
             Events.update( event, { $addToSet: { eventMemberIDs: userID } }, (error, response) => {
               if (error) {
                 console.log(error);
@@ -101,7 +101,6 @@ const getMembers = (organizationID, eventID) => {
             });
           };
         };
-
       });
     };
   });

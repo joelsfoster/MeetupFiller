@@ -1,6 +1,6 @@
-import { paypalHandler } from './providers/paypal';
+import { paypalHandler } from './providers/paypal/index.js';
 
-let module;
+let action;
 
 const providers = {
   paypal: paypalHandler,
@@ -8,12 +8,12 @@ const providers = {
 
 const handler = ({ provider, request }, promise) => {
   try {
-    module = promise;
+    action = promise;
     const targetProvider = providers[provider];
     if (targetProvider) targetProvider({ body: request.body });
-    module.resolve('Webhook received!');
+    action.resolve('Webhook received!');
   } catch (exception) {
-    module.reject(`[handleWebhook.handler] ${exception}`);
+    action.reject(`[handleWebhook.handler] ${exception}`);
   }
 };
 
