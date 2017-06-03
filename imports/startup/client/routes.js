@@ -14,6 +14,7 @@ import RecoverPassword from '../../ui/pages/RecoverPassword.js';
 import ResetPassword from '../../ui/pages/ResetPassword.js';
 import Signup from '../../ui/pages/Signup.js';
 import RsvpPayment from '../../ui/pages/RsvpPayment.js';
+import RsvpPaymentSuccess from '../../ui/pages/RsvpPaymentSuccess.js';
 
 
 // Function to authenticate when loading private pages. Redirects to login page if "Meteor.userId" doesn't detect a user
@@ -33,6 +34,7 @@ Meteor.startup(() => {
       <Route path="/" component={ App }>
         <IndexRoute name="index" component={ Index } />
         <Route name="rsvp-payment" path="/rsvp-payment/:_id" component={ RsvpPayment } />
+        <Route name="rsvp-payment-success" path="/rsvp-payment-success/:_id" component={ RsvpPaymentSuccess } />
         <Route name="documents" path="/documents" component={ Documents } onEnter={ authenticate } />
         <Route name="newDocument" path="/documents/new" component={ NewDocument } onEnter={ authenticate } />
         <Route name="editDocument" path="/documents/:_id/edit" component={ EditDocument } onEnter={ authenticate } />

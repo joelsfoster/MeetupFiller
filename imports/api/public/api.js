@@ -2,6 +2,7 @@ import bodyParser from 'body-parser';
 import { Picker } from 'meteor/meteorhacks:picker';
 import { handleWebhook } from './handle-webhook.js';
 
+
 Picker.middleware(bodyParser.json());
 
 Picker.route('/api/webhooks/:provider', ({ provider }, request, response) => {

@@ -30,7 +30,7 @@ Meteor.methods({
       }
     }
 
-    // Run the delayed query 
+    // Run the delayed query
     Meteor.setTimeout(delayedFunction, delayMilliseconds);
 
   }

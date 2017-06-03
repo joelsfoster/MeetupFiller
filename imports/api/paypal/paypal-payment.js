@@ -20,7 +20,8 @@ Meteor.methods({
       const organizationName = AccountSettings.findOne({"organizationID": organizationID})["organizationName"];
       const eventID = discountRecord["eventID"];
       const eventName = discountRecord["eventName"];
-      const gameURL = "https://www.meetup.com/" + organizationID + "/events/" + eventID + "/";
+      const event_url = "https://www.meetup.com/" + organizationID + "/events/" + eventID + "/";
+      const userID = discountRecord["userID"];
 
       // Create the display profile of the Paypal portal
       const create_web_profile_json = {
@@ -41,6 +42,8 @@ Meteor.methods({
           }
       };
 
+      const root_url = Meteor.isProduction ? "https://www.meetupfiller.com/" : "http://localhost:3000/"
+
       // Configure the payment that will be in the Paypal portal
       const create_payment_json = {
           "intent": "sale",
@@ -48,14 +51,14 @@ Meteor.methods({
               "payment_method": "paypal"
           },
           "redirect_urls": {
-              "return_url": gameURL + "?utm_source=lastMinuteDiscounts&utm_medium=email&utm_campaign=" + _id + "?success=ticket_paid",
-              "cancel_url": gameURL + "?success=ticket_aborted"
+              "return_url": root_url + "rsvp-payment-success/" + _id,
+              "cancel_url": event_url + "?success=ticket_aborted"
           },
           "transactions": [{
               "item_list": {
                   "items": [{
-                      "name": eventName,
-                      "sku": gameURL,
+                      "name": eventName + " (userID=" + userID + ")",
+                      "sku": event_url,
                       "price": price.toString(),
                       "currency": "USD",
                       "quantity": 1
@@ -65,7 +68,7 @@ Meteor.methods({
                   "currency": "USD",
                   "total": price.toString()
               },
-              "description": eventName
+              "description": eventName + " (userID=" + userID + ")"
           }]
       };
 

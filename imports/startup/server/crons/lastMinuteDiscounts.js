@@ -17,7 +17,7 @@ export const sendLastMinuteDiscounts = () => {
   accountOrganizationIDs.forEach( (accountOrganizationID) => {
     const organizationID = accountOrganizationID["organizationID"];
     const url = 'https://api.meetup.com/' + organizationID + '/events?&sign=true&photo-host=public&page=10&omit=created,duration,fee.accepts,fee.currency,fee.description,fee.label,fee.required,id,updated,utc_offset,description,how_to_find_us,visibility,group,venue,rsvp_open_offset&key=' + MEETUP_API_KEY;
-    // https://api.meetup.com/playsoccer2give/events?&sign=true&photo-host=public&page=10&omit=created,duration,fee.accepts,fee.currency,fee.description,fee.label,fee.required,id,updated,utc_offset,description,how_to_find_us,visibility,group,venue,rsvp_open_offset&key=282a2c7858483325b5b6c5510422e5b
+    // https://api.meetup.com/playsoccer2give/events?&sign=true&photo-host=public&page=10&omit=created,duration,fee.accepts,fee.currency,fee.description,fee.label,fee.required,id,updated,utc_offset,description,how_to_find_us,visibility,group,venue,rsvp_open_offset&key=
 
     // ...get the next 10 games in the future...
     HTTP.call( 'GET', url, {}, function( error, response ) {
@@ -54,7 +54,7 @@ export const sendLastMinuteDiscounts = () => {
               // ...and log the discount that will be offered to them...
               members.forEach( (member) => {
                 const originalPrice = object["fee"]["amount"].toFixed(2);
-                const discountAmount = (originalPrice * .33).toFixed(2); // HARD-CODED TO 33% OFF FOR NOW
+                const discountAmount = 9.98; // (originalPrice * .33).toFixed(2); // HARD-CODED TO 33% OFF FOR NOW
                 const eventName = object["name"];
                 const userID = member["userID"];
                 const userName = member["userName"];
@@ -101,7 +101,7 @@ export const sendLastMinuteDiscounts = () => {
                               const discountID = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];
                               const price = (originalPrice - discountAmount).toFixed(2);
 
-                              lastMinuteDiscounts(emailAddress, price, eventName, discountID);
+                              // lastMinuteDiscounts(emailAddress, price, eventName, discountID);
                               emailsSent += 1;
                             }
                           });
@@ -132,3 +132,28 @@ export const sendLastMinuteDiscounts = () => {
   }
   Meteor.setTimeout(announceEmailSendCount, 30000);
 }
+
+
+// sendLastMinuteDiscounts();
+
+// DiscountLog.remove({});
+// NotificationLog.remove({});
+
+/*
+DiscountLog.insert({
+  "organizationID": "playsoccer2give",
+  "eventID": 240320394,
+  "eventName": "Saturday Morning game 11:15am CO-ED Soccer @ LIC (7v7 game) for PS2G",
+  "userID": 58124462,
+  "originalPrice": 5.00,
+  "discountAmount": 4.90,
+}, (error, response) => {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log(DiscountLog.find({"userID": 58124462}).fetch());
+  }
+});
+
+_id = k5TkvTxTBJEf2abGH, rxJWKF5BayNnbLyLr, Pn8oDbnRBPTjnoznL
+*/

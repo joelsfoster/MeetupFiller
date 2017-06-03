@@ -4,7 +4,7 @@ import Loading from '../components/Loading.js';
 import DiscountLog from '../../api/discountLog/discountLog.js';
 
 
-export default class RsvpPayment extends React.Component {
+export default class RsvpPaymentSuccess extends React.Component {
   componentWillMount() {
     const _id = this.props.params._id;
 
@@ -21,10 +21,14 @@ export default class RsvpPayment extends React.Component {
         const organizationID = discount["organizationID"];
         const eventID = discount["eventID"];
         const userID = discount["userID"];
-        const rsvpStatus = "yes";
 
         // If any sub-process fails, redirect the user to Meetup with a failure message
         const failureRedirect = () => {
+
+          // Send a notification to get the refund processed ASAP
+          // {CODE}!!!!!
+
+          // Then redirect the user appropriately
           if (organizationID && eventID) {
             window.location.href = root_url + organizationID + "/events/" + eventID + "/?success=ticket_aborted";
           } else if (organizationID) {
@@ -34,31 +38,22 @@ export default class RsvpPayment extends React.Component {
           }
         }
 
-        // Use the discount data to generate a PayPal portal
-        Meteor.call('generatePaypalPortal', _id, (error, url) => {
+        // When this page is loaded, check if member is RSVP'd and log rsvpTime if yes.
+        Meteor.call('finalizeMemberMeetupRsvp', organizationID, eventID, userID, (error, response) => {
           if (error) {
             console.warn(error.reason);
             failureRedirect();
           } else {
 
-            // Upon generating the PayPal portal, POST the "yes" RSVP
-            Meteor.call('postMeetupRsvp', organizationID, eventID, userID, rsvpStatus, (error, response) => {
+            // Then, POST payment confirmation on Meetup.
+            Meteor.call('postMeetupRsvpPayment', organizationID, eventID, userID, (error, response) => {
               if (error) {
                 console.warn(error.reason);
                 failureRedirect();
               } else {
 
-                // Run the function that un-RSVPs you in 20 minutes unless a timestamped DiscountLog["rsvpTime"] is found
-                Meteor.call('timedRemoveMeetupRsvp', organizationID, eventID, userID, (error, response) => {
-                  if (error) {
-                    console.warn(error.reason);
-                    failureRedirect();
-                  } else {
-
-                    // Redirect user to the PayPal portal
-                    window.location.href = url;
-                  }
-                });
+                // Redirect user to Meetup confirmation page
+                window.location.href = "https://www.meetup.com/" + organizationID + "/events/" + eventID + "?utm_source=lastMinuteDiscounts&utm_medium=email&utm_campaign=" + _id + "?success=ticket_paid";
               }
             });
           }
@@ -69,12 +64,11 @@ export default class RsvpPayment extends React.Component {
 
   render() {
     return (
-      <div className="RsvpPayment">
+      <div className="RsvpPaymentSuccess">
         <Loading />
         <h2>
-          <p>Meetup discount applied!</p>
-          <p>You have 20 minutes to complete your payment.</p>
-          <p>Redirecting to PayPal...</p>
+          <p>RSVP complete!</p>
+          <p>Verifying, then taking you to Meetup...</p>
         </h2>
       </div>
     );
