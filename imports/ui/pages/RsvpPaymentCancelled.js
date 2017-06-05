@@ -4,7 +4,7 @@ import Loading from '../components/Loading.js';
 import DiscountLog from '../../api/discountLog/discountLog.js';
 
 
-export default class RsvpPayment extends React.Component {
+export default class RsvpPaymentCancelled extends React.Component {
   componentWillMount() {
     const _id = this.props.params._id;
 
@@ -21,9 +21,8 @@ export default class RsvpPayment extends React.Component {
         const organizationID = discount["organizationID"];
         const eventID = discount["eventID"];
         const userID = discount["userID"];
-        const rsvpStatus = "yes";
 
-        // If any sub-process fails, redirect the user to Meetup with a failure message
+        // Function to redirect user according to what data is available
         const failureRedirect = () => {
           if (organizationID && eventID) {
             window.location.href = root_url + organizationID + "/events/" + eventID + "/?success=ticket_aborted";
@@ -34,33 +33,15 @@ export default class RsvpPayment extends React.Component {
           }
         }
 
-        // Use the discount data to generate a PayPal portal
-        Meteor.call('generatePaypalPortal', _id, (error, url) => {
+        const rsvpStatus = "no";
+
+        // Remove the user's RSVP...
+        Meteor.call('postMeetupRsvp', organizationID, eventID, userID, rsvpStatus, (error, response) => {
           if (error) {
             console.warn(error.reason);
-            failureRedirect();
+            window.location.href = root_url + "?success=ticket_aborted";
           } else {
-
-            // Upon generating the PayPal portal, POST the "yes" RSVP
-            Meteor.call('postMeetupRsvp', organizationID, eventID, userID, rsvpStatus, (error, response) => {
-              if (error) {
-                console.warn(error.reason);
-                failureRedirect();
-              } else {
-
-                // Run the function that un-RSVPs you in 20 minutes unless a timestamped DiscountLog["rsvpTime"] is found
-                Meteor.call('timedRemoveMeetupRsvp', organizationID, eventID, userID, (error, response) => {
-                  if (error) {
-                    console.warn(error.reason);
-                    failureRedirect();
-                  } else {
-
-                    // Redirect user to the PayPal portal
-                    window.location.href = url;
-                  }
-                });
-              }
-            });
+            failureRedirect();
           }
         });
       }
@@ -69,12 +50,11 @@ export default class RsvpPayment extends React.Component {
 
   render() {
     return (
-      <div className="RsvpPayment">
+      <div className="RsvpPaymentCancelled">
         <Loading />
         <h2>
-          <p>Meetup discount applied!</p>
-          <p>You have 20 minutes to complete your payment.</p>
-          <p>Redirecting to PayPal...</p>
+          <p>RSVP process cancelled</p>
+          <p>Returning you to Meetup...</p>
         </h2>
       </div>
     );

@@ -7,6 +7,8 @@ import DiscountLog from '../../api/discountLog/discountLog.js';
 export default class RsvpPaymentSuccess extends React.Component {
   componentWillMount() {
     const _id = this.props.params._id;
+    const paymentID = this.props.location.query.paymentId;
+    const payerID = this.props.location.query.PayerID;
 
     // Get the discount data for this URL
     Meteor.subscribe('getDiscountID', _id, () => {
@@ -25,16 +27,13 @@ export default class RsvpPaymentSuccess extends React.Component {
         // If any sub-process fails, redirect the user to Meetup with a failure message
         const failureRedirect = () => {
 
-          // Send a notification to get the refund processed ASAP
-          // {CODE}!!!!!
-
           // Then redirect the user appropriately
           if (organizationID && eventID) {
             window.location.href = root_url + organizationID + "/events/" + eventID + "/?success=ticket_aborted";
           } else if (organizationID) {
             window.location.href = root_url + organizationID + "/events/?success=ticket_aborted";
           } else {
-            window.location.href = root_url+ "?success=ticket_aborted";
+            window.location.href = root_url + "?success=ticket_aborted";
           }
         }
 
@@ -45,15 +44,24 @@ export default class RsvpPaymentSuccess extends React.Component {
             failureRedirect();
           } else {
 
-            // Then, POST payment confirmation on Meetup.
-            Meteor.call('postMeetupRsvpPayment', organizationID, eventID, userID, (error, response) => {
+            // Then, execute the payment that the member approved.
+            Meteor.call('executePaypalPayment', _id, payerID, paymentID, (error, response) => {
               if (error) {
                 console.warn(error.reason);
                 failureRedirect();
               } else {
 
-                // Redirect user to Meetup confirmation page
-                window.location.href = "https://www.meetup.com/" + organizationID + "/events/" + eventID + "?utm_source=lastMinuteDiscounts&utm_medium=email&utm_campaign=" + _id + "?success=ticket_paid";
+                // Then, POST payment confirmation on Meetup.
+                Meteor.call('postMeetupRsvpPayment', organizationID, eventID, userID, (error, response) => {
+                  if (error) {
+                    console.warn(error.reason);
+                    failureRedirect();
+                  } else {
+
+                    // Redirect user to Meetup confirmation page
+                    window.location.href = "https://www.meetup.com/" + organizationID + "/events/" + eventID + "?utm_source=lastMinuteDiscounts&utm_medium=email&utm_campaign=" + _id + "?success=ticket_paid";
+                  }
+                });
               }
             });
           }

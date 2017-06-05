@@ -101,7 +101,7 @@ export const sendLastMinuteDiscounts = () => {
                               const discountID = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];
                               const price = (originalPrice - discountAmount).toFixed(2);
 
-                              // lastMinuteDiscounts(emailAddress, price, eventName, discountID);
+                              lastMinuteDiscounts(emailAddress, price, eventName, discountID);
                               emailsSent += 1;
                             }
                           });
@@ -134,19 +134,14 @@ export const sendLastMinuteDiscounts = () => {
 }
 
 
-// sendLastMinuteDiscounts();
-
-// DiscountLog.remove({});
-// NotificationLog.remove({});
-
 /*
 DiscountLog.insert({
   "organizationID": "playsoccer2give",
-  "eventID": 240320394,
-  "eventName": "Saturday Morning game 11:15am CO-ED Soccer @ LIC (7v7 game) for PS2G",
+  "eventID": 240450207,
+  "eventName": "Wednesday game 645pm CO-ED Soccer @ LIC (7v7 game) for PS2G",
   "userID": 58124462,
-  "originalPrice": 5.00,
-  "discountAmount": 4.90,
+  "originalPrice": 7.00,
+  "discountAmount": 6.97,
 }, (error, response) => {
   if (error) {
     console.log(error);
@@ -155,5 +150,6 @@ DiscountLog.insert({
   }
 });
 
-_id = k5TkvTxTBJEf2abGH, rxJWKF5BayNnbLyLr, Pn8oDbnRBPTjnoznL
+
+_id = t9HvMzW4cb66jmBrp
 */

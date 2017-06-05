@@ -10,7 +10,7 @@ Meteor.methods({
   generatePaypalPortal(_id) {
     check(_id, String);
 
-    // Set the parameters for the code below. Replace this with variable parameters later.
+    // Set the parameters for the code below
     const discountRecord = DiscountLog.findOne({"_id": _id});
 
     if (discountRecord) {
@@ -26,6 +26,7 @@ Meteor.methods({
       // Create the display profile of the Paypal portal
       const create_web_profile_json = {
           "name": profile_name,
+          "temporary": true,
           "presentation": {
               "brand_name": organizationName,
               // "logo_image": organizationLogo,
@@ -38,7 +39,7 @@ Meteor.methods({
           },
           "flow_config": {
               "landing_page_type": "billing",
-              "bank_txn_pending_url": "https://www.meetup.com/" // What is this?
+              "bank_txn_pending_url": "https://www.meetup.com/"
           }
       };
 
@@ -52,7 +53,7 @@ Meteor.methods({
           },
           "redirect_urls": {
               "return_url": root_url + "rsvp-payment-success/" + _id,
-              "cancel_url": event_url + "?success=ticket_aborted"
+              "cancel_url": root_url + "rsvp-payment-canceled" + _id
           },
           "transactions": [{
               "item_list": {
