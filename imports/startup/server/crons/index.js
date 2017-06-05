@@ -52,6 +52,7 @@ SyncedCron.add({
   },
 });
 
+/*
 SyncedCron.add({
   name: "lastMinuteDiscounts",
   schedule(parser) {
@@ -61,3 +62,4 @@ SyncedCron.add({
     // sendLastMinuteDiscounts();
   },
 });
+*/

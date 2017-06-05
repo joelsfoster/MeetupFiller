@@ -28,19 +28,19 @@ export const sendThankYouComeAgain = () => {
       object["eventMemberIDs"].forEach( (userID) => {
         const member = Members.findOne( { "organizationID": organizationID, "userID": userID } );
         const userName = member["userName"];
-        const askedEmail = member["askedEmail"];
+        const askedEmail = member["askedEmail"] ? member["askedEmail"] : "";
         const paymentEmail = member["paymentEmail"];
         const emailAddress = paymentEmail ? paymentEmail : askedEmail;
 
         // If an attendee has an email address...
-        if (emailAddress || emailAddress !== "") {
+        if (emailAddress && emailAddress !== "") {
           const notificationRecord = {
             "notificationName": "thankYouComeAgain",
             "organizationID": organizationID,
             "eventID": eventID,
             "userID": userID,
             "emailAddress": emailAddress
-          };
+          }
 
           // ...and this email+organizationID pair was not sent a thankYouComeAgain notification in the last 24 hours...
           if (!NotificationLog.findOne( {

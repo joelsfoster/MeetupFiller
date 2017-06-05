@@ -38,7 +38,7 @@ export const sendLastMinuteDiscounts = () => {
             if (object["yes_rsvp_count"] < object["rsvp_limit"]) {
 
               // ...then find the members of this organization who have been away for at least 11 days...
-              const TRIGGER_DAYS = 11; // "7" will mean a week before yesterday (if today's Saturday, "7" will include games last Friday)
+              const TRIGGER_DAYS = 11; // "7" will mean a week before yesterday (if today is Saturday, "7" will include games last Friday)
               const beenAwayTime = parseInt(nowUnix) - (parseInt(TRIGGER_DAYS) * parseInt(unixDay));
               const members = Members.find(
                 { "lastSeen": { $lte : parseInt(beenAwayTime) }, "askedEmail": { $ne: "" || undefined } },
@@ -134,22 +134,24 @@ export const sendLastMinuteDiscounts = () => {
 }
 
 
-/*
+
 DiscountLog.insert({
   "organizationID": "playsoccer2give",
-  "eventID": 240450207,
-  "eventName": "Wednesday game 645pm CO-ED Soccer @ LIC (7v7 game) for PS2G",
+  "eventID": 240467973,
+  "eventName": "Wednesday 8pm Tron Ball - Night Soccer @ LIC (7v7 game) for PS2G",
   "userID": 58124462,
-  "originalPrice": 7.00,
-  "discountAmount": 6.97,
+  "originalPrice": 5.00,
+  "discountAmount": 4.92,
 }, (error, response) => {
   if (error) {
     console.log(error);
   } else {
     console.log(DiscountLog.find({"userID": 58124462}).fetch());
+    let discountID = DiscountLog.find({"userID": 58124462}).fetch()["_id"];
+    lastMinuteDiscounts("joelsfoster@gmail.com", 0.08, "Wednesday 8pm Tron Ball - Night Soccer @ LIC (7v7 game) for PS2G", discountID);
   }
 });
 
-
+/*
 _id = t9HvMzW4cb66jmBrp
 */
