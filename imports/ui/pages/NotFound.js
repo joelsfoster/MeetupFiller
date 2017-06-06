@@ -5,8 +5,8 @@ import { Alert } from 'react-bootstrap';
 const NotFound = () => (
   <div className="NotFound">
     <Alert bsStyle="danger">
-      <h1><strong>[404] - Oh snap! This page doesn't exist!</strong></h1>
-      <h3>Here's a funny gif of failure. Click <a href="/">here</a> to go back to the homepage.</h3>
+      <h1><strong>[404] - Don't panic! The link must be broken, contact the Meetup organizer for more details.</strong></h1>
+      <h3>Here's a funny gif of failure. Click <a href="https://www.meetup.com">here</a> to go back to Meetup.</h3>
     </Alert>
     <br />
     <img src="images/404-fail.gif" alt="404-fail" />

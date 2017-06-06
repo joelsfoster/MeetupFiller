@@ -58,7 +58,14 @@ export default class RsvpPaymentSuccess extends React.Component {
                     failureRedirect();
                   } else {
 
-                    // Redirect user to Meetup confirmation page
+                    // Send confirmation email and...
+                    Meteor.call('paymentConfirmation', _id, (error, response) => {
+                      if (error) {
+                        console.warn(error.reason);
+                      }
+                    });
+
+                    // ...redirect user to Meetup confirmation page
                     window.location.href = "https://www.meetup.com/" + organizationID + "/events/" + eventID + "?utm_source=lastMinuteDiscounts&utm_medium=email&utm_campaign=" + _id + "?success=ticket_paid";
                   }
                 });
@@ -76,7 +83,7 @@ export default class RsvpPaymentSuccess extends React.Component {
         <Loading />
         <h2>
           <p>RSVP complete!</p>
-          <p>Verifying, then taking you to Meetup...</p>
+          <p>Taking you to Meetup...</p>
         </h2>
       </div>
     );

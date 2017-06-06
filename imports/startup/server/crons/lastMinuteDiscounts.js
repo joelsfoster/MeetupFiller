@@ -5,7 +5,7 @@ import Members from '../../../api/members/members';
 import AccountSettings from '../../../api/accountSettings/accountSettings';
 import DiscountLog from '../../../api/discountLog/discountLog';
 import NotificationLog from '../../../api/notificationLog/notificationLog';
-import { lastMinuteDiscounts } from '../../../notifications/lastMinuteDiscounts';
+import { lastMinuteDiscounts } from '../../../api/notifications/lastMinuteDiscounts';
 import moment from 'moment';
 
 
@@ -37,7 +37,7 @@ export const sendLastMinuteDiscounts = () => {
             // ...and if that game has open spots...
             if (object["yes_rsvp_count"] < object["rsvp_limit"]) {
 
-              // ...then find the members of this organization who have been away for at least 11 days...
+              // ...then find the members of this organization who have been away for at least 11 days and have an email address...
               const TRIGGER_DAYS = 11; // "7" will mean a week before yesterday (if today is Saturday, "7" will include games last Friday)
               const beenAwayTime = parseInt(nowUnix) - (parseInt(TRIGGER_DAYS) * parseInt(unixDay));
               const members = Members.find(
@@ -134,7 +134,7 @@ export const sendLastMinuteDiscounts = () => {
 }
 
 
-
+/*
 DiscountLog.insert({
   "organizationID": "playsoccer2give",
   "eventID": 240467973,
@@ -147,11 +147,11 @@ DiscountLog.insert({
     console.log(error);
   } else {
     console.log(DiscountLog.find({"userID": 58124462}).fetch());
-    let discountID = DiscountLog.find({"userID": 58124462}).fetch()["_id"];
+    let discountID = DiscountLog.findOne({"userID": 58124462})["_id"];
     lastMinuteDiscounts("joelsfoster@gmail.com", 0.08, "Wednesday 8pm Tron Ball - Night Soccer @ LIC (7v7 game) for PS2G", discountID);
   }
 });
 
-/*
+
 _id = t9HvMzW4cb66jmBrp
 */

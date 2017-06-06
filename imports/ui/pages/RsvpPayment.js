@@ -41,7 +41,7 @@ export default class RsvpPayment extends React.Component {
             failureRedirect();
           } else {
 
-            // Upon generating the PayPal portal, POST the "yes" RSVP
+            // Upon generating the PayPal portal, POST the "yes" RSVP. Will fail if member already finalizing RSVP for this event
             Meteor.call('postMeetupRsvp', organizationID, eventID, userID, rsvpStatus, (error, response) => {
               if (error) {
                 console.warn(error.reason);

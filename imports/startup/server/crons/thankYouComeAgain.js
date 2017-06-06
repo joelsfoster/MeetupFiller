@@ -1,4 +1,4 @@
-import { thankYouComeAgain } from '../../../notifications/thankYouComeAgain';
+import { thankYouComeAgain } from '../../../api/notifications/thankYouComeAgain';
 import Events from '../../../api/events/events';
 import Members from '../../../api/members/members';
 import NotificationLog from '../../../api/notificationLog/notificationLog';

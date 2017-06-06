@@ -2,6 +2,7 @@ import { HTTP } from 'meteor/http';
 import { MEETUP_API_KEY } from '../../startup/server/environment-variables';
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
+import DiscountLog from '../discountLog/discountLog';
 import moment from 'moment';
 
 
@@ -29,19 +30,28 @@ Meteor.methods({
           // If the event is full, throw an error
           if (data["yes_rsvp_count"] < data["rsvp_limit"]) {
 
-            // api version 2:
-            const post_url = "https://api.meetup.com/2/rsvp?event_id=" + eventID + "&agree_to_refund=true&member_id=" + userID + "&rsvp=" + rsvpStatus + "&key=" + MEETUP_API_KEY; // API version 2
-            // https://api.meetup.com/2/rsvp?event_id=239885114&agree_to_refund=true&member_id=58124462&rsvp=yes&key=282a2c7858483325b5b6c5510422e5b;
+            const discountRecord = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID});
 
-            // If the event is valid, mark the member as attending (other mechanisms may mark them as not attending based on certain triggers)
-            HTTP.call( 'POST', post_url, {}, function( error, response ) {
-              if ( error ) {
-                console.log( error );
-                throw error;
-              } else {
-                return response;
-              }
-            });
+            // If the member has already completed booking, throw an error
+            if (!discountRecord["rsvpTime"]) {
+
+              // api version 2:
+              const post_url = "https://api.meetup.com/2/rsvp?event_id=" + eventID + "&agree_to_refund=true&member_id=" + userID + "&rsvp=" + rsvpStatus + "&key=" + MEETUP_API_KEY; // API version 2
+              // https://api.meetup.com/2/rsvp?event_id=239885114&agree_to_refund=true&member_id=58124462&rsvp=yes&key=282a2c7858483325b5b6c5510422e5b;
+
+              // If the event is valid, mark the member as attending (other mechanisms may mark them as not attending based on certain triggers)
+              HTTP.call( 'POST', post_url, {}, function( error, response ) {
+                if ( error ) {
+                  console.log( error );
+                  throw error;
+                } else {
+                  return response;
+                }
+              });
+            } else {
+              console.log("ERROR: Member already finalized RSVPing");
+              throw error;
+            }
           } else {
             console.log("ERROR: Event full, unable to RSVP");
             throw error;
