@@ -13,11 +13,7 @@ export const lastMinuteDiscounts = (recipient, price, eventName, discountID) => 
     });
   }
 
-  if (recipient === "joelsfoster@gmail.com") {
-    email(recipient, price, eventName, discountID);
-  }
 
-  /*
   if (!Meteor.isProduction) {
     if (recipient === "joelsfoster@gmail.com") {
       email(recipient, price, eventName, discountID);
@@ -27,5 +23,4 @@ export const lastMinuteDiscounts = (recipient, price, eventName, discountID) => 
   } else {
     email(recipient, price, eventName, discountID);
   }
-  */
 };
