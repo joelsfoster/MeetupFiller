@@ -149,7 +149,6 @@ export const sendLastMinuteDiscounts = () => {
                     if (discount["originalPrice"] == originalPrice) {
                       let discountAmount = discount["discountAmount"].toFixed(2);
                       sendDiscounts(discountAmount);
-                      console.log("sent... " + discountAmount);
                     }
                   });
 
@@ -170,7 +169,6 @@ export const sendLastMinuteDiscounts = () => {
                     if (discount["originalPrice"] == originalPrice) {
                       let discountAmount = discount["discountAmount"].toFixed(2);
                       sendDiscounts(discountAmount);
-                      console.log("sent... " + discountAmount);
                     }
                   });
 

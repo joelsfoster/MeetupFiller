@@ -2,8 +2,8 @@ import { SyncedCron } from 'meteor/percolate:synced-cron'; // http://bunkat.gith
 import { getEvents } from './getEvents';
 import { backfillData } from './getMembers';
 import { sendThankYouComeAgain } from './thankYouComeAgain';
-import { sendWeMissYou } from './weMissYou';
 import { sendLastMinuteDiscounts } from './lastMinuteDiscounts';
+import { payoutOrganizations } from './payoutOrganizations';
 
 // Schedule the crons to be run
 SyncedCron.config({ log: true, utc: true });
@@ -42,18 +42,15 @@ SyncedCron.add({
   },
 });
 
-/*
-// This email is no longer needed since we have lastMinuteDiscounts. Yay!
 SyncedCron.add({
-  name: "weMissYou",
+  name: "payoutOrganizations",
   schedule(parser) {
-    return parser.text('at 8:00 pm'); // This is UTC time -> 4:00pm EST
+    return parser.text('at 3:55 am'); // This is UTC time -> 11:55pm EST
   },
   job() {
-    sendWeMissYou();
+    payoutOrganizations();
   },
 });
-*/
 
 /*
 SyncedCron.add({
@@ -62,7 +59,7 @@ SyncedCron.add({
     return parser.text('at 3:55 am'); // This is UTC time -> 11:55pm EST
   },
   job() {
-    // sendLastMinuteDiscounts();
+    sendLastMinuteDiscounts();
   },
 });
 */

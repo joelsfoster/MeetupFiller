@@ -45,9 +45,13 @@ if (!AccountSettings.findOne({"organizationID": "playsoccer2give"})) {
 }
 
 
-// Seed baseline discount settings
+// Seed baseline discount settings and paypalPayoutID
 if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "flatDiscountsNormal": undefined})) {
-  console.log("Seeding baseline discount settings for playsoccer2give...");
+  console.log("Seeding baseline discount settings and paypalPayoutID for playsoccer2give...");
+
+  AccountSettings.update( {"organizationID": "playsoccer2give"}, { $set: {"paypalPayoutID": "danny@playsoccer2give.com"} }, (error, response) => {
+    if (error) { console.log(error) } else { console.log(AccountSettings.findOne({"organizationID": "playsoccer2give"})) }
+  });
 
   let flatDiscountsNormalArray = [
       { "originalPrice": 18, "discountAmount": 3 },

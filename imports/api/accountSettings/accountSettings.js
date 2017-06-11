@@ -28,9 +28,9 @@ AccountSettings.schema = new SimpleSchema({
     type: String,
     label: "organizationName",
   },
-  "payPalPayoutID": {
+  "paypalPayoutID": {
     type: String,
-    label: "payPalPayoutID",
+    label: "paypalPayoutID",
     optional: true,
   },
   "flatDiscountsNormal.$.originalPrice": {

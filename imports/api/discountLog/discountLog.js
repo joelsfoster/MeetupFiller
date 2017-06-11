@@ -50,6 +50,11 @@ DiscountLog.schema = new SimpleSchema({
     type: Number,
     label: "rsvpTime",
     optional: true // Will be null until the booking happens, then we log the UNIX time so we can verify it was booked
+  },
+  "payoutTime": {
+    type: Number,
+    label: "payoutTime",
+    optional: true // Will be null until the payout happens, then we log the UNIX time so we can verify it was paid out
   }
 });
 
