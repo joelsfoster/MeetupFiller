@@ -42,6 +42,8 @@ SyncedCron.add({
   },
 });
 
+/*
+// This email is no longer needed since we have lastMinuteDiscounts. Yay!
 SyncedCron.add({
   name: "weMissYou",
   schedule(parser) {
@@ -51,6 +53,7 @@ SyncedCron.add({
     sendWeMissYou();
   },
 });
+*/
 
 /*
 SyncedCron.add({

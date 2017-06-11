@@ -18,7 +18,8 @@ Meteor.methods({
       const discountRecord = DiscountLog.findOne( { "organizationID": organizationID, "eventID": eventID, "userID": userID } );
 
       // If the discountRecord does not have an rsvpTime stamp...
-      if (discountRecord["rsvpTime"] === undefined) {
+      if (!discountRecord["rsvpTime"] || discountRecord["rsvpTime"] === "") {
+
         // ...remove that user's RSVP (since it was presumably already set to "yes" when they navigated to PayPal)
         Meteor.call('postMeetupRsvp', organizationID, eventID, userID, rsvpStatus, (error, response) => {
           if (error) {

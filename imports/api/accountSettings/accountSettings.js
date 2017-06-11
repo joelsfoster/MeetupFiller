@@ -31,7 +31,27 @@ AccountSettings.schema = new SimpleSchema({
   "payPalPayoutID": {
     type: String,
     label: "payPalPayoutID",
-    optional: true
+    optional: true,
+  },
+  "flatDiscountsNormal.$.originalPrice": {
+    type: Number,
+    label: "originalPrice",
+    optional: true,
+  },
+  "flatDiscountsNormal.$.discountAmount": {
+    type: Number,
+    label: "discountAmount",
+    optional: true,
+  },
+  "flatDiscountsBig.$.originalPrice": {
+    type: Number,
+    label: "originalPrice",
+    optional: true,
+  },
+  "flatDiscountsBig.$.discountAmount": {
+    type: Number,
+    label: "discountAmount",
+    optional: true,
   },
 });
 

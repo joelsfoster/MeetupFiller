@@ -9,6 +9,7 @@ import NotificationLog from '../../api/notificationLog/notificationLog';
 import AccountSettings from '../../api/accountSettings/accountSettings';
 import DiscountLog from '../../api/discountLog/discountLog';
 
+
 // Seed admin user
 const users = [{
   email: 'joelsfoster@gmail.com',
@@ -28,6 +29,7 @@ users.forEach(({ email, password, profile, roles }) => {
   }
 });
 
+
 // Seed AccountSettings if not already present
 if (!AccountSettings.findOne({"organizationID": "playsoccer2give"})) {
   AccountSettings.insert({
@@ -41,6 +43,47 @@ if (!AccountSettings.findOne({"organizationID": "playsoccer2give"})) {
     }
   });
 }
+
+
+// Seed baseline discount settings
+if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "flatDiscountsNormal": undefined})) {
+  console.log("Seeding baseline discount settings for playsoccer2give...");
+
+  let flatDiscountsNormalArray = [
+      { "originalPrice": 18, "discountAmount": 3 },
+      { "originalPrice": 15, "discountAmount": 3 },
+      { "originalPrice": 12, "discountAmount": 2 },
+      { "originalPrice": 10, "discountAmount": 3 },
+      { "originalPrice": 7, "discountAmount": 2 },
+      { "originalPrice": 5, "discountAmount": 1 },
+  ]
+
+  let flatDiscountsBigArray = [
+      { "originalPrice": 18, "discountAmount": 6 },
+      { "originalPrice": 15, "discountAmount": 5 },
+      { "originalPrice": 12, "discountAmount": 4 },
+      { "originalPrice": 10, "discountAmount": 3 },
+      { "originalPrice": 7, "discountAmount": 2 },
+      { "originalPrice": 5, "discountAmount": 1 },
+  ]
+
+  flatDiscountsNormalArray.forEach( (object) => {
+    let discount = { "flatDiscountsNormal": object, }
+
+    AccountSettings.update( {"organizationID": "playsoccer2give"}, { $addToSet: discount }, (error, response) => {
+      if (error) { console.log(error) }
+    });
+  });
+
+  flatDiscountsBigArray.forEach( (object) => {
+    let discount = { "flatDiscountsBig": object, }
+
+    AccountSettings.update( {"organizationID": "playsoccer2give"}, { $addToSet: discount }, (error, response) => {
+      if (error) { console.log(error) }
+    });
+  });
+}
+
 
 // Clear data then re-seed upon staging and localdev startup
 if (!Meteor.isProduction) {
