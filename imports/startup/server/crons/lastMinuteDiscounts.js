@@ -11,7 +11,6 @@ import moment from 'moment';
 
 export const sendLastMinuteDiscounts = () => {
   const accountOrganizationIDs = AccountSettings.find({}, {fields: {"_id": 0, "organizationID": 1} }).fetch();
-  let emailsSent = 0;
 
   // For each organization...
   accountOrganizationIDs.forEach( (accountOrganizationID) => {
@@ -102,7 +101,6 @@ export const sendLastMinuteDiscounts = () => {
                             const price = (originalPrice - discountAmount).toFixed(2);
 
                             lastMinuteDiscounts(emailAddress, price, eventName, discountID);
-                            emailsSent += 1;
                           }
                         });
                       } else {
@@ -137,7 +135,7 @@ export const sendLastMinuteDiscounts = () => {
               const originalPrice = parseFloat(object["fee"]["amount"].toFixed(2));
 
               // PART 2.1
-              // If the game doesn't qualify either for a big discount, and should be sent a discount, then send a normal discount
+              // If the game doesn't qualify for a big discount, and should be sent a discount, then send a normal discount
               if (!dontDiscount && !bigDiscount) {
 
                 const flatDiscountsNormal = AccountSettings.findOne({"organizationID": organizationID }, {fields: {"_id": 0, "flatDiscountsNormal": 1} });
@@ -193,11 +191,4 @@ export const sendLastMinuteDiscounts = () => {
   // FUTURE WORK: Here, sometime in the future, consider adding a script that cleans up old DiscountLog records if they linger too long
   // ***
 
-  // Report back on how many were sent
-  const announceEmailSendCount = () => {
-    if (emailsSent > 0) {
-      console.log("lastMinuteDiscounts emails sent: " + emailsSent);
-    }
-  }
-  Meteor.setTimeout(announceEmailSendCount, 30000);
 }

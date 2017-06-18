@@ -24,6 +24,7 @@ Meteor.methods({
         Meteor.call('postMeetupRsvp', organizationID, eventID, userID, rsvpStatus, (error, response) => {
           if (error) {
             console.warn(error.reason);
+            throw new Meteor.Error('500', error);
           } else {
             console.log("User: " + userID + " removed from " + organizationID + ":" + eventID + " because of " + DELAY_MINUTES + " minute PayPal timeout.");
           }

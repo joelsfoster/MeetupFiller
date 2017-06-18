@@ -3,7 +3,7 @@ import { MEETUP_API_KEY } from '../environment-variables';
 import DiscountLog from '../../../api/discountLog/discountLog';
 
 export const payoutOrganizations = () => {
-  const discountsToPayout = DiscountLog.find({"rsvpTime": {$ne: undefined}, "payoutTime": undefined }).fetch();
+  const discountsToPayout = DiscountLog.find({"rsvpTime": {$ne: null}, "payoutTime": null }).fetch();
 
   discountsToPayout.forEach( (discount) => {
     const _id = discount["_id"];

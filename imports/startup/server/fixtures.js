@@ -54,11 +54,13 @@ if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "flatDiscount
   });
 
   let flatDiscountsNormalArray = [
-      { "originalPrice": 18, "discountAmount": 3 },
-      { "originalPrice": 15, "discountAmount": 3 },
+      { "originalPrice": 18, "discountAmount": 2 },
+      { "originalPrice": 15, "discountAmount": 2 },
       { "originalPrice": 12, "discountAmount": 2 },
-      { "originalPrice": 10, "discountAmount": 3 },
-      { "originalPrice": 7, "discountAmount": 2 },
+      { "originalPrice": 10, "discountAmount": 1 },
+      { "originalPrice": 8, "discountAmount": 1 },
+      { "originalPrice": 7, "discountAmount": 1 },
+      { "originalPrice": 6, "discountAmount": 1 },
       { "originalPrice": 5, "discountAmount": 1 },
   ]
 
@@ -67,7 +69,9 @@ if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "flatDiscount
       { "originalPrice": 15, "discountAmount": 5 },
       { "originalPrice": 12, "discountAmount": 4 },
       { "originalPrice": 10, "discountAmount": 3 },
+      { "originalPrice": 8, "discountAmount": 2 },
       { "originalPrice": 7, "discountAmount": 2 },
+      { "originalPrice": 6, "discountAmount": 1 },
       { "originalPrice": 5, "discountAmount": 1 },
   ]
 
@@ -101,7 +105,7 @@ if (!Meteor.isProduction) {
 
   const seedData = () => {
     getEvents("playsoccer2give");
-    Meteor.setTimeout(backfillData, 3000);
+    Meteor.setTimeout(backfillData, 5000);
   }
 
   const reset = () => {
@@ -111,3 +115,20 @@ if (!Meteor.isProduction) {
 
   // reset();
 }
+
+/*
+// Seed a test discount for Joel Foster
+const record = {
+  "organizationID": "playsoccer2give",
+  "eventID": 240774722,
+  "eventName": "Monday 8pm Tron Ball - Night Soccer @ LIC (7v7 game) for PS2G",
+  "userID": 58124462,
+  "originalPrice": 6.00,
+  "discountAmount": 1.00,
+}
+
+if (!DiscountLog.findOne({record})) {
+  DiscountLog.insert(record, (error, response) => { });
+}
+*/
+// console.log(DiscountLog.find({}).fetch());

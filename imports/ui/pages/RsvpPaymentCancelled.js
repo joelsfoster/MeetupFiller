@@ -11,12 +11,11 @@ export default class RsvpPaymentCancelled extends React.Component {
     // Get the discount data for this URL
     Meteor.subscribe('getDiscountID', _id, () => {
       const discount = DiscountLog.findOne();
-
-      const root_url = Meteor.isProduction ? "https://www.meetup.com/" : "localhost:3000/";
+      const meetup_url = "https://www.meetup.com/";
 
       // If a user goes to an invalid URL, redirect to Meetup
       if (discount === undefined) {
-        window.location.href = root_url + "?success=ticket_aborted";
+        window.location.href = meetup_url + "?success=ticket_aborted";
       } else {
         const organizationID = discount["organizationID"];
         const eventID = discount["eventID"];
@@ -25,11 +24,11 @@ export default class RsvpPaymentCancelled extends React.Component {
         // Function to redirect user according to what data is available
         const failureRedirect = () => {
           if (organizationID && eventID) {
-            window.location.href = root_url + organizationID + "/events/" + eventID + "/?success=ticket_aborted";
+            window.location.href = meetup_url + organizationID + "/events/" + eventID + "/?success=ticket_aborted";
           } else if (organizationID) {
-            window.location.href = root_url + organizationID + "/events/?success=ticket_aborted";
+            window.location.href = meetup_url + organizationID + "/events/?success=ticket_aborted";
           } else {
-            window.location.href = root_url + "?success=ticket_aborted";
+            window.location.href = meetup_url + "?success=ticket_aborted";
           }
         }
 
@@ -38,8 +37,9 @@ export default class RsvpPaymentCancelled extends React.Component {
         // Remove the user's RSVP...
         Meteor.call('postMeetupRsvp', organizationID, eventID, userID, rsvpStatus, (error, response) => {
           if (error) {
+            console.log("Error at postMeetupRsvp at RsvpPaymentCancelled");
             console.warn(error.reason);
-            window.location.href = root_url + "?success=ticket_aborted";
+            window.location.href = meetup_url + "?success=ticket_aborted";
           } else {
             failureRedirect();
           }

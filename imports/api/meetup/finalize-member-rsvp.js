@@ -18,7 +18,7 @@ Meteor.methods({
     HTTP.call( 'GET', url, {}, function( error, response ) {
       if ( error ) {
         console.log( error );
-        return error;
+        throw new Meteor.Error('500', error);
       } else {
         const data = response.data;
 
@@ -29,7 +29,10 @@ Meteor.methods({
             DiscountLog.update( {"organizationID": organizationID, "eventID": eventID, "userID": userID}, { $set: { "rsvpTime": moment.utc().format("x") } }, (error, response) => {
               if (error) {
                 console.log(error);
-              };
+                throw new Meteor.Error('500', error);
+              } else {
+                console.log("userID:" + userID + " successfully RSVP'd for eventID:" + eventID + "!");
+              }
             });
           }
         });

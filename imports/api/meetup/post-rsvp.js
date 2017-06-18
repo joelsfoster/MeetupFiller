@@ -20,7 +20,7 @@ Meteor.methods({
     HTTP.call( 'GET', get_url, {}, function( error, response ) {
       if ( error ) {
         console.log( error );
-        throw error;
+        throw new Meteor.Error('500', error);
       } else {
         const data = response.data;
 
@@ -43,22 +43,19 @@ Meteor.methods({
               HTTP.call( 'POST', post_url, {}, function( error, response ) {
                 if ( error ) {
                   console.log( error );
-                  throw error;
+                  throw new Meteor.Error('500', error);
                 } else {
                   return response;
                 }
               });
             } else {
-              console.log("ERROR: Member already finalized RSVPing");
-              throw error;
+              throw console.log("ERROR: Member already finalized RSVPing");
             }
           } else {
-            console.log("ERROR: Event full, unable to RSVP");
-            throw error;
+            throw console.log("ERROR: Event full, unable to RSVP");
           }
         } else {
-          console.log("ERROR: Event is in the past");
-          throw error;
+          throw console.log("ERROR: Event is in the past");
         }
       }
     });

@@ -13,12 +13,11 @@ export default class RsvpPaymentSuccess extends React.Component {
     // Get the discount data for this URL
     Meteor.subscribe('getDiscountID', _id, () => {
       const discount = DiscountLog.findOne();
-
-      const root_url = Meteor.isProduction ? "https://www.meetup.com/" : "localhost:3000/";
+      const meetup_url = "https://www.meetup.com/";
 
       // If a user goes to an invalid URL, redirect to Meetup
       if (discount === undefined) {
-        window.location.href = root_url + "?success=ticket_aborted";
+        window.location.href = meetup_url + "?success=ticket_aborted";
       } else {
         const organizationID = discount["organizationID"];
         const eventID = discount["eventID"];
@@ -29,17 +28,18 @@ export default class RsvpPaymentSuccess extends React.Component {
 
           // Then redirect the user appropriately
           if (organizationID && eventID) {
-            window.location.href = root_url + organizationID + "/events/" + eventID + "/?success=ticket_aborted";
+            window.location.href = meetup_url + organizationID + "/events/" + eventID + "/?success=ticket_aborted";
           } else if (organizationID) {
-            window.location.href = root_url + organizationID + "/events/?success=ticket_aborted";
+            window.location.href = meetup_url + organizationID + "/events/?success=ticket_aborted";
           } else {
-            window.location.href = root_url + "?success=ticket_aborted";
+            window.location.href = meetup_url + "?success=ticket_aborted";
           }
         }
 
         // When this page is loaded, check if member is RSVP'd and log rsvpTime if yes.
         Meteor.call('finalizeMemberMeetupRsvp', organizationID, eventID, userID, (error, response) => {
           if (error) {
+            console.log("Error at finalizeMemberMeetupRsvp");
             console.warn(error.reason);
             failureRedirect();
           } else {
@@ -47,6 +47,7 @@ export default class RsvpPaymentSuccess extends React.Component {
             // Then, execute the payment that the member approved.
             Meteor.call('executePaypalPayment', _id, payerID, paymentID, (error, response) => {
               if (error) {
+                console.log("Error at executePaypalPayment");
                 console.warn(error.reason);
                 failureRedirect();
               } else {
@@ -54,6 +55,7 @@ export default class RsvpPaymentSuccess extends React.Component {
                 // Then, POST payment confirmation on Meetup.
                 Meteor.call('postMeetupRsvpPayment', organizationID, eventID, userID, (error, response) => {
                   if (error) {
+                    console.log("Error at postMeetupRsvpPayment");
                     console.warn(error.reason);
                     failureRedirect();
                   } else {
@@ -61,6 +63,7 @@ export default class RsvpPaymentSuccess extends React.Component {
                     // Send confirmation email and...
                     Meteor.call('paymentConfirmation', _id, (error, response) => {
                       if (error) {
+                        console.log("Error at paymentConfirmation");
                         console.warn(error.reason);
                       }
                     });

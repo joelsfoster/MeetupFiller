@@ -102,7 +102,7 @@ Meteor.methods({
         throw new Meteor.Error('500', error);
       });
     } else {
-      console.log("There is no record of discount " + _id);
+      throw console.log("There is no record of discount " + _id);
     }
   }
 });

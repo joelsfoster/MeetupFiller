@@ -45,14 +45,13 @@ SyncedCron.add({
 SyncedCron.add({
   name: "payoutOrganizations",
   schedule(parser) {
-    return parser.text('at 3:55 am'); // This is UTC time -> 11:55pm EST
+    return parser.text('at 3:35 am'); // This is UTC time -> 11:35pm EST
   },
   job() {
     payoutOrganizations();
   },
 });
 
-/*
 SyncedCron.add({
   name: "lastMinuteDiscounts",
   schedule(parser) {
@@ -62,4 +61,3 @@ SyncedCron.add({
     sendLastMinuteDiscounts();
   },
 });
-*/

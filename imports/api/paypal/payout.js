@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import DiscountLog from '../discountLog/discountLog';
 import AccountSettings from '../accountSettings/accountSettings';
 import Members from '../members/members';
+import moment from 'moment';
 
 // This method calls the function that houses the promise
 Meteor.methods({
