@@ -53,7 +53,12 @@ Members.schema = new SimpleSchema({
   "lastSeen": {
     type: Number,
     label: "lastSeen",
-  }
+  },
+  "discountOptOut": {
+    type: Boolean,
+    label: "discountOptOut",
+    optional: true,
+  },
 });
 
 // Attach the schema to the collection so that it is applied. This is actually a Collection2 method.

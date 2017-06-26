@@ -12,6 +12,8 @@ export default class RsvpPayment extends React.Component {
     Meteor.subscribe('getDiscountID', _id, () => {
       const discount = DiscountLog.findOne();
       const meetup_url = "https://www.meetup.com/";
+      console.log(_id);
+      console.log(discount);
 
       // If a user goes to an invalid URL, redirect to Meetup
       if (discount === undefined) {

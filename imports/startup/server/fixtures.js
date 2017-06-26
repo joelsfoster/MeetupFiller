@@ -115,20 +115,3 @@ if (!Meteor.isProduction) {
 
   // reset();
 }
-
-/*
-// Seed a test discount for Joel Foster
-const record = {
-  "organizationID": "playsoccer2give",
-  "eventID": 240774722,
-  "eventName": "Monday 8pm Tron Ball - Night Soccer @ LIC (7v7 game) for PS2G",
-  "userID": 58124462,
-  "originalPrice": 6.00,
-  "discountAmount": 1.00,
-}
-
-if (!DiscountLog.findOne({record})) {
-  DiscountLog.insert(record, (error, response) => { });
-}
-*/
-// console.log(DiscountLog.find({}).fetch());

@@ -24,7 +24,7 @@ Meteor.methods({
       const finalPrice = originalPrice - discountAmount;
       const paypalFee = (finalPrice * .029 + .3).toFixed(2);
       const amountToPayout = finalPrice - paypalFee;
-      const payPalPayoutID = AccountSettings.findOne({"organizationID": organizationID})["payPalPayoutID"];
+      const paypalPayoutID = AccountSettings.findOne({"organizationID": organizationID})["paypalPayoutID"];
 
       const create_payout_json = {
           "sender_batch_header": {
@@ -38,26 +38,44 @@ Meteor.methods({
                       "value": amountToPayout.toFixed(2),
                       "currency": "USD"
                   },
-                  "receiver": payPalPayoutID,
+                  "receiver": paypalPayoutID,
                   "note": eventName + " | originalPrice:$" + originalPrice + " discountAmount:$" + discountAmount + " paypalFee:$" + paypalFee,
                   "sender_item_id": "eventID:" + eventID + " userID:" + userID + " userName:" + userName
               }
           ]
       };
 
-      paypal.payout.create(create_payout_json, function (error, payout) {
-        if (error) {
-          console.log(error.response);
-          throw error;
-        } else {
-          console.log("Paid out $" + amountToPayout + " ($" + finalPrice + ") for " + organizationID + "/" + eventID + " userID:" + userID + " (_id:" + _id + ")");
-
-          DiscountLog.update( {"_id": _id}, { $set: { "payoutTime": moment.utc().format("x") } }, (error, response) => {
+      // A function that houses a promise to handle the async nature of the response
+      const callPaypal = () => {
+        return new Promise((resolve, reject) => {
+          paypal.payout.create(create_payout_json, function (error, payout) {
             if (error) {
-              console.log(error);
-            };
+              console.log(error.response);
+              reject(error);
+            } else {
+              console.log("Paid out $" + amountToPayout.toFixed(2) + " ($" + finalPrice.toFixed(2) + ") for " + organizationID + "/" + eventID + " userID:" + userID + " (_id:" + _id + ")");
+              resolve(payment);
+            }
           });
-        }
+        });
+      };
+
+      const logPayoutTime = () => {
+        DiscountLog.update( {"_id": _id}, { $set: { "payoutTime": moment.utc().format("x") } }, (error, response) => {
+          if (error) {
+            console.log(error);
+          };
+        });
+      }
+
+      // Run the promise that executes the payment
+      return callPaypal()
+      .then((response) => {
+        logPayoutTime();
+        return response;
+      })
+      .catch((error) => {
+        throw new Meteor.Error('500', error);
       });
     } else {
       console.log("WARNING! paypalPayout is not allowed to run outside of Production!");

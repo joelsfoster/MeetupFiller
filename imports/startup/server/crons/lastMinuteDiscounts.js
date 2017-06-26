@@ -97,20 +97,19 @@ export const sendLastMinuteDiscounts = () => {
                           if (error) {
                             console.log(error);
                           } else {
-                            const discountID = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];
-                            const price = (originalPrice - discountAmount).toFixed(2);
+                            const discountID = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];                            
 
-                            lastMinuteDiscounts(emailAddress, price, eventName, discountID);
+                            lastMinuteDiscounts(emailAddress, discountID);
                           }
                         });
                       } else {
-                        console.log("Error: Did not send lastMinuteDiscounts, NotificationLog indicates it was already sent");
+                        console.log("Error: Did not send lastMinuteDiscounts for " + userID + ":" + emailAddress + ", NotificationLog indicates it was already sent");
                       }
                     }
                   }
                 });
               } else {
-                console.log("Error: Did not send lastMinuteDiscounts, DiscountLog indicates it was already logged");
+                console.log("Error: Did not send lastMinuteDiscounts for " + userID + ":" + emailAddress + ", DiscountLog indicates it was already logged");
               }
             });
           } // End of sendDiscounts function definition.
