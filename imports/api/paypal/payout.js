@@ -54,7 +54,7 @@ Meteor.methods({
               reject(error);
             } else {
               console.log("Paid out $" + amountToPayout.toFixed(2) + " ($" + finalPrice.toFixed(2) + ") for " + organizationID + "/" + eventID + " userID:" + userID + " (_id:" + _id + ")");
-              resolve(payment);
+              resolve(payout);
             }
           });
         });
@@ -64,16 +64,18 @@ Meteor.methods({
         DiscountLog.update( {"_id": _id}, { $set: { "payoutTime": moment.utc().format("x") } }, (error, response) => {
           if (error) {
             console.log(error);
-          };
+          } else {
+            console.log(_id + " was paid out successfully.");
+          }
         });
       }
 
       // Run the promise that executes the payment
       return callPaypal()
       .then((response) => {
-        logPayoutTime();
         return response;
       })
+      .then(logPayoutTime)
       .catch((error) => {
         throw new Meteor.Error('500', error);
       });

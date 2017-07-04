@@ -54,9 +54,9 @@ Members.schema = new SimpleSchema({
     type: Number,
     label: "lastSeen",
   },
-  "discountOptOut": {
-    type: Boolean,
-    label: "discountOptOut",
+  "discountUnsubUntil": {
+    type: Number,
+    label: "discountUnsubUntil",
     optional: true,
   },
 });
