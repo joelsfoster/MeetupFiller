@@ -42,7 +42,7 @@ Meteor.methods({
                 const post_url = "https://api.meetup.com/2/rsvp?event_id=" + eventID + "&agree_to_refund=true&member_id=" + userID + "&rsvp=" + rsvpStatus + "&key=" + MEETUP_API_KEY; // API version 2
                 // https://api.meetup.com/2/rsvp?event_id=239885114&agree_to_refund=true&member_id=58124462&rsvp=yes&key=282a2c7858483325b5b6c5510422e5b;
 
-                // If the event is valid, mark the member as attending (other mechanisms may mark them as not attending based on certain triggers)
+                // If the event is valid, mark the member as attending
                 HTTP.call( 'POST', post_url, {}, function( error, response ) {
                   if ( error ) {
                     console.log( error );

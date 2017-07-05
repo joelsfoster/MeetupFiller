@@ -3,6 +3,7 @@ import { MEETUP_API_KEY } from '../../startup/server/environment-variables';
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import DiscountLog from '../discountLog/discountLog';
+import Members from '../members/members';
 import moment from 'moment';
 
 
@@ -25,13 +26,23 @@ Meteor.methods({
         data.forEach( (object) => {
           if (object["member"]["id"] === userID) {
 
-            // If the member is found to be on the event, log their rsvpTime (thus preventing automatic timed removal)
+            // If the member is found to be on the event, log their rsvpTime (thus preventing automatic timed removal)...
             DiscountLog.update( {"organizationID": organizationID, "eventID": eventID, "userID": userID}, { $set: { "rsvpTime": moment.utc().format("x") } }, (error, response) => {
               if (error) {
                 console.log(error);
                 throw new Meteor.Error('500', error);
               } else {
-                console.log("userID:" + userID + " successfully RSVP'd for eventID:" + eventID + "!");
+
+                const eventTime = Events.findOne( {"organizationID": organizationID, "eventID": eventID} )["eventTime"];
+
+                // ...and update their latest "lastSeen" date so that they don't get any discounts between now and that game
+                Members.update( {"organizationID": organizationID, "userID": userID}, { $set: { "lastEvent": eventID, "lastSeen": eventTime } }, (error, response) => {
+                  if (error) {
+                    console.log(error);
+                  } else {
+                    console.log("userID:" + userID + " successfully RSVP'd for eventID:" + eventID + "!");
+                  }
+                });
               }
             });
           }
