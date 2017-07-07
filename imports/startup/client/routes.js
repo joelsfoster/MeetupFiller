@@ -16,6 +16,7 @@ import Signup from '../../ui/pages/Signup.js';
 import RsvpPayment from '../../ui/pages/RsvpPayment.js';
 import RsvpPaymentSuccess from '../../ui/pages/RsvpPaymentSuccess.js';
 import RsvpPaymentCancelled from '../../ui/pages/RsvpPaymentCancelled.js';
+import Snooze from '../../ui/pages/Snooze.js';
 
 
 // Function to authenticate when loading private pages. Redirects to login page if "Meteor.userId" doesn't detect a user
@@ -37,6 +38,7 @@ Meteor.startup(() => {
         <Route name="rsvp-payment" path="/rsvp-payment/:_id" component={ RsvpPayment } />
         <Route name="rsvp-payment-success" path="/rsvp-payment-success/:_id" component={ RsvpPaymentSuccess } />
         <Route name="rsvp-payment-cancelled" path="/rsvp-payment-cancelled/:_id" component={ RsvpPaymentCancelled } />
+        <Route name="snooze" path="/snooze/:_id" component={ Snooze } />
         <Route name="documents" path="/documents" component={ Documents } onEnter={ authenticate } />
         <Route name="newDocument" path="/documents/new" component={ NewDocument } onEnter={ authenticate } />
         <Route name="editDocument" path="/documents/:_id/edit" component={ EditDocument } onEnter={ authenticate } />

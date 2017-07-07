@@ -54,9 +54,9 @@ Members.schema = new SimpleSchema({
     type: Number,
     label: "lastSeen",
   },
-  "discountUnsubUntil": {
+  "snoozeUntil": {
     type: Number,
-    label: "discountUnsubUntil",
+    label: "snoozeUntil",
     optional: true,
   },
 });

@@ -39,11 +39,11 @@ export const sendLastMinuteDiscounts = () => {
           // First, we define the function to send discounts, so we can run it after the logic in PART 2 runs.
           const sendDiscounts = (discountAmount) => {
 
-            // For this event, find the members of this organization who have been away for at least XYZ days and have an email address...
+            // For this event, find the members of this organization who have been away for at least X days, have an email address, and are not snoozed/unsubscribed...
             const BEEN_AWAY_DAYS = 19; // NOTE: As per time of script run! UPDATE THIS TO BE VARIABLE FROM accountSettings!
             const beenAwayTime = parseInt(nowUnix) - (parseInt(BEEN_AWAY_DAYS) * parseInt(unixDay));
             const members = Members.find(
-              { "lastSeen": { $lte : parseInt(beenAwayTime) }, "askedEmail": { $ne: "" || undefined } },
+              { "lastSeen": { $lte: parseInt(beenAwayTime) }, "askedEmail": { $ne: "" || undefined }, $or: [{"snoozeUntil": undefined}, {"snoozeUntil": {$lte: parseInt(nowUnix)} }] },
               { fields: { "userName": 1, "userID": 1, "lastEvent": 1, "askedEmail": 1, "paymentEmail": 1, "organizationID": 1 } }
             ).fetch();
 
@@ -97,7 +97,7 @@ export const sendLastMinuteDiscounts = () => {
                           if (error) {
                             console.log(error);
                           } else {
-                            const discountID = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];                            
+                            const discountID = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];
 
                             lastMinuteDiscounts(emailAddress, discountID);
                           }
