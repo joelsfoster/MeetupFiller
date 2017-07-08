@@ -30,7 +30,7 @@ const getMembers = (organizationID, eventID) => {
         // First check if there was an email given. Then clean up any "\n" separations.
         const askedEmailCheck = member["answers"] ? member["answers"][0]["answer"] : undefined; // If answer exists, use answer
         const askedEmailArray = askedEmailCheck ? askedEmailCheck.split("\n") : undefined; // Split text according to "\n"
-        const askedEmailString = askedEmailArray ? askedEmailArray.join(" ") : undefined; // Replace "\n" with " "
+        const askedEmailString = askedEmailArray ? askedEmailArray.join(" ").toLowerCase() : undefined; // Replace "\n" with " " and make the whole email lowercase
         const askedEmail = askedEmailString ? findEmailsInString(askedEmailString)[0] : undefined; // Now we can extract the email
 
         // Format and define each uniquely identifiable record using the raw data above (note that "dateAdded" and "askedEmail" are defined below, so as not to accidentally create duplicate records)

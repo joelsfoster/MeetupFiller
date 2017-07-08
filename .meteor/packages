@@ -23,7 +23,6 @@ check@1.2.5
 audit-argument-checks@1.0.7
 browser-policy@1.1.0
 fourseven:scss
-aldeed:collection2
 alanning:roles
 react-meteor-data
 static-html
@@ -39,3 +38,4 @@ dburles:factory
 themeteorchef:bert
 meteorhacks:picker
 dynamic-import
+aldeed:collection2

@@ -148,9 +148,6 @@ export const sendLastMinuteDiscounts = () => {
                       sendDiscounts(discountAmount);
                     }
                   });
-
-                } else {
-                  console.log("ERROR: originalPrice $" + originalPrice + " has no corresponding flatDiscountsNormal amount");
                 }
 
               // PART 2.2
@@ -168,9 +165,6 @@ export const sendLastMinuteDiscounts = () => {
                       sendDiscounts(discountAmount);
                     }
                   });
-
-                } else {
-                  console.log("ERROR: originalPrice $" + originalPrice + " has no corresponding flatDiscountsBig amount");
                 }
 
               // PART 2.3

@@ -115,3 +115,15 @@ if (!Meteor.isProduction) {
 
   // reset();
 }
+
+
+// Make all email addresses lower-case
+const members = Members.find({"askedEmail": {$ne: "" || undefined}}).fetch();
+
+members.forEach( (member) => {
+  const email = member["askedEmail"];
+
+  Members.update( member, { $set: {"askedEmail": email.toLowerCase()} }, (error, response) => {
+    if (error) { console.log(error) }
+  });
+});
