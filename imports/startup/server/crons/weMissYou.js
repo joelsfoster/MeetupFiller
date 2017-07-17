@@ -47,7 +47,7 @@ export const sendWeMissYou = () => {
             "notificationName": "weMissYou",
             "notificationTime": moment.utc().format("x"),
             "organizationID": organizationID,
-            "eventID": eventID,
+            "eventID": Array.of(eventID),
             "userID": userID,
             "userName": userName,
             "emailAddress": emailAddress

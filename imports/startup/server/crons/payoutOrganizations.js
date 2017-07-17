@@ -1,5 +1,3 @@
-import { HTTP } from 'meteor/http';
-import { MEETUP_API_KEY } from '../environment-variables';
 import DiscountLog from '../../../api/discountLog/discountLog';
 
 export const payoutOrganizations = () => {

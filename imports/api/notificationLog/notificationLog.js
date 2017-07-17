@@ -33,7 +33,7 @@ NotificationLog.schema = new SimpleSchema({
     label: "organizationID",
   },
   "eventID": {
-    type: Number,
+    type: [ Number ],
     label: "eventID",
     optional: true,
   },

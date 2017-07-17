@@ -4,12 +4,11 @@ import Events from '../../../api/events/events';
 import Members from '../../../api/members/members';
 import AccountSettings from '../../../api/accountSettings/accountSettings';
 import DiscountLog from '../../../api/discountLog/discountLog';
-import NotificationLog from '../../../api/notificationLog/notificationLog';
 import { lastMinuteDiscounts } from '../../../api/notifications/lastMinuteDiscounts';
 import moment from 'moment';
 
 
-export const sendLastMinuteDiscounts = () => {
+export const logLastMinuteDiscounts = () => {
   const accountOrganizationIDs = AccountSettings.find({}, {fields: {"_id": 0, "organizationID": 1} }).fetch();
 
   // For each organization...
@@ -28,91 +27,54 @@ export const sendLastMinuteDiscounts = () => {
         // ...and look through each to determine if it should be discounted (logic below in PART 2).
         data.forEach( (object) => {
           const unixDay = 86400000;
-          const nowUnix = moment.utc().format("x");
+          const nowUnix = parseInt(moment.utc().format("x"));
           const tomorrowUnix = parseInt(nowUnix) + parseInt(unixDay);
           const dayAfterTomorrowUnix = parseInt(nowUnix) + (parseInt(unixDay) * 2);
           const eventID = parseInt(object["link"].slice(46, 55)); // UPDATE THIS WHEN SCRAPING OTHER WEBSITES!!
           const eventName = object["name"];
+          const eventTime = object["time"];
           const originalPrice = object["fee"]["amount"].toFixed(2);
 
           // PART 1:
           // First, we define the function to send discounts, so we can run it after the logic in PART 2 runs.
-          const sendDiscounts = (discountAmount) => {
+          const logDiscounts = (discountAmount) => {
 
             // For this event, find the members of this organization who have been away for at least X days, have an email address, and are not snoozed/unsubscribed...
             const BEEN_AWAY_DAYS = 19; // NOTE: As per time of script run! UPDATE THIS TO BE VARIABLE FROM accountSettings!
             const beenAwayTime = parseInt(nowUnix) - (parseInt(BEEN_AWAY_DAYS) * parseInt(unixDay));
-            const members = Members.find(
-              { "lastSeen": { $lte: parseInt(beenAwayTime) }, "askedEmail": { $ne: "" || undefined }, $or: [{"snoozeUntil": undefined}, {"snoozeUntil": {$lte: parseInt(nowUnix)} }] },
-              { fields: { "userName": 1, "userID": 1, "lastEvent": 1, "askedEmail": 1, "paymentEmail": 1, "organizationID": 1 } }
-            ).fetch();
+            const members = Members.find({
+              "lastSeen": { $lte: parseInt(beenAwayTime) },
+              "askedEmail": { $ne: "" || undefined },
+              $or: [ {"snoozeUntil": undefined}, {"snoozeUntil": { $lte: parseInt(nowUnix) }} ]
+            }).fetch();
 
             // ...then announce that we're starting the process...
             console.log("Starting lastMinuteDiscounts for " + organizationID + ":" + eventID + " --> " + members.length + " recipients.");
 
-            // ENSURE EMAILS DONT GET SENT OUT TO PEOPLE ALREADY ATTENDING
-            // (Don't worry, this will make HTTP calls only for games that are tomorrow that aren't full)
-
-            // ...and log the discount that will be offered to them...
+            // ...and log the discount that will be offered to them, so another function can send them out.
             members.forEach( (member) => {
               const userID = member["userID"];
-              const userName = member["userName"];
-              const askedEmail = member["askedEmail"];
-              const paymentEmail = member["paymentEmail"];
-              const emailAddress = paymentEmail ? paymentEmail : askedEmail;
 
               if (!DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID}) ) {
                 DiscountLog.insert( {
                   "organizationID": organizationID,
                   "eventID": eventID,
                   "eventName": eventName,
+                  "eventTime": eventTime,
                   "userID": userID,
                   "originalPrice": originalPrice,
                   "discountAmount": discountAmount,
+                  "createdAt": parseInt(moment.utc().format("x")),
                 }, (error, response) => {
                   if (error) {
                     console.log(error);
-                  } else {
-
-                    // ...and log that the discount email was sent (after sending the email).
-                    if (!(emailAddress === "" || emailAddress === undefined)) {
-                      let notificationRecord = {
-                        "notificationName": "lastMinuteDiscounts",
-                        "organizationID": organizationID,
-                        "eventID": eventID,
-                        "userID": userID,
-                        "emailAddress": emailAddress
-                      };
-
-                      if (!NotificationLog.findOne(notificationRecord) ) {
-                        NotificationLog.insert( {
-                          "notificationName": "lastMinuteDiscounts",
-                          "notificationTime": moment.utc().format("x"),
-                          "organizationID": organizationID,
-                          "eventID": eventID,
-                          "userID": userID,
-                          "userName": userName,
-                          "emailAddress": emailAddress
-                        }, (error, response) => {
-                          if (error) {
-                            console.log(error);
-                          } else {
-                            const discountID = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];
-
-                            lastMinuteDiscounts(emailAddress, discountID);
-                          }
-                        });
-                      } else {
-                        console.log("Error: Did not send lastMinuteDiscounts for " + userID + ":" + emailAddress + ", NotificationLog indicates it was already sent");
-                      }
-                    }
                   }
                 });
               } else {
-                console.log("Error: Did not send lastMinuteDiscounts for " + userID + ":" + emailAddress + ", DiscountLog indicates it was already logged");
+                console.log("Error: Did not send lastMinuteDiscounts for " + userID + ":" + member["askedEmail"] + ", DiscountLog indicates it was already logged");
               }
             });
-          } // End of sendDiscounts function definition.
+          } // End of logDiscounts function definition.
 
 
           // PART 2:
@@ -145,7 +107,7 @@ export const sendLastMinuteDiscounts = () => {
                   discounts.forEach( (discount) => {
                     if (discount["originalPrice"] == originalPrice) {
                       let discountAmount = discount["discountAmount"].toFixed(2);
-                      sendDiscounts(discountAmount);
+                      logDiscounts(discountAmount);
                     }
                   });
                 }
@@ -162,7 +124,7 @@ export const sendLastMinuteDiscounts = () => {
                   discounts.forEach( (discount) => {
                     if (discount["originalPrice"] == originalPrice) {
                       let discountAmount = discount["discountAmount"].toFixed(2);
-                      sendDiscounts(discountAmount);
+                      logDiscounts(discountAmount);
                     }
                   });
                 }
@@ -179,9 +141,4 @@ export const sendLastMinuteDiscounts = () => {
       }
     });
   });
-
-  // ***
-  // FUTURE WORK: Here, sometime in the future, consider adding a script that cleans up old DiscountLog records if they linger too long
-  // ***
-
 }

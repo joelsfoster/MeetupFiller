@@ -117,13 +117,11 @@ if (!Meteor.isProduction) {
 }
 
 
-// Make all email addresses lower-case
-const members = Members.find({"askedEmail": {$ne: "" || undefined}}).fetch();
-
-members.forEach( (member) => {
-  const email = member["askedEmail"];
-
-  Members.update( member, { $set: {"askedEmail": email.toLowerCase()} }, (error, response) => {
-    if (error) { console.log(error) }
-  });
+// Convert NotificationLog.eventID into an Array
+const logs = NotificationLog.find().fetch();
+logs.forEach( (log) => {
+  if (!Array.isArray(log["eventID"])) {
+    const eventIDs = Array.of(log["eventID"]);
+    NotificationLog.update({"_id": log["_id"]}, {$set: { "eventID": eventIDs }});
+  }
 });

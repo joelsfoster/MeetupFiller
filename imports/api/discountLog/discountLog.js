@@ -1,5 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema'; // This is a subset of the Collection2 package
+import moment from 'moment';
 
 // Create a new collection and export it from this file for methods to use
 const DiscountLog = new Mongo.Collection('discountLog');
@@ -32,6 +33,11 @@ DiscountLog.schema = new SimpleSchema({
     type: String,
     label: "eventName",
   },
+  "eventTime": {
+    type: Number,
+    label: "eventTime in UNIX UTC time",
+    optional: true // Will need to backfill all old null values before I can make this field required
+  },
   "userID": {
     type: Number,
     label: "userID",
@@ -55,6 +61,13 @@ DiscountLog.schema = new SimpleSchema({
     type: Number,
     label: "payoutTime",
     optional: true // Will be null until the payout happens, then we log the UNIX time so we can verify it was paid out
+  },
+  "createdAt": {
+    type: Number,
+    label: "createdAt",
+    autoValue: function() {
+        return parseInt(moment.utc().format("x"))
+    }
   }
 });
 

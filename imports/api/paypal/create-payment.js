@@ -53,7 +53,7 @@ Meteor.methods({
           },
           "redirect_urls": {
               "return_url": root_url + "rsvp-payment-success/" + _id,
-              "cancel_url": root_url + "rsvp-payment-canceled" + _id
+              "cancel_url": root_url + "rsvp-payment-cancelled/" + _id
           },
           "transactions": [{
               "item_list": {
