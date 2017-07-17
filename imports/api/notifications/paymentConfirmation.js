@@ -3,6 +3,8 @@ import { Email } from 'meteor/email';
 import DiscountLog from '../discountLog/discountLog';
 import Members from '../members/members';
 import { check } from 'meteor/check';
+import NotificationLog from '../../../api/notificationLog/notificationLog';
+import moment from 'moment';
 
 
 Meteor.methods({
@@ -12,18 +14,22 @@ Meteor.methods({
     // Function to send the email
     const sendPaymentConfirmation = (_id) => {
 
+      // First, check if there is a corresponding discount to this _id
       const discount = DiscountLog.findOne({"_id": _id});
 
       if (discount) {
         const eventName = discount["eventName"];
         const organizationID = discount["organizationID"];
         const eventID = discount["eventID"];
-        const recipient = Members.findOne({"organizationID": organizationID, "userID": discount["userID"]})["askedEmail"];
+        const userID = discount["userID"];
+        const emailAddress = Members.findOne({"organizationID": organizationID, "userID": userID})["askedEmail"];
+        const userName = Members.findOne({"organizationID": organizationID, "userID": userID})["userName"];
         const price = (discount["originalPrice"].toFixed(2) - discount["discountAmount"].toFixed(2));
 
-        const email = (recipient) => {
+        // Function to send the email (called below)
+        const email = (emailAddress) => {
           Email.send({
-            to: recipient,
+            to: emailAddress,
             from: "Play Soccer 2 Give <caleb@ps2g.org>",
             replyTo: "Caleb Olson <caleb@ps2g.org>",
             subject: "Success! You RSVPed using a discount!",
@@ -31,16 +37,32 @@ Meteor.methods({
           });
         }
 
+        // Precaution to prevent non-production email sends
         if (!Meteor.isProduction) {
-          if (recipient.toLowerCase() === "joelsfoster@gmail.com") {
-            email(recipient);
+          if (emailAddress.toLowerCase() === "joelsfoster@gmail.com") {
+            email(emailAddress);
           } else {
-            console.log("WARNING! paymentConfirmation recipient is not authorized to recieve emails outside Production: " + recipient);
+            console.log("WARNING! paymentConfirmation recipient is not authorized to recieve emails outside Production: " + emailAddress);
           }
-        } else {
-          email(recipient);
+        } else { // If on Production, send the email
+          NotificationLog.insert( {
+            "notificationName": "paymentConfirmation",
+            "notificationTime": parseInt(moment.utc().format("x")),
+            "organizationID": organizationID,
+            "eventID": Array.of(eventID),
+            "userID": userID,
+            "userName": userName,
+            "emailAddress": emailAddress
+          }, (error, response) => {
+            if (error) {
+              console.log(error);
+            } else {
+              email(emailAddress);
+            }
+          });
         }
-      } else {
+
+      } else { // If no discount for this _id is found, throw an error
         throw console.log("ERROR: discountID does not exist (paymentConfirmation)");
       }
     };

@@ -115,13 +115,3 @@ if (!Meteor.isProduction) {
 
   // reset();
 }
-
-
-// Convert NotificationLog.eventID into an Array
-const logs = NotificationLog.find().fetch();
-logs.forEach( (log) => {
-  if (!Array.isArray(log["eventID"])) {
-    const eventIDs = Array.of(log["eventID"]);
-    NotificationLog.update({"_id": log["_id"]}, {$set: { "eventID": eventIDs }});
-  }
-});
