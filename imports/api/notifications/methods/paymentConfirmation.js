@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
-import DiscountLog from '../discountLog/discountLog';
-import Members from '../members/members';
+import DiscountLog from '../../discountLog/discountLog';
+import Members from '../../members/members';
+import NotificationLog from '../../notificationLog/notificationLog';
 import { check } from 'meteor/check';
-import NotificationLog from '../../../api/notificationLog/notificationLog';
 import moment from 'moment';
 
 

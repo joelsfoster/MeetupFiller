@@ -5,6 +5,7 @@ import { sendThankYouComeAgain } from './thankYouComeAgain';
 import { logLastMinuteDiscounts } from './logLastMinuteDiscounts';
 import { payoutOrganizations } from './payoutOrganizations';
 import { sendLastMinuteDiscounts } from './sendLastMinuteDiscounts';
+import { sendWeeklyRecap } from './weeklyRecap';
 
 // Schedule the crons to be run
 SyncedCron.config({ log: true, utc: true });
@@ -70,5 +71,15 @@ SyncedCron.add({
   },
   job() {
     sendLastMinuteDiscounts();
+  },
+});
+
+SyncedCron.add({
+  name: "weeklyRecap",
+  schedule(parser) {
+    return parser.text('at 3:58 am on Sun'); // This is UTC time -> 11:58pm EST
+  },
+  job() {
+    sendWeeklyRecap();
   },
 });
