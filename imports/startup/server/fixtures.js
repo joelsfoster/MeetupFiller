@@ -104,7 +104,7 @@ if (!Meteor.isProduction) {
   }
 
   const seedData = () => {
-    getEvents("playsoccer2give");
+    getEvents();
     Meteor.setTimeout(backfillData, 5000);
   }
 
@@ -115,18 +115,3 @@ if (!Meteor.isProduction) {
 
   // reset();
 }
-
-
-// Seed PS2G's meetupAPIKey
-if (AccountSettings.findOne({"organizationID": "playsoccer2give", "meetupAPIKey": undefined})) {
-  AccountSettings.update(
-    {"organizationID": "playsoccer2give"},
-    { $set: {"meetupAPIKey": "282a2c7858483325b5b6c5510422e5b"} },
-  (error, response) => {
-    if (error) {
-      console.log(error)
-    } else {
-      console.log("PS2G's meetupAPIKey was seeded");
-    }
-  });
-};

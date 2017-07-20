@@ -7,6 +7,7 @@ import { payoutOrganizations } from './payoutOrganizations';
 import { sendLastMinuteDiscounts } from './sendLastMinuteDiscounts';
 import { sendWeeklyRecap } from './weeklyRecap';
 
+
 // Schedule the crons to be run
 SyncedCron.config({ log: true, utc: true });
 SyncedCron.start();

@@ -29,20 +29,18 @@ export const getEvents = () => {
           const eventURLSplitArray = eventURL.split("/");
           const eventID = eventURLSplitArray[5]; // Example URL: https://www.meetup.com/PlaySoccer2Give/events/241664470/
 
-          const record = {
-            "organizationID": organizationID,
-            "eventID": eventID,
-            "eventName": object["name"],
-            "eventTime": parseInt(object["time"])
-          };
-
           // ... and add each event to the database if it doesn't already exist
-          if (!Events.findOne(record)) {
-            Events.insert(record, (error, response) => {
+          if (!Events.findOne({"organizationID": organizationID, "eventID": eventID})) {
+            Events.insert({
+              "organizationID": organizationID,
+              "eventID": eventID,
+              "eventName": object["name"],
+              "eventTime": parseInt(object["time"])
+            }, (error, response) => {
               if (error) {
                 console.log(error)
               } else {
-                console.log("Event: " + organizationID + "/" + record["eventID"] + " has been added to the Events collection");
+                console.log("Event: " + organizationID + "/" + eventID + " has been added to the Events collection");
               }
             });
           };
