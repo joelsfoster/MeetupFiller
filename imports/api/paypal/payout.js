@@ -21,9 +21,10 @@ Meteor.methods({
       const userName = Members.findOne({"organizationID": organizationID, "userID": userID})["userName"];
       const originalPrice = discountLog["originalPrice"].toFixed(2);
       const discountAmount = discountLog["discountAmount"].toFixed(2);
-      const finalPrice = originalPrice - discountAmount;
-      const paypalFee = (finalPrice * .029 + .3).toFixed(2);
-      const amountToPayout = finalPrice - paypalFee;
+      const discountedPrice = (originalPrice - discountAmount).toFixed(2);
+      const paypalFee = ((discountedPrice * .029) + .30).toFixed(2);
+      const meetupFillerFee = (discountedPrice * .82).toFixed(2); // 18% fee
+      const amountToPayout = (discountedPrice - paypalFee - meetupFillerFee).toFixed(2);
       const paypalPayoutID = AccountSettings.findOne({"organizationID": organizationID})["paypalPayoutID"];
 
       const create_payout_json = {
@@ -35,11 +36,11 @@ Meteor.methods({
               {
                   "recipient_type": "EMAIL",
                   "amount": {
-                      "value": amountToPayout.toFixed(2),
+                      "value": amountToPayout,
                       "currency": "USD"
                   },
                   "receiver": paypalPayoutID,
-                  "note": eventName + " | originalPrice:$" + originalPrice + " discountAmount:$" + discountAmount + " paypalFee:$" + paypalFee,
+                  "note": eventName + " | originalPrice:$" + originalPrice + " discountAmount:$" + discountAmount + " paypalFee:$" + paypalFee + " meetupFillerFee:$" + meetupFillerFee,
                   "sender_item_id": "eventID:" + eventID + " userID:" + userID + " userName:" + userName
               }
           ]
@@ -53,7 +54,7 @@ Meteor.methods({
               console.log(error.response);
               reject(error);
             } else {
-              console.log("Paid out $" + amountToPayout.toFixed(2) + " ($" + finalPrice.toFixed(2) + ") for " + organizationID + "/" + eventID + " userID:" + userID + " (_id:" + _id + ")");
+              console.log("Paid out $" + amountToPayout + " ($" + discountedPrice + ") for " + organizationID + "/" + eventID + " userID:" + userID + " (_id:" + _id + ")");
               resolve(payout);
             }
           });
@@ -65,7 +66,7 @@ Meteor.methods({
           if (error) {
             console.log(error);
           } else {
-            console.log(_id + " was paid out successfully.");
+            console.log(_id + " was paid out successfully. meetupFillerFee=$" + meetupFillerFee);
           }
         });
       }

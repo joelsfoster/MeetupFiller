@@ -20,9 +20,10 @@ export const weeklyRecap = (emailAddress, discountIDs) => {
       const originalPrice = discount["originalPrice"].toFixed(2);
       const discountAmount = discount["discountAmount"].toFixed(2);
       const discountedPrice = (originalPrice - discountAmount).toFixed(2);
-      const payPalFees = ((discountedPrice * .029) + .30).toFixed(2);
-      const profit = (discountedPrice - payPalFees).toFixed(2);
-      const htmlBlock = "<p>Meetup Page & Event Details: <a href='https://www.meetup.com/" + organizationID + "/events/" + eventID + "/'>" + eventName + "</a><br/ >Member: " + userName + " (userID=" + userID + ")<br/ >Original Price: $" + originalPrice + "<br />Discounted Price: $" + discountedPrice + "<br />PayPal Fees: $" + payPalFees + "<br /><b>Profit: $" + profit + "</b></p>";
+      const payPalFee = ((discountedPrice * .029) + .30).toFixed(2);
+      const meetupFillerFee = (discountedPrice * .82).toFixed(2); // 18% fee
+      const profit = (discountedPrice - payPalFee - meetupFillerFee).toFixed(2);
+      const htmlBlock = "<p>Meetup Page & Event Details: <a href='https://www.meetup.com/" + organizationID + "/events/" + eventID + "/'>" + eventName + "</a><br/ >Member: " + userName + " (userID=" + userID + ")<br/ >Original Price: $" + originalPrice + "<br />Discounted Price: $" + discountedPrice + "<br />PayPal Fee: $" + payPalFee + "<br />MeetupFiller Fee: $" + meetupFillerFee + "<br /><b>Profit: $" + profit + "</b></p>";
 
       return htmlBlock;
 
@@ -52,8 +53,9 @@ export const weeklyRecap = (emailAddress, discountIDs) => {
       const originalPrice = discount["originalPrice"].toFixed(2);
       const discountAmount = discount["discountAmount"].toFixed(2);
       const discountedPrice = (originalPrice - discountAmount).toFixed(2);
-      const payPalFees = ((discountedPrice * .029) + .30).toFixed(2);
-      const profit = (discountedPrice - payPalFees).toFixed(2);
+      const payPalFee = ((discountedPrice * .029) + .30).toFixed(2);
+      const meetupFillerFee = (discountedPrice * .82).toFixed(2); // 18% fee
+      const profit = (discountedPrice - payPalFee - meetupFillerFee).toFixed(2);
 
       return profit;
     } else {
@@ -75,7 +77,7 @@ export const weeklyRecap = (emailAddress, discountIDs) => {
       from: "MeetupFiller <joelsfoster@gmail.com>",
       replyTo: "Joel Foster <joelsfoster@gmail.com>",
       subject: "MeetupFiller weekly recap [" + moment().format("MMM D") + "]",
-      html: "<p>Hello,</p><p>MeetupFiller generated <b>$" + totalRevenue.toFixed(2) + " in RSVP revenue</b> for you this past week--that's <b>$" + totalProfit.toFixed(2) + " profit</b> in your pocket after PayPal fees! Here's the breakdown:</p>" + discountBlocks + "<p><i>If you have any questions or concerns, please feel free to reply to this email for support!</i></p><p>All the best,<br />Joel</p>",
+      html: "<p>Hello,</p><p>MeetupFiller generated <b>$" + totalRevenue.toFixed(2) + " in RSVP revenue</b> for you this past week--that's <b>$" + totalProfit.toFixed(2) + " profit</b> in your pocket after PayPal and MeetupFiller fees! Here's the breakdown:</p>" + discountBlocks + "<p><i>If you have any questions or concerns, please feel free to reply to this email for support!</i></p><p>All the best,<br />Joel<br />Founder | MeetupFiller</p>",
     });
   }
 
