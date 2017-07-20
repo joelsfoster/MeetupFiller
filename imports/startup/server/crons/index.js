@@ -27,10 +27,7 @@ SyncedCron.add({
     return parser.text('at 3:40 am'); // This is UTC time -> 11:40pm EST
   },
   job() {
-    let organizations = [ "playsoccer2give" ]; // Change this to include all organizations to pull data from. Note that we have to account for eventID parsing and new API keys when this happens!!
-    organizations.forEach( (organization) => {
-      getEvents(organization);
-    });
+    getEvents();
   },
 });
 

@@ -28,6 +28,10 @@ AccountSettings.schema = new SimpleSchema({
     type: String,
     label: "organizationName",
   },
+  "meetupAPIKey": {
+    type: String,
+    label: "meetupAPIKey",
+  },
   "paypalPayoutID": {
     type: String,
     label: "paypalPayoutID",

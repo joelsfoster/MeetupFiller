@@ -1,5 +1,4 @@
 import { HTTP } from 'meteor/http';
-import { MEETUP_API_KEY } from '../environment-variables';
 import Events from '../../../api/events/events';
 import Members from '../../../api/members/members';
 import AccountSettings from '../../../api/accountSettings/accountSettings';
@@ -9,12 +8,13 @@ import moment from 'moment';
 
 
 export const logLastMinuteDiscounts = () => {
-  const accountOrganizationIDs = AccountSettings.find({}, {fields: {"_id": 0, "organizationID": 1} }).fetch();
+  const organizations = AccountSettings.find().fetch();
 
   // For each organization...
-  accountOrganizationIDs.forEach( (accountOrganizationID) => {
-    const organizationID = accountOrganizationID["organizationID"];
-    const url = 'https://api.meetup.com/' + organizationID + '/events?&sign=true&photo-host=public&page=20&fields=rsvp_rules&omit=rsvp_rules.open_time,rsvp_rules.guest_limit,rsvp_rules.waitlisting,rsvp_rules.refund_policy,rsvp_rules.notes,created,duration,fee.accepts,fee.currency,fee.description,fee.label,fee.required,id,updated,utc_offset,description,how_to_find_us,visibility,group,venue,rsvp_open_offset&key=' + MEETUP_API_KEY;
+  organizations.forEach( (organization) => {
+    const organizationID = organization["organizationID"];
+    const meetupAPIKey = organization["meetupAPIKey"];
+    const url = 'https://api.meetup.com/' + organizationID + '/events?&sign=true&photo-host=public&page=20&fields=rsvp_rules&omit=rsvp_rules.open_time,rsvp_rules.guest_limit,rsvp_rules.waitlisting,rsvp_rules.refund_policy,rsvp_rules.notes,created,duration,fee.accepts,fee.currency,fee.description,fee.label,fee.required,id,updated,utc_offset,description,how_to_find_us,visibility,group,venue,rsvp_open_offset&key=' + meetupAPIKey;
     // https://api.meetup.com/playsoccer2give/events?&sign=true&photo-host=public&page=20&fields=rsvp_rules&omit=rsvp_rules.open_time,rsvp_rules.guest_limit,rsvp_rules.waitlisting,rsvp_rules.refund_policy,rsvp_rules.notes,created,duration,fee.accepts,fee.currency,fee.description,fee.label,fee.required,id,updated,utc_offset,description,how_to_find_us,visibility,group,venue,rsvp_open_offset&key=
 
     // ...get the next 20 games in the future...
@@ -26,11 +26,14 @@ export const logLastMinuteDiscounts = () => {
 
         // ...and look through each to determine if it should be discounted (logic below in PART 2).
         data.forEach( (object) => {
+
           const unixDay = 86400000;
           const nowUnix = parseInt(moment.utc().format("x"));
           const tomorrowUnix = parseInt(nowUnix) + parseInt(unixDay);
           const dayAfterTomorrowUnix = parseInt(nowUnix) + (parseInt(unixDay) * 2);
-          const eventID = parseInt(object["link"].slice(46, 55)); // UPDATE THIS WHEN SCRAPING OTHER WEBSITES!!
+          const eventURL = object["link"];
+          const eventURLSplitArray = eventURL.split("/");
+          const eventID = eventURLSplitArray[5]; // Example URL: https://www.meetup.com/PlaySoccer2Give/events/241664470/
           const eventName = object["name"];
           const eventTime = object["time"];
           const originalPrice = object["fee"]["amount"].toFixed(2);

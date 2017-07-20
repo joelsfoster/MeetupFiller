@@ -14,8 +14,3 @@ paypal.configure({
       'custom': 'customHeader'
   }
 });
-
-export const MEETUP_API_KEY = Meteor.settings.private.MEETUP_API_KEY;
-
-
-// Will have to re-architect this when the app supports other groups

@@ -1,8 +1,8 @@
 import { HTTP } from 'meteor/http';
-import { MEETUP_API_KEY } from '../../startup/server/environment-variables';
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import DiscountLog from '../discountLog/discountLog';
+import AccountSettings from '../accountSettings/accountSettings';
 
 
 Meteor.methods({
@@ -11,12 +11,16 @@ Meteor.methods({
     check(eventID, Number);
     check(userID, Number);
 
+    const organization = AccountSettings.findOne({"organizationID": organizationID});
+    const meetupAPIKey = organization["meetupAPIKey"];
     const discountRecord = DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID});
     const price = discountRecord["originalPrice"].toFixed(2) - discountRecord["discountAmount"].toFixed(2);
 
+    // If there is indeed a discount for this combination of organizationID, eventID, and userID...
     if (discountRecord) {
-      const url = 'https://api.meetup.com/' + organizationID + '/events/' + eventID + '/payments?amount=' + price.toFixed(2) + '&member=' + userID + '&key=' + MEETUP_API_KEY;
+      const url = 'https://api.meetup.com/' + organizationID + '/events/' + eventID + '/payments?amount=' + price.toFixed(2) + '&member=' + userID + '&key=' + meetupAPIKey;
 
+      // ...post their payment on that Meetup event.
       HTTP.call( 'POST', url, {}, function( error, response ) {
         if ( error ) {
           console.log( error );

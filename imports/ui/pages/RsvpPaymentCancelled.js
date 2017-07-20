@@ -32,6 +32,10 @@ export default class RsvpPaymentCancelled extends React.Component {
           }
         }
 
+        const redirectToMeetup = () => {
+          window.location.href = meetup_url + organizationID + "/events/" + eventID + "/?success=ticket_aborted";
+        }
+
         const rsvpStatus = "no";
 
         // Remove the user's RSVP...
@@ -39,7 +43,7 @@ export default class RsvpPaymentCancelled extends React.Component {
           if (error) {
             console.log("Error at postMeetupRsvp at RsvpPaymentCancelled");
             console.warn(error.reason);
-            window.location.href = meetup_url + "?success=ticket_aborted";
+            Meteor.setTimeout(redirectToMeetup, 3000);
           } else {
             failureRedirect();
           }

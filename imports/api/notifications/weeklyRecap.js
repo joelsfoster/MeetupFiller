@@ -71,6 +71,7 @@ export const weeklyRecap = (emailAddress, discountIDs) => {
 
     Email.send({
       to: emailAddress,
+      bcc: "Joel Foster <joelsfoster@gmail.com>",
       from: "MeetupFiller <joelsfoster@gmail.com>",
       replyTo: "Joel Foster <joelsfoster@gmail.com>",
       subject: "MeetupFiller weekly recap [" + moment().format("MMM D") + "]",

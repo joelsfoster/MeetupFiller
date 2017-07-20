@@ -65,7 +65,7 @@ export default class RsvpPaymentSuccess extends React.Component {
                       if (error) {
                         console.log("Error at paymentConfirmation");
                         console.warn(error.reason);
-                      }
+                      } 
                     });
 
                     // ...redirect user to Meetup confirmation page
