@@ -21,7 +21,7 @@ export const weeklyRecap = (emailAddress, discountIDs) => {
       const discountAmount = discount["discountAmount"].toFixed(2);
       const discountedPrice = (originalPrice - discountAmount).toFixed(2);
       const payPalFee = ((discountedPrice * .029) + .30).toFixed(2);
-      const meetupFillerFee = (discountedPrice * .82).toFixed(2); // 18% fee
+      const meetupFillerFee = (discountedPrice * .18).toFixed(2); // 18% fee
       const profit = (discountedPrice - payPalFee - meetupFillerFee).toFixed(2);
       const htmlBlock = "<p>Meetup Page & Event Details: <a href='https://www.meetup.com/" + organizationID + "/events/" + eventID + "/'>" + eventName + "</a><br/ >Member: " + userName + " (userID=" + userID + ")<br/ >Original Price: $" + originalPrice + "<br />Discounted Price: $" + discountedPrice + "<br />PayPal Fee: $" + payPalFee + "<br />MeetupFiller Fee: $" + meetupFillerFee + "<br /><b>Profit: $" + profit + "</b></p>";
 
