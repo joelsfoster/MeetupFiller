@@ -33,7 +33,7 @@ export const logLastMinuteDiscounts = () => {
           const dayAfterTomorrowUnix = parseInt(nowUnix) + (parseInt(unixDay) * 2);
           const eventURL = object["link"];
           const eventURLSplitArray = eventURL.split("/");
-          const eventID = eventURLSplitArray[5]; // Example URL: https://www.meetup.com/PlaySoccer2Give/events/241664470/
+          const eventID = parseInt(eventURLSplitArray[5]); // Example URL: https://www.meetup.com/PlaySoccer2Give/events/241664470/
           const eventName = object["name"];
           const eventTime = object["time"];
           const originalPrice = object["fee"]["amount"].toFixed(2);

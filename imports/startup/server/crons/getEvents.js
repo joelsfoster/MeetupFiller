@@ -27,9 +27,9 @@ export const getEvents = () => {
 
           const eventURL = object["link"];
           const eventURLSplitArray = eventURL.split("/");
-          const eventID = eventURLSplitArray[5]; // Example URL: https://www.meetup.com/PlaySoccer2Give/events/241664470/
+          const eventID = parseInt(eventURLSplitArray[5]); // Example URL: https://www.meetup.com/PlaySoccer2Give/events/241664470/
 
-          // ... and add each event to the database if it doesn't already exist
+          // ...and add each event to the database if it doesn't already exist
           if (!Events.findOne({"organizationID": organizationID, "eventID": eventID})) {
             Events.insert({
               "organizationID": organizationID,

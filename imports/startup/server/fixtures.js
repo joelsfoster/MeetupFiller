@@ -115,3 +115,5 @@ if (!Meteor.isProduction) {
 
   // reset();
 }
+
+Events.remove({"eventMemberIDs": null});
