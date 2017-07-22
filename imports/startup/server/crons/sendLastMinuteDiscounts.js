@@ -29,31 +29,35 @@ export const sendLastMinuteDiscounts = () => {
       // If a member has at least one discount to recieve from this organization...
       if (discountsToSend.length > 0) {
 
-        const eventIDs = discountsToSend.map( (discount) => {
-           return discount["eventID"];
-        });
+        // ...and the emailAddress is valid...
+        if (emailAddress && emailAddress !== "") {
 
-        // ...log it in NotificationLog and send out the discounts, all bundled into a single email.
-        NotificationLog.insert( {
-          "notificationName": "lastMinuteDiscounts",
-          "notificationTime": parseInt(moment.utc().format("x")),
-          "organizationID": organizationID,
-          "eventID": eventIDs,
-          "userID": userID,
-          "userName": userName,
-          "emailAddress": emailAddress
-        }, (error, response) => {
-          if (error) {
-            console.log(error);
-          } else {
+          const eventIDs = discountsToSend.map( (discount) => {
+             return discount["eventID"];
+          });
 
-            const discountIDs = eventIDs.map( (eventID) => {
-              return DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];
-            });
+          // ...log it in NotificationLog and send out the discounts, all bundled into a single email.
+          NotificationLog.insert( {
+            "notificationName": "lastMinuteDiscounts",
+            "notificationTime": parseInt(moment.utc().format("x")),
+            "organizationID": organizationID,
+            "eventID": eventIDs,
+            "userID": userID,
+            "userName": userName,
+            "emailAddress": emailAddress
+          }, (error, response) => {
+            if (error) {
+              console.log(error);
+            } else {
 
-            lastMinuteDiscounts(emailAddress, discountIDs);
-          }
-        });
+              const discountIDs = eventIDs.map( (eventID) => {
+                return DiscountLog.findOne({"organizationID": organizationID, "eventID": eventID, "userID": userID})["_id"];
+              });
+
+              lastMinuteDiscounts(emailAddress, discountIDs);
+            }
+          });
+        }
       }
     });
   });

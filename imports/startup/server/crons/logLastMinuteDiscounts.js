@@ -43,7 +43,7 @@ export const logLastMinuteDiscounts = () => {
           const logDiscounts = (discountAmount) => {
 
             // For this event, find the members of this organization who have been away for at least X days, have an email address, and are not snoozed/unsubscribed...
-            const BEEN_AWAY_DAYS = 19; // NOTE: As per time of script run! UPDATE THIS TO BE VARIABLE FROM accountSettings!
+            const BEEN_AWAY_DAYS = 19; // Note: As per time of script run! UPDATE THIS TO BE VARIABLE FROM accountSettings!
             const beenAwayTime = parseInt(nowUnix) - (parseInt(BEEN_AWAY_DAYS) * parseInt(unixDay));
             const members = Members.find({
               "lastSeen": { $lte: parseInt(beenAwayTime) },

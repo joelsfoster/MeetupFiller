@@ -37,6 +37,22 @@ AccountSettings.schema = new SimpleSchema({
     label: "paypalPayoutID",
     optional: true,
   },
+  "emailFrom": {
+    type: String,
+    label: "emailFrom",
+  },
+  "emailFromName": {
+    type: String,
+    label: "emailFromName",
+  },
+  "emailSignature": {
+    type: String,
+    label: "emailSignature",
+  },
+  "thankYouComeAgainMessage": {
+    type: String,
+    label: "thankYouComeAgainMessage",
+  },
   "flatDiscountsNormal.$.originalPrice": {
     type: Number,
     label: "originalPrice",

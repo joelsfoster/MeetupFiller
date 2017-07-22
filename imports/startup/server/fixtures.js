@@ -93,6 +93,21 @@ if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "flatDiscount
 }
 
 
+// Seed email message settings for PS2G
+if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "emailFrom": undefined})) {
+  console.log("Seeding email message settings for playsoccer2give...");
+
+  AccountSettings.update( {"organizationID": "playsoccer2give"}, { $set: {
+    "emailFrom": "caleb@ps2g.org",
+    "emailFromName": "Caleb Olson",
+    "emailSignature": "<br />PS2G<br /><i><a href='https://www.playsoccer2give.com'>Local Games for Global Change</a></i><br /><br /><p><img src='a248.e.akamai.net/secure.meetupstatic.com/photos/event/5/e/d/0/highres_258204272.jpeg' height='100'></p>",
+    "thankYouComeAgainMessage": "<p>Hi there,</p><p>If you loved the high-quality soccer, great community, and knowing that your money is going to charity, why not come back?</p><p>We want to see you again! <a href='https://www.meetup.com/PlaySoccer2Give/events/?utm_source=thankYouComeAgain&utm_medium=email'>RSVP for next week</a> right now so that you don't lose out on your favorite time slot--visit <a href='https://www.meetup.com/PlaySoccer2Give/events/?utm_source=thankYouComeAgain&utm_medium=email'>our calendar page</a> to see what's still available. See you on the field!</p>",
+  } }, (error, response) => {
+    if (error) { console.log(error) } else { console.log(AccountSettings.findOne({"organizationID": "playsoccer2give"})) }
+  });
+}
+
+
 // Clear data then re-seed upon staging and localdev startup
 if (!Meteor.isProduction) {
 
@@ -115,5 +130,3 @@ if (!Meteor.isProduction) {
 
   // reset();
 }
-
-Events.remove({"eventMemberIDs": null});

@@ -42,7 +42,7 @@ export const sendThankYouComeAgain = () => {
             "emailAddress": emailAddress
           }
 
-          // ...and this email+organizationID pair was not sent a thankYouComeAgain notification in the last 24 hours...
+          // ...and this email was not sent a thankYouComeAgain notification in the last 24 hours...
           if (!NotificationLog.findOne( {
             "notificationName": "thankYouComeAgain",
             "emailAddress": emailAddress,
@@ -63,7 +63,7 @@ export const sendThankYouComeAgain = () => {
                 if (error) {
                   console.log(error);
                 } else {
-                  thankYouComeAgain(emailAddress, userID);
+                  thankYouComeAgain(emailAddress, organizationID);
                   console.log("thankYouComeAgain sent -> " + eventID + ":" + emailAddress);
                 }
               });

@@ -1,6 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
 
+
+// **
+// THIS EMAIL IS DEPRECATED!!! It should be taken out of the app in the future.
+// **
+
+
 export const weMissYou = (recipient, userID) => {
 
   const email = (recipient, userID) => {

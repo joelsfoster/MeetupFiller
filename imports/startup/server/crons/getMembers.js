@@ -38,13 +38,6 @@ const getMembers = (organizationID, eventID) => {
         const askedEmailString = askedEmailArray ? askedEmailArray.join(" ").toLowerCase() : undefined; // Replace "\n" with " " and make the whole email lowercase
         const askedEmail = askedEmailString ? findEmailsInString(askedEmailString)[0] : undefined; // Now we can extract the email
 
-        // Format and define each uniquely identifiable record using the raw data above (note that "dateAdded" and "askedEmail" are defined below, so as not to accidentally create duplicate records)
-        const record = {
-          "organizationID": organizationID,
-          "userID": userID,
-          "userName": userName
-        };
-
         // PART 2.1 (used below, inside part 2)
         // Log the member as having attended this event if not already logged, and update the member's lastSeen date. This function is called below.
         const logAttendance = () => {
@@ -57,8 +50,8 @@ const getMembers = (organizationID, eventID) => {
               }
             });
 
-            if (eventTime > Members.findOne( record )["lastSeen"]) {
-              Members.update( record, { $set: { "lastEvent": eventID, "lastSeen": eventTime } }, (error, response) => {
+            if (eventTime > Members.findOne( {"organizationID": organizationID, "userID": userID} )["lastSeen"]) {
+              Members.update( {"organizationID": organizationID, "userID": userID}, { $set: { "lastEvent": eventID, "lastSeen": eventTime } }, (error, response) => {
                 if (error) {
                   console.log(error);
                 } else {
@@ -74,7 +67,7 @@ const getMembers = (organizationID, eventID) => {
 
         // PART 2.0
         // If the member doesn't exist, add them to the DB and log their attendance
-        if (!Members.findOne( record )) {
+        if (!Members.findOne( {"organizationID": organizationID, "userID": userID} )) {
           Members.insert( {
             "organizationID": organizationID,
             "userID": userID,
@@ -96,14 +89,14 @@ const getMembers = (organizationID, eventID) => {
           logAttendance();
 
           let emailGiven = !(askedEmail === "" || askedEmail === undefined);
-          let noEmailOnRecord = !Members.findOne( record )["askedEmail"];
+          let noEmailOnRecord = !Members.findOne( {"organizationID": organizationID, "userID": userID} )["askedEmail"];
 
           if (noEmailOnRecord && emailGiven) {
-            Members.update( record, { $set: { "askedEmail": askedEmail } }, (error, response) => {
+            Members.update( {"organizationID": organizationID, "userID": userID}, { $set: { "askedEmail": askedEmail } }, (error, response) => {
               if (error) {
                 console.log(error);
               } else {
-                console.log(organizationID + ":\"" + userName + "\" has a new email address: " + Members.findOne(record)["askedEmail"]);
+                console.log(organizationID + ":\"" + userName + "\" has a new email address: " + Members.findOne({"organizationID": organizationID, "userID": userID})["askedEmail"]);
               }
             });
           };
