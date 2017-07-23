@@ -14,7 +14,9 @@ export const sendWeeklyRecap = () => {
   const organizations = AccountSettings.find().fetch();
 
   organizations.forEach( (organization) => {
-    const email = organization["paypalPayoutID"];
+    const emails = [];
+    emails.push(organization["paypalPayoutID"]);
+    emails.push(organization["emailFrom"]);
     const discounts = DiscountLog.find({"rsvpTime": {$gte: lastWeekUnix}, "organizationID": organization["organizationID"]}).fetch();
 
     // Then, if there are discounts to report, pass their _ids into an array...
@@ -24,10 +26,10 @@ export const sendWeeklyRecap = () => {
       });
 
       // ...and send it into the weeklyRecap function.
-      weeklyRecap(email, discountIDs);
+      weeklyRecap(emails, discountIDs);
 
     } else { // But, if there are no discounts to report, send a recap anyways with single empty string (to trigger a specific empty message).
-      weeklyRecap(email, [""]);
+      weeklyRecap(emails, [""]);
     }
   });
 };

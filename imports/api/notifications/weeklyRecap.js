@@ -5,7 +5,7 @@ import Members from '../members/members';
 import moment from 'moment';
 
 
-export const weeklyRecap = (emailAddress, discountIDs) => {
+export const weeklyRecap = (emailAddresses, discountIDs) => {
 
   // Grab each discountID's (_id) details and create an htmlBlock for each one
   const htmlBlocks = discountIDs.map( (_id) => {
@@ -54,7 +54,7 @@ export const weeklyRecap = (emailAddress, discountIDs) => {
       const discountAmount = discount["discountAmount"].toFixed(2);
       const discountedPrice = (originalPrice - discountAmount).toFixed(2);
       const payPalFee = ((discountedPrice * .029) + .30).toFixed(2);
-      const meetupFillerFee = (discountedPrice * .82).toFixed(2); // 18% fee
+      const meetupFillerFee = (discountedPrice * .18).toFixed(2); // 18% fee
       const profit = (discountedPrice - payPalFee - meetupFillerFee).toFixed(2);
 
       return profit;
@@ -67,12 +67,17 @@ export const weeklyRecap = (emailAddress, discountIDs) => {
   const totalProfit = profits.reduce( (sum, value) => parseFloat(sum) + parseFloat(value), 0);
 
   // Function to send the email
-  const email = (emailAddress) => {
+  const email = (emailAddresses) => {
 
     const discountBlocks = htmlBlocks.join("");
 
+    const paypalEmail = emailAddresses[0];
+    const replyToEmail = emailAddresses[1];
+    const ccEmail = (paypalEmail !== replyToEmail) ? replyToEmail : "";
+
     Email.send({
-      to: emailAddress,
+      to: paypalEmail,
+      cc: ccEmail,
       bcc: "Joel Foster <joelsfoster@gmail.com>",
       from: "MeetupFiller <joelsfoster@gmail.com>",
       replyTo: "Joel Foster <joelsfoster@gmail.com>",
@@ -83,12 +88,12 @@ export const weeklyRecap = (emailAddress, discountIDs) => {
 
   // Safety precaution for testing
   if (!Meteor.isProduction) {
-    if (emailAddress === "joelsfoster@gmail.com") {
-      email(emailAddress);
+    if (emailAddresses[0] === "joelsfoster@gmail.com") {
+      email(emailAddresses);
     } else {
-      console.log("WARNING! weeklyRecap recipient is not authorized to recieve emails outside Production: " + emailAddress);
+      console.log("WARNING! weeklyRecap recipients are not authorized to recieve emails outside Production: " + emailAddresses);
     }
   } else {
-    email(emailAddress);
+    email(emailAddresses);
   }
 };
