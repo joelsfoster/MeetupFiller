@@ -40,7 +40,7 @@ Meteor.methods({
                       "currency": "USD"
                   },
                   "receiver": paypalPayoutID,
-                  "note": eventName + " | originalPrice:$" + originalPrice + " discountAmount:$" + discountAmount + " paypalFee:$" + paypalFee + " meetupFillerFee:$" + meetupFillerFee,
+                  "note": eventName + " | price:$" + originalPrice + " discount:$" + discountAmount + " paypalFee:$" + paypalFee + " meetupFillerFee:$" + meetupFillerFee,
                   "sender_item_id": "eventID:" + eventID + " userID:" + userID + " userName:" + userName
               }
           ]

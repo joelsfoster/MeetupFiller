@@ -59,19 +59,33 @@ export const lastMinuteDiscounts = (emailAddress, discountIDs) => {
 };
 
 
+
+
 /*
 // Seed a test discount for Joel Foster
-const record = {
+const record1 = {
   "organizationID": "playsoccer2give",
-  "eventID": 241127248,
-  "eventName": "Wednesday 8pm Tron Ball - Night Soccer @ LIC (7v7 game) for PS2G",
+  "eventID": 242004432,
+  "eventName": "Monday game 645pm CO-ED Soccer @ LIC (7v7 game) for PS2G",
   "userID": 58124462,
-  "originalPrice": 6.00,
-  "discountAmount": 5.50,
+  "originalPrice": 8.00,
+  "discountAmount": 3.00,
 }
 
-DiscountLog.insert(record, (error, response) => {
-  lastMinuteDiscounts("joelsfoster@gmail.com", [response, response]);
-  console.log(response);
+const record2 = {
+  "organizationID": "playsoccer2give",
+  "eventID": 241984374,
+  "eventName": "Monday game 545pm CO-ED Soccer @ LIC (7v7 game) for PS2G",
+  "userID": 58124462,
+  "originalPrice": 8.00,
+  "discountAmount": 3.00,
+}
+
+DiscountLog.insert(record1, (error, response1) => {
+  DiscountLog.insert(record2, (error, response2) => {
+    lastMinuteDiscounts("joelsfoster@gmail.com", [response1, response2]);
+    console.log(response1);
+    console.log(response2);
+  });
 });
 */

@@ -1,5 +1,6 @@
 import DiscountLog from '../../../api/discountLog/discountLog';
 
+
 export const payoutOrganizations = () => {
 
   // Find all discounts where rsvpTime is present, but payoutTime is null (meaning the discount was not paid out)
