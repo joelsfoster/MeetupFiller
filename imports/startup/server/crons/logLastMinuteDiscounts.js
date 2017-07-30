@@ -113,6 +113,8 @@ export const logLastMinuteDiscounts = () => {
                       logDiscounts(discountAmount);
                     }
                   });
+                } else {
+                  console.log("WARNING: No discountAmount set for " + organizationID + ": flatDiscountsNormal's originalPrice=$" + originalPrice);
                 }
 
               // PART 2.2
@@ -130,6 +132,8 @@ export const logLastMinuteDiscounts = () => {
                       logDiscounts(discountAmount);
                     }
                   });
+                } else {
+                  console.log("WARNING: No discountAmount set for " + organizationID + ": flatDiscountsBig's originalPrice=$" + originalPrice);
                 }
 
               // PART 2.3
