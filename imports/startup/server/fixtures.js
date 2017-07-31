@@ -86,7 +86,7 @@ if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "memberBeenAw
     "attendanceDiscountCeiling": .70,
     "attendanceBigDiscountCeiling": .50,
   } }, (error, response) => {
-    if (error) { console.log(error) } else { console.log(response) }
+    if (error) { console.log(error) } else { console.log(AccountSettings.findOne({"organizationID": "playsoccer2give"})) }
   });
 }
 

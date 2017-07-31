@@ -17,7 +17,7 @@ Meteor.methods({
     const meetupAPIKey = organization["meetupAPIKey"];
 
     const get_url = 'https://api.meetup.com/' + organizationID + '/events/' + eventID + '?&sign=true&photo-host=public&page=10&fields=rsvp_rules&omit=created,duration,fee.accepts,fee.currency,fee.description,fee.label,fee.required,id,updated,utc_offset,description,how_to_find_us,visibility,group,venue,rsvp_open_offset,rsvp_rules.open_time,rsvp_rules.guest_limit,rsvp_rules.waitlisting,rsvp_rules.refund_policy&key=' + meetupAPIKey;
-    // https://api.meetup.com/playsoccer2give/events/241159577?&sign=true&photo-host=public&page=10&fields=rsvp_rules&omit=created,duration,fee.accepts,fee.currency,fee.description,fee.label,fee.required,id,updated,utc_offset,description,how_to_find_us,visibility,group,venue,rsvp_open_offset,rsvp_rules.open_time,rsvp_rules.guest_limit,rsvp_rules.waitlisting,rsvp_rules.refund_policy&key=282a2c7858483325b5b6c5510422e5b
+    // https://api.meetup.com/playsoccer2give/events/241159577?&sign=true&photo-host=public&page=10&fields=rsvp_rules&omit=created,duration,fee.accepts,fee.currency,fee.description,fee.label,fee.required,id,updated,utc_offset,description,how_to_find_us,visibility,group,venue,rsvp_open_offset,rsvp_rules.open_time,rsvp_rules.guest_limit,rsvp_rules.waitlisting,rsvp_rules.refund_policy&key=
 
     // First, get the eventTime from that future event so that we can log a future "lastSeen" date for the member, preventing extra discount emails
     HTTP.call( 'GET', get_url, {}, function( error, response ) {

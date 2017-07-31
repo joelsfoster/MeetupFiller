@@ -82,10 +82,10 @@ export const weeklyRecap = (emailAddresses, discountIDs) => {
       to: paypalEmail,
       cc: ccEmail,
       bcc: "Joel Foster <joelsfoster@gmail.com>",
-      from: "MeetupFiller <joelsfoster@gmail.com>",
+      from: "Joel Foster <joelsfoster@gmail.com>",
       replyTo: "Joel Foster <joelsfoster@gmail.com>",
       subject: "MeetupFiller weekly recap [" + moment().format("MMM D") + "]",
-      html: "<p>Hello,</p><p>MeetupFiller generated <b>$" + totalRevenue.toFixed(2) + " in RSVP revenue</b> for you this past week--that's <b>$" + totalProfit.toFixed(2) + " profit</b> in your pocket after PayPal and MeetupFiller fees! Here's the breakdown:</p>" + discountBlocks + "<p><i>If you have any questions or concerns, please feel free to reply to this email for support!</i></p><p>All the best,<br />Joel<br />Founder | MeetupFiller</p>",
+      html: "Hello,<p>MeetupFiller generated <b>$" + totalRevenue.toFixed(2) + " in RSVP revenue</b> for you this past week--that's <b>$" + totalProfit.toFixed(2) + " profit</b> in your pocket after PayPal and MeetupFiller fees! Here's the breakdown:</p>" + discountBlocks + "<p><i>If you have any questions or concerns, please feel free to reply to this email for support!</i></p><p>All the best,<br />Joel<br />Founder | MeetupFiller</p>",
     });
   }
 
