@@ -11,6 +11,8 @@ export const sendLastMinuteDiscounts = () => {
 
   // For each organization,...
   accountOrganizationIDs.forEach( (accountOrganizationID) => {
+
+    console.log("Sending lastMinuteDiscounts for " + accountOrganizationID + "...");
     const organizationID = accountOrganizationID["organizationID"];
     const unixDay = 86400000;
     const nowUnix = parseInt(moment.utc().format("x"));

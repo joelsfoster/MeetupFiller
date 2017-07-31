@@ -63,14 +63,17 @@ export const weeklyRecap = (emailAddresses, discountIDs) => {
     }
   });
 
+  // Sum together the revenues and profits of each game, respectively, so we can announce the totals in the email
   const totalRevenue = revenues.reduce( (sum, value) => parseFloat(sum) + parseFloat(value), 0);
   const totalProfit = profits.reduce( (sum, value) => parseFloat(sum) + parseFloat(value), 0);
 
   // Function to send the email
   const email = (emailAddresses) => {
 
+    // Join together each string in the htmlBlocks array
     const discountBlocks = htmlBlocks.join("");
 
+    // CC the replyToEmail if it's different from the paypalEmail
     const paypalEmail = emailAddresses[0];
     const replyToEmail = emailAddresses[1];
     const ccEmail = (paypalEmail !== replyToEmail) ? replyToEmail : "";

@@ -30,21 +30,6 @@ users.forEach(({ email, password, profile, roles }) => {
 });
 
 
-// Seed AccountSettings if not already present
-if (!AccountSettings.findOne({"organizationID": "playsoccer2give"})) {
-  AccountSettings.insert({
-    "organizationID": "playsoccer2give",
-    "organizationName": "Play Soccer 2 Give",
-  }, (error, response) => {
-    if (error) {
-      console.log(error)
-    } else {
-      console.log("Play Soccer 2 Give was seeded to the db");
-    }
-  });
-}
-
-
 // Seed baseline discount settings and paypalPayoutID
 if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "flatDiscountsNormal": undefined})) {
   console.log("Seeding baseline discount settings and paypalPayoutID for playsoccer2give...");
@@ -92,6 +77,18 @@ if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "flatDiscount
   });
 }
 
+// Seed additional settings for PS2G
+if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "memberBeenAwayDays": undefined})) {
+  console.log("Seeding additional AccountSettings for playsoccer2give...");
+
+  AccountSettings.update( {"organizationID": "playsoccer2give"}, { $set: {
+    "memberBeenAwayDays": 19,
+    "attendanceDiscountCeiling": .70,
+    "attendanceBigDiscountCeiling": .50,
+  } }, (error, response) => {
+    if (error) { console.log(error) } else { console.log(response) }
+  });
+}
 
 // Seed email message settings for PS2G
 if (AccountSettings.findOne( {"organizationID": "playsoccer2give", "emailFrom": undefined})) {

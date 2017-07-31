@@ -29,8 +29,8 @@ export const logLastMinuteDiscounts = () => {
 
           const unixDay = 86400000;
           const nowUnix = parseInt(moment.utc().format("x"));
-          const tomorrowUnix = parseInt(nowUnix) + parseInt(unixDay);
-          const dayAfterTomorrowUnix = parseInt(nowUnix) + (parseInt(unixDay) * 2);
+          const tomorrowUnix = parseInt(nowUnix) + parseInt(unixDay); // 24 hours from right now
+          const dayAfterTomorrowUnix = parseInt(nowUnix) + (parseInt(unixDay) * 2); // 48 hours from right now
           const eventURL = object["link"];
           const eventURLSplitArray = eventURL.split("/");
           const eventID = parseInt(eventURLSplitArray[5]); // Example URL: https://www.meetup.com/PlaySoccer2Give/events/241664470/
@@ -43,16 +43,17 @@ export const logLastMinuteDiscounts = () => {
           const logDiscounts = (discountAmount) => {
 
             // For this event, find the members of this organization who have been away for at least X days, have an email address, and are not snoozed/unsubscribed...
-            const BEEN_AWAY_DAYS = 19; // Note: As per time of script run! UPDATE THIS TO BE VARIABLE FROM accountSettings!
-            const beenAwayTime = parseInt(nowUnix) - (parseInt(BEEN_AWAY_DAYS) * parseInt(unixDay));
+            const memberBeenAwayDaysSetting = organization["memberBeenAwayDays"];
+            const memberBeenAwayDays = memberBeenAwayDaysSetting > 0 ? memberBeenAwayDaysSetting : 0; // If no limit was set on how long a member has to be away to be given a discount, set days to 0
+            const lastTimeSeen = parseInt(nowUnix) - (parseInt(memberBeenAwayDays) * parseInt(unixDay));
             const members = Members.find({
-              "lastSeen": { $lte: parseInt(beenAwayTime) },
+              "lastSeen": { $lte: parseInt(lastTimeSeen) },
               "askedEmail": { $ne: "" || undefined },
               $or: [ {"snoozeUntil": undefined}, {"snoozeUntil": { $lte: parseInt(nowUnix) }} ]
             }).fetch();
 
             // ...then announce that we're starting the process...
-            console.log("Starting lastMinuteDiscounts for " + organizationID + ":" + eventID + " --> " + members.length + " recipients.");
+            console.log("Logging lastMinuteDiscounts for " + organizationID + ":" + eventID + " --> " + members.length + " recipients.");
 
             // ...and log the discount that will be offered to them, so another function can send them out.
             members.forEach( (member) => {
@@ -89,25 +90,26 @@ export const logLastMinuteDiscounts = () => {
             if (object["rsvp_rules"]["closed"] !== true) {
 
               // ...then use the logic specified by the account to determine how much discount to offer based off original price and how empty the event is...
-              const DONT_DISCOUNT_IF_OVER = .70; // Need to make variable from accountSettings
-              const BIG_DISCOUNT_IF_UNDER = .50; // Need to make variable from accountSettings
+              const attendanceDiscountCeiling = organization["attendanceDiscountCeiling"] ? organization["attendanceDiscountCeiling"] : 1.00;
+              const attendanceBigDiscountCeiling = organization["attendanceBigDiscountCeiling"] ? organization["attendanceBigDiscountCeiling"] : 0.00; // If no big discount settings are found, never offer big discounts
               const currentAttendeesCount = object["yes_rsvp_count"];
               const rsvpLimit = object["rsvp_limit"];
               const percentageFilled = (currentAttendeesCount / rsvpLimit).toFixed(2);
-              const dontDiscount = percentageFilled > DONT_DISCOUNT_IF_OVER;
-              const bigDiscount = percentageFilled <= BIG_DISCOUNT_IF_UNDER;
+              const giveDiscount = percentageFilled > attendanceDiscountCeiling; // If a game is filled above the % specified, don't offer any discounts (the % is 100 if not specified, so as to always offer them)
+              const bigDiscount = percentageFilled <= attendanceBigDiscountCeiling; // If a game is filled below the % specified, offer a big discount (the % is 0 if not specified, so as never to offer them)
               const originalPrice = parseFloat(object["fee"]["amount"].toFixed(2));
 
               // PART 2.1
-              // If the game doesn't qualify for a big discount, and should be sent a discount, then send a normal discount
-              if (!dontDiscount && !bigDiscount) {
+              // If the game should be sent a discount but doesn't qualify for a big discount...
+              if (giveDiscount && !bigDiscount) {
 
-                const flatDiscountsNormal = AccountSettings.findOne({"organizationID": organizationID }, {fields: {"_id": 0, "flatDiscountsNormal": 1} });
+                const flatDiscountsNormal = organization["flatDiscountsNormal"];
 
+                // ...and this organization has specified normal discount amounts...
                 if (flatDiscountsNormal !== undefined) {
-                  let discounts = flatDiscountsNormal["flatDiscountsNormal"];
+                  flatDiscountsNormal.forEach( (discount) => {
 
-                  discounts.forEach( (discount) => {
+                    // ...and if the price of this event has been given a corresponding discount amount, log the discount.
                     if (discount["originalPrice"] == originalPrice) {
                       let discountAmount = discount["discountAmount"].toFixed(2);
                       logDiscounts(discountAmount);
@@ -118,15 +120,16 @@ export const logLastMinuteDiscounts = () => {
                 }
 
               // PART 2.2
-              // If the game qualifies for a bigDiscount, send it
-              } else if (!dontDiscount && bigDiscount) {
+              // If the game qualifies for a bigDiscount...
+              } else if (giveDiscount && bigDiscount) {
 
-                const flatDiscountsBig = AccountSettings.findOne({"organizationID": organizationID }, {fields: {"_id": 0, "flatDiscountsBig": 1} });
+                const flatDiscountsBig = organization["flatDiscountsBig"];
 
+                // ...and this organization has specified big discount amounts...
                 if (flatDiscountsBig !== undefined) {
-                  let discounts = flatDiscountsBig["flatDiscountsBig"];
+                  flatDiscountsBig.forEach( (discount) => {
 
-                  discounts.forEach( (discount) => {
+                    // ...and if the price of this event has been given a corresponding discount amount, log the discount.
                     if (discount["originalPrice"] == originalPrice) {
                       let discountAmount = discount["discountAmount"].toFixed(2);
                       logDiscounts(discountAmount);
@@ -139,13 +142,13 @@ export const logLastMinuteDiscounts = () => {
               // PART 2.3
               // If the game doesn't qualify for a discount because it's almost full, don't send any discount
               } else {
-                console.log(organizationID + ":" + eventID + " filled above capacity ceiling specified (" + (DONT_DISCOUNT_IF_OVER * 100).toFixed(0) + "%), no discount offered.");
+                console.log(organizationID + ":" + eventID + " filled above capacity ceiling specified (" + (attendanceDiscountCeiling * 100).toFixed(0) + "%), no discount offered.");
               }
             }
           } // End of logic, and function execution.
 
-        }); // End of "for each event..." loop.
+        }); // End of "for each event returned from the HTTP call..." loop.
       }
     });
-  });
+  }); // End of "for each organization..." loop.
 }

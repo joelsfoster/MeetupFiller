@@ -35,7 +35,7 @@ DiscountLog.schema = new SimpleSchema({
   },
   "eventTime": {
     type: Number,
-    label: "eventTime in UNIX UTC time",
+    label: "eventTime",
     optional: true // Will need to backfill all old null values before I can make this field required
   },
   "userID": {
@@ -44,11 +44,13 @@ DiscountLog.schema = new SimpleSchema({
   },
   "originalPrice": {
     type: Number,
+    decimal: true,
     label: "originalPrice",
     decimal: true
   },
   "discountAmount": {
     type: Number,
+    decimal: true,
     label: "discountAmount",
     decimal: true
   },

@@ -55,22 +55,43 @@ AccountSettings.schema = new SimpleSchema({
   },
   "flatDiscountsNormal.$.originalPrice": {
     type: Number,
+    decimal: true,
     label: "originalPrice",
     optional: true,
   },
   "flatDiscountsNormal.$.discountAmount": {
     type: Number,
+    decimal: true,
     label: "discountAmount",
     optional: true,
   },
   "flatDiscountsBig.$.originalPrice": {
     type: Number,
+    decimal: true,
     label: "originalPrice",
     optional: true,
   },
   "flatDiscountsBig.$.discountAmount": {
     type: Number,
+    decimal: true,
     label: "discountAmount",
+    optional: true,
+  },
+  "memberBeenAwayDays": {
+    type: Number,
+    label: "memberBeenAwayDays",
+    optional: true,
+  },
+  "attendanceDiscountCeiling": {
+    type: Number,
+    decimal: true,
+    label: "attendanceDiscountCeiling",
+    optional: true,
+  },
+  "attendanceBigDiscountCeiling": {
+    type: Number,
+    decimal: true,
+    label: "attendanceBigDiscountCeiling",
     optional: true,
   },
 });
