@@ -34,11 +34,11 @@ Events.schema = new SimpleSchema({
   },
   "eventTime": {
     type: Number,
-    label: "eventTime in UNIX UTC time",
+    label: "eventTime",
   },
   "eventMemberIDs": {
     type: [ Number ],
-    label: "eventMemberIDs as an array of numbers",
+    label: "eventMemberIDs",
     optional: true
   }
 });

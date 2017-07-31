@@ -3,11 +3,15 @@ import { Link } from 'react-router';
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap';
 import handleLogin from '../../modules/login';
 
+// Need to be reminded why React.Component is an extended class
 export default class Login extends React.Component {
+
+  // Upon mounting (what is this again???), run the validation function
   componentDidMount() {
     handleLogin({ component: this });
   }
 
+  // I assume this is from the React library. What does it do?
   handleSubmit(event) {
     event.preventDefault();
   }
@@ -35,7 +39,7 @@ export default class Login extends React.Component {
               <FormGroup>
                 <ControlLabel>
                   <span className="pull-left">Password</span>
-                  <Link className="pull-right" to="/recover-password">Forgot Password?</Link>
+                  <Link className="pull-right" to="/recover-password">Forgot your password?</Link>
                 </ControlLabel>
                 <FormControl
                   type="password"

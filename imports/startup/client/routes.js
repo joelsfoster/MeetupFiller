@@ -1,23 +1,27 @@
-/* eslint-disable max-len */
-
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { Meteor } from 'meteor/meteor';
-import App from '../../ui/layouts/App.js'; // Layout = main app that pages sit on top of
-import Documents from '../../ui/pages/Documents.js'; // Pages = individual web pages
+import App from '../../ui/layouts/App.js';
+import Documents from '../../ui/pages/Documents.js';
 import NewDocument from '../../ui/pages/NewDocument.js';
-import EditDocument from '../../ui/containers/EditDocument.js'; // Containers = data layer wrapped around React components
-import ViewDocument from '../../ui/containers/ViewDocument.js';
+import EditDocument from '../../ui/pages/EditDocument.js';
+import ViewDocument from '../../ui/pages/ViewDocument.js';
 import Index from '../../ui/pages/Index.js';
 import Login from '../../ui/pages/Login.js';
 import NotFound from '../../ui/pages/NotFound.js';
 import RecoverPassword from '../../ui/pages/RecoverPassword.js';
 import ResetPassword from '../../ui/pages/ResetPassword.js';
 import Signup from '../../ui/pages/Signup.js';
+import RsvpPayment from '../../ui/pages/RsvpPayment.js';
+import RsvpPaymentSuccess from '../../ui/pages/RsvpPaymentSuccess.js';
+import RsvpPaymentCancelled from '../../ui/pages/RsvpPaymentCancelled.js';
+import Snooze from '../../ui/pages/Snooze.js';
 
+
+// Function to authenticate when loading private pages. Redirects to login page if "Meteor.userId" doesn't detect a user
 const authenticate = (nextState, replace) => {
-  if (!Meteor.loggingIn() && !Meteor.userId()) {
+  if (!Meteor.loggingIn() && !Meteor.userId()) { // Need to learn more about Meteor methods
     replace({
       pathname: '/login',
       state: { nextPathname: nextState.location.pathname },
@@ -25,11 +29,16 @@ const authenticate = (nextState, replace) => {
   }
 };
 
+
 Meteor.startup(() => {
   render(
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute name="index" component={ Index } />
+        <Route name="rsvp-payment" path="/rsvp-payment/:_id" component={ RsvpPayment } />
+        <Route name="rsvp-payment-success" path="/rsvp-payment-success/:_id" component={ RsvpPaymentSuccess } />
+        <Route name="rsvp-payment-cancelled" path="/rsvp-payment-cancelled/:_id" component={ RsvpPaymentCancelled } />
+        <Route name="snooze" path="/snooze/:_id" component={ Snooze } />
         <Route name="documents" path="/documents" component={ Documents } onEnter={ authenticate } />
         <Route name="newDocument" path="/documents/new" component={ NewDocument } onEnter={ authenticate } />
         <Route name="editDocument" path="/documents/:_id/edit" component={ EditDocument } onEnter={ authenticate } />

@@ -4,6 +4,7 @@ import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
 import './validation.js';
 
+
 let component;
 
 const handleRecovery = () => {
@@ -11,9 +12,17 @@ const handleRecovery = () => {
     email: document.querySelector('[name="emailAddress"]').value,
   }, (error) => {
     if (error) {
-      Bert.alert(error.reason, 'warning');
+      Bert.alert({
+        title: "Whoops! Try again, friend.",
+        message: error.reason + ".",
+        type: 'warning',
+      });
     } else {
-      Bert.alert('Check your inbox for a reset link!', 'success');
+      Bert.alert({
+        title: "Password reset link sent!",
+        message: "Check your inbox for instructions.",
+        type: 'success',
+      });
     }
   });
 };
@@ -28,15 +37,15 @@ const validate = () => {
     },
     messages: {
       emailAddress: {
-        required: 'Need an email address here.',
-        email: 'Is this email address legit?',
+        required: "Whoops! Forgot to fill in the most important thing...",
+        email: "That's definitely not a legit email address...",
       },
     },
     submitHandler() { handleRecovery(); },
   });
 };
 
-export default function handleRecoverPassword(options) {
+export default function handleRecoverPassword(options) { // Looking to receive "{ component: this }" from RecoverPassword.js
   component = options.component;
   validate();
 }

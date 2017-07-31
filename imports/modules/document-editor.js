@@ -43,7 +43,7 @@ const validate = () => {
         required: 'Need a title in here, Seuss.',
       },
       body: {
-        required: 'This thneeds a body, please.',
+        required: 'This needs a body, please.',
       },
     },
     submitHandler() { handleUpsert(); },

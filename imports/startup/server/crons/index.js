@@ -2,7 +2,11 @@ import { SyncedCron } from 'meteor/percolate:synced-cron'; // http://bunkat.gith
 import { getEvents } from './getEvents';
 import { backfillData } from './getMembers';
 import { sendThankYouComeAgain } from './thankYouComeAgain';
-import { sendWeMissYou } from './weMissYou';
+import { logLastMinuteDiscounts } from './logLastMinuteDiscounts';
+import { payoutOrganizations } from './payoutOrganizations';
+import { sendLastMinuteDiscounts } from './sendLastMinuteDiscounts';
+import { sendWeeklyRecap } from './weeklyRecap';
+
 
 // Schedule the crons to be run
 SyncedCron.config({ log: true, utc: true });
@@ -11,7 +15,7 @@ SyncedCron.start();
 SyncedCron.add({
   name: "getMembers & backfillData",
   schedule(parser) {
-    return parser.text('at 3:50 am'); // This ('at 3:50 am') is UTC time -> 11:50pm EST
+    return parser.text('at 3:45 am'); // This is UTC time -> 11:45pm EST
   },
   job() {
     backfillData();
@@ -21,20 +25,17 @@ SyncedCron.add({
 SyncedCron.add({
   name: "getEvents",
   schedule(parser) {
-    return parser.text('at 3:45 am'); // This is UTC time -> 11:40pm EST
+    return parser.text('at 3:40 am'); // This is UTC time -> 11:40pm EST
   },
   job() {
-    let organizations = [ "playsoccer2give" ]; // Change this to include all organizations to pull data from. Note that we have to account for eventID parsing and new API keys when this happens!!
-    organizations.forEach( (organization) => {
-      getEvents(organization);
-    });
+    getEvents();
   },
 });
 
 SyncedCron.add({
   name: "thankYouComeAgain",
   schedule(parser) {
-    return parser.text('at 3:55 am'); // This is UTC time -> 11:55pm EST
+    return parser.text('at 3:50 am'); // This is UTC time -> 11:50pm EST
   },
   job() {
     sendThankYouComeAgain();
@@ -42,17 +43,41 @@ SyncedCron.add({
 });
 
 SyncedCron.add({
-  name: "weMissYou",
+  name: "payoutOrganizations",
   schedule(parser) {
-    return parser.text('at 8:00 pm'); // This is UTC time -> 4:00pm EST
+    return parser.text('at 3:35 am'); // This is UTC time -> 11:35pm EST
   },
   job() {
-    sendWeMissYou();
+    payoutOrganizations();
   },
 });
 
+SyncedCron.add({
+  name: "logLastMinuteDiscounts",
+  schedule(parser) {
+    return parser.text('at 3:53 am'); // This is UTC time -> 11:53pm EST
+  },
+  job() {
+    logLastMinuteDiscounts();
+  },
+});
 
-// When I make a lastMinuteOpenings notification:
-// The HTTP call should be made when the cron runs, once per organizationID.
-// After making the call, logic runs to see if there is at least one game in the next 24 hours that has at least one opening.
-// If true, then send out the basic email to all users who are not already in those games.
+SyncedCron.add({
+  name: "sendLastMinuteDiscounts",
+  schedule(parser) {
+    return parser.text('at 3:56 am'); // This is UTC time -> 11:56pm EST
+  },
+  job() {
+    sendLastMinuteDiscounts();
+  },
+});
+
+SyncedCron.add({
+  name: "weeklyRecap",
+  schedule(parser) {
+    return parser.text('at 3:58 am on Sun'); // This is UTC time -> 11:58pm EST
+  },
+  job() {
+    sendWeeklyRecap();
+  },
+});
