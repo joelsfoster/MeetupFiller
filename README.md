@@ -1,5 +1,7 @@
-# PickupBaller by Joel Foster
+# MeetupFiller by Joel Foster
 
-The scaffolding for this app came from Base, by The Meteor Chef:
-
-[Read the Documentation](http://themeteorchef.com/base)
+Home page: https://www.meetupfiller.com/
+Trello Board: https://trello.com/b/N2TzPEX5/meetupfiller
+Host: https://galaxy.meteor.com/app/www.meetupfiller.com
+Mail Server: https://app.mailgun.com/app/reporting/overview
+Database: https://mlab.com/clusters/rs-ds163619/databases/pickupballer_1
