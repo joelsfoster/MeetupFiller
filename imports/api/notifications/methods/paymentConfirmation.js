@@ -64,14 +64,3 @@ Meteor.methods({
     }
   }
 });
-
-/*
-Meteor.call('paymentConfirmation', "euowcswoC7iiGkgTm", (error, response) => {
-  if (error) {
-    console.log("Error at paymentConfirmation");
-    console.warn(error.reason);
-  } else {
-    console.log("paymentConfirmation sent!");
-  }
-});
-*/
