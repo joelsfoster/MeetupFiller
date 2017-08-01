@@ -13,16 +13,6 @@ SyncedCron.config({ log: true, utc: true });
 SyncedCron.start();
 
 SyncedCron.add({
-  name: "getMembers & backfillData",
-  schedule(parser) {
-    return parser.text('at 3:45 am'); // This is UTC time -> 11:45pm EST
-  },
-  job() {
-    backfillData();
-  },
-});
-
-SyncedCron.add({
   name: "getEvents",
   schedule(parser) {
     return parser.text('at 3:40 am'); // This is UTC time -> 11:40pm EST
@@ -33,9 +23,19 @@ SyncedCron.add({
 });
 
 SyncedCron.add({
+  name: "getMembers & backfillData",
+  schedule(parser) {
+    return parser.text('at 3:45 am'); // This is UTC time -> 11:45pm EST
+  },
+  job() {
+    backfillData();
+  },
+});
+
+SyncedCron.add({
   name: "thankYouComeAgain",
   schedule(parser) {
-    return parser.text('at 3:50 am'); // This is UTC time -> 11:50pm EST
+    return parser.text('at 3:48 am'); // This is UTC time -> 11:48pm EST
   },
   job() {
     sendThankYouComeAgain();
@@ -43,19 +43,9 @@ SyncedCron.add({
 });
 
 SyncedCron.add({
-  name: "payoutOrganizations",
-  schedule(parser) {
-    return parser.text('at 3:35 am'); // This is UTC time -> 11:35pm EST
-  },
-  job() {
-    payoutOrganizations();
-  },
-});
-
-SyncedCron.add({
   name: "logLastMinuteDiscounts",
   schedule(parser) {
-    return parser.text('at 3:53 am'); // This is UTC time -> 11:53pm EST
+    return parser.text('at 3:51 am'); // This is UTC time -> 11:51pm EST
   },
   job() {
     logLastMinuteDiscounts();
@@ -65,10 +55,20 @@ SyncedCron.add({
 SyncedCron.add({
   name: "sendLastMinuteDiscounts",
   schedule(parser) {
-    return parser.text('at 3:56 am'); // This is UTC time -> 11:56pm EST
+    return parser.text('at 3:54 am'); // This is UTC time -> 11:54pm EST
   },
   job() {
     sendLastMinuteDiscounts();
+  },
+});
+
+SyncedCron.add({
+  name: "payoutOrganizations",
+  schedule(parser) {
+    return parser.text('at 3:56 am on Sun'); // This is UTC time -> 11:56pm EST
+  },
+  job() {
+    payoutOrganizations();
   },
 });
 

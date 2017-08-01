@@ -8,40 +8,42 @@ import moment from 'moment';
 
 // This method calls the function that houses the promise
 Meteor.methods({
-  paypalPayout(_id) {
-    check(_id, String);
+  paypalPayout(paypalPayoutID, discountIDs) {
+    check(paypalPayoutID, String);
+    check(discountIDs, [String]);
 
     if (Meteor.isProduction) {
       const sender_batch_id = Math.random().toString(36).substring(9); // Must be unique so generating a random number
-      const discountLog = DiscountLog.findOne({"_id": _id});
-      const organizationID = discountLog["organizationID"];
-      const eventID = discountLog["eventID"];
-      const eventName = discountLog["eventName"];
-      const userID = discountLog["userID"];
-      const userName = Members.findOne({"organizationID": organizationID, "userID": userID})["userName"];
-      const originalPrice = discountLog["originalPrice"].toFixed(2);
-      const discountAmount = discountLog["discountAmount"].toFixed(2);
-      const discountedPrice = (originalPrice - discountAmount).toFixed(2);
-      const paypalFee = ((discountedPrice * .029) + .30).toFixed(2);
-      const meetupFillerFee = (discountedPrice * .18).toFixed(2); // 18% fee
-      const amountToPayout = (discountedPrice - paypalFee - meetupFillerFee).toFixed(2);
-      const paypalPayoutID = AccountSettings.findOne({"organizationID": organizationID})["paypalPayoutID"];
+
+      const amountToPayoutArray = discountIDs.map( (_id) => {
+        const discountLog = DiscountLog.findOne({"_id": _id});
+        const originalPrice = discountLog["originalPrice"].toFixed(2);
+        const discountAmount = discountLog["discountAmount"].toFixed(2);
+        const discountedPrice = (originalPrice - discountAmount).toFixed(2);
+        const paypalFee = ((discountedPrice * .029) + .30).toFixed(2);
+        const meetupFillerFee = (discountedPrice * .18).toFixed(2); // 18% fee
+        const amountToPayout = (discountedPrice - paypalFee - meetupFillerFee).toFixed(2);
+
+        return amountToPayout;
+      });
+
+      const amountToPayoutTotal = amountToPayoutArray.reduce( (sum, value) => parseFloat(sum) + parseFloat(value), 0).toFixed(2);
 
       const create_payout_json = {
           "sender_batch_header": {
               "sender_batch_id": sender_batch_id,
-              "email_subject": "Payment for " + eventName,
+              "email_subject": "Here's the money MeetupFiller made you this week!",
           },
           "items": [
               {
                   "recipient_type": "EMAIL",
                   "amount": {
-                      "value": amountToPayout,
+                      "value": amountToPayoutTotal,
                       "currency": "USD"
                   },
                   "receiver": paypalPayoutID,
-                  "note": eventName + " | price:$" + originalPrice + " discount:$" + discountAmount + " paypalFee:$" + paypalFee + " meetupFillerFee:$" + meetupFillerFee,
-                  "sender_item_id": "eventID:" + eventID + " | member:" + userName + " (" + userID + ")"
+                  "note": "Check your email for a breakdown of the RSVPs made via MeetupFiller this week",
+                  "sender_item_id": "MeetupFiller"
               }
           ]
       };
@@ -54,20 +56,21 @@ Meteor.methods({
               console.log(error.response);
               reject(error);
             } else {
-              console.log("Paid out $" + amountToPayout + " ($" + discountedPrice + ") for " + organizationID + "/" + eventID + " userID:" + userID + " (_id:" + _id + ")");
+              console.log("Payout for " + organizationID + " completed!");
               resolve(payout);
             }
           });
         });
       };
 
+      // A function to mark the discount as paid, so we don't pay it twice
       const logPayoutTime = () => {
-        DiscountLog.update( {"_id": _id}, { $set: { "payoutTime": moment.utc().format("x") } }, (error, response) => {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log(_id + " was paid out successfully. meetupFillerFee=$" + meetupFillerFee);
-          }
+        discountIDs.forEach( (_id) => {
+          DiscountLog.update( {"_id": _id}, { $set: { "payoutTime": moment.utc().format("x") } }, (error, response) => {
+            if (error) {
+              console.log(error);
+            }
+          });
         });
       }
 
