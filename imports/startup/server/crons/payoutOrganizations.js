@@ -19,11 +19,15 @@ export const payoutOrganizations = () => {
       return discount["_id"];
     });
 
-    // ...and call the Meteor method "paypalPayout" to send them out to their paypalPayoutID
-    Meteor.call("paypalPayout", paypalPayoutID, discountIDs, (error, response) => {
-      if (error) {
-        console.log(error);
-      }
-    });
+    // ...and if there's anything to send out, call the Meteor method "paypalPayout" to send them out to their paypalPayoutID
+    if (discountIDs.length > 0) {
+      Meteor.call("paypalPayout", paypalPayoutID, discountIDs, (error, response) => {
+        if (error) {
+          console.log(error);
+        }
+      });
+    } else {
+      console.log("Tried to pay out to " + organizationID + ", but there were no events to payout");
+    }
   });
 }

@@ -38,7 +38,7 @@ const getMembers = (organizationID, eventID) => {
         const askedEmailString = askedEmailArray ? askedEmailArray.join(" ").toLowerCase() : undefined; // Replace "\n" with " " and make the whole email lowercase
         const askedEmail = askedEmailString ? findEmailsInString(askedEmailString)[0] : undefined; // Now we can extract the email
 
-        // PART 2.1 (used below, inside part 2)
+        // PART 3 (used below, inside part 2)
         // Log the member as having attended this event if not already logged, and update the member's lastSeen date. This function is called below.
         const logAttendance = () => {
           const memberAttendedEvent = Events.findOne( { "organizationID": organizationID, "eventID": eventID, "eventMemberIDs": { $in: [ userID ] } } );
@@ -65,7 +65,7 @@ const getMembers = (organizationID, eventID) => {
           }
         };
 
-        // PART 2.0
+        // PART 2
         // If the member doesn't exist, add them to the DB and log their attendance
         if (!Members.findOne( {"organizationID": organizationID, "userID": userID} )) {
           Members.insert( {

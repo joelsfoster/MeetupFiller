@@ -48,8 +48,8 @@ export const logLastMinuteDiscounts = () => {
             const lastTimeSeen = parseInt(nowUnix) - (parseInt(memberBeenAwayDays) * parseInt(unixDay));
             const members = Members.find({
               "lastSeen": { $lte: parseInt(lastTimeSeen) },
-              "askedEmail": { $ne: "" || undefined },
-              $or: [ {"snoozeUntil": undefined}, {"snoozeUntil": { $lte: parseInt(nowUnix) }} ]
+              $or: [ { "askedEmail": { $ne: "" || undefined } }, { "paymentEmail": { $ne: "" || undefined } } ],
+              $or: [ { "snoozeUntil": undefined }, { "snoozeUntil": { $lte: parseInt(nowUnix) } } ]
             }).fetch();
 
             // ...then announce that we're starting the process...
