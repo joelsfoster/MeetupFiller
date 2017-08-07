@@ -12,20 +12,27 @@ export const sendLastMinuteDiscounts = () => {
   // For each organization,...
   accountOrganizationIDs.forEach( (accountOrganizationID) => {
 
-    console.log("Sending lastMinuteDiscounts for " + accountOrganizationID + "...");
     const organizationID = accountOrganizationID["organizationID"];
     const unixDay = 86400000;
     const nowUnix = parseInt(moment.utc().format("x"));
     const yesterdayUnix = parseInt(nowUnix) - parseInt(unixDay);
-    const members = Members.find({ "organizationID": organizationID, "askedEmail": {$ne: "" || undefined } }).fetch(); // Refactor to first find recent new discounts and what members they belong to, to prevent going through the whole userbase
 
-    // ...for each member in that organization, find all their discounts in the DiscountLog that were created in the last 24 hours.
+    // ...find all members in that organization who have an email address and are not snoozed/unsubscribed.
+    const members = Members.find({
+      "organizationID": organizationID,
+      $or: [ { "askedEmail": { $ne: "" || undefined } }, { "paymentEmail": { $ne: "" || undefined } } ],
+      $or: [ { "snoozeUntil": undefined }, { "snoozeUntil": { $lte: parseInt(nowUnix) } } ]
+    }).fetch(); // Refactor to first find recent new discounts and what members they belong to, to prevent going through the whole userbase
+
+    console.log("Sending lastMinuteDiscounts for " + organizationID + "...");
+
+    // Then, for each member, find all their discounts in the DiscountLog that were created in the last 24 hours.
     members.forEach( (member) => {
       const userID = member["userID"];
       const userName = member["userName"];
-      const askedEmail = member["askedEmail"];
-      const paymentEmail = member["paymentEmail"];
-      const emailAddress = paymentEmail ? paymentEmail : askedEmail;
+      const askedEmail = (member["askedEmail"] && member["askedEmail"] !== "") ? member["askedEmail"] : undefined;
+      const paymentEmail = (member["paymentEmail"] && member["paymentEmail"] !== "") ? member["paymentEmail"] : undefined;
+      const emailAddress = askedEmail ? askedEmail : paymentEmail;
       const discountsToSend = DiscountLog.find({ "createdAt": {$gte: yesterdayUnix}, "organizationID": organizationID, "userID": userID }).fetch();
 
       // If a member has at least one discount to recieve from this organization...

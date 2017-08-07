@@ -28,9 +28,9 @@ export const sendThankYouComeAgain = () => {
       object["eventMemberIDs"].forEach( (userID) => {
         const member = Members.findOne( { "organizationID": organizationID, "userID": userID } );
         const userName = member["userName"];
-        const askedEmail = member["askedEmail"] ? member["askedEmail"] : "";
-        const paymentEmail = member["paymentEmail"];
-        const emailAddress = paymentEmail ? paymentEmail : askedEmail;
+        const askedEmail = (member["askedEmail"] && member["askedEmail"] !== "") ? member["askedEmail"] : undefined;
+        const paymentEmail = (member["paymentEmail"] && member["paymentEmail"] !== "") ? member["paymentEmail"] : undefined;
+        const emailAddress = askedEmail ? askedEmail : paymentEmail;
 
         // If an attendee has an email address...
         if (emailAddress && emailAddress !== "") {
@@ -43,11 +43,11 @@ export const sendThankYouComeAgain = () => {
           }
 
           // ...and this email was not sent a thankYouComeAgain notification in the last 24 hours...
-          if (!NotificationLog.findOne( {
+          if (!NotificationLog.findOne({
             "notificationName": "thankYouComeAgain",
             "emailAddress": emailAddress,
             "notificationTime": { $gte : parseInt(yesterdayUnix) }
-          } )) {
+          }) ) {
 
             // ...and this specific notification instance wasn't sent, send them a notification and log it
             if (!NotificationLog.findOne(notificationRecord) ) {

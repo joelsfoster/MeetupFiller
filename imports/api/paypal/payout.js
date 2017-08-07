@@ -14,6 +14,8 @@ Meteor.methods({
 
     if (Meteor.isProduction) {
       const sender_batch_id = Math.random().toString(36).substring(9); // Must be unique so generating a random number
+      const sampleDiscount = DiscountLog.findOne({"_id": discountIDs[0]});
+      const organizationID = sampleDiscount["organizationID"];
 
       const amountToPayoutArray = discountIDs.map( (_id) => {
         const discountLog = DiscountLog.findOne({"_id": _id});

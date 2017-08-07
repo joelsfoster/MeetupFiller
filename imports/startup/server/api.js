@@ -5,3 +5,4 @@ import '../../api/meetup/index.js';
 import '../../api/paypal/index.js';
 import '../../api/public/api.js';
 import '../../api/notifications/index.js';
+import '../../api/members/methods/index.js';

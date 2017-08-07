@@ -13,6 +13,7 @@ import NotFound from '../../ui/pages/NotFound.js';
 import RecoverPassword from '../../ui/pages/RecoverPassword.js';
 import ResetPassword from '../../ui/pages/ResetPassword.js';
 import Signup from '../../ui/pages/Signup.js';
+import Admin from '../../ui/pages/Admin.js';
 import RsvpPayment from '../../ui/pages/RsvpPayment.js';
 import RsvpPaymentSuccess from '../../ui/pages/RsvpPaymentSuccess.js';
 import RsvpPaymentCancelled from '../../ui/pages/RsvpPaymentCancelled.js';
@@ -46,10 +47,13 @@ Meteor.startup(() => {
         <Route name="login" path="/login" component={ Login } />
         <Route name="recover-password" path="/recover-password" component={ RecoverPassword } />
         <Route name="reset-password" path="/reset-password/:token" component={ ResetPassword } />
-        <Route name="signup" path="/signup" component={ Signup } />
+        <Route name="admin" path="/admin" component={ Admin } onEnter={ authenticate } />
         <Route path="*" component={ NotFound } />
       </Route>
     </Router>,
     document.getElementById('react-root')
   );
 });
+
+// Removed, to prevent public access of AdminTools:
+// <Route name="signup" path="/signup" component={ Signup } />
