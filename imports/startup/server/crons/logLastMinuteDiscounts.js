@@ -75,7 +75,7 @@ export const logLastMinuteDiscounts = () => {
                   }
                 });
               } else {
-                console.log("Error: Did not send lastMinuteDiscounts for " + userID + ":" + member["askedEmail"] + ", DiscountLog indicates it was already logged");
+                console.log("Error: Did not send lastMinuteDiscounts for " + eventID + ":" + userID + ", DiscountLog indicates it was already logged");
               }
             });
           } // End of logDiscounts function definition.
@@ -92,11 +92,11 @@ export const logLastMinuteDiscounts = () => {
               // ...then use the logic specified by the account to determine how much discount to offer based off original price and how empty the event is...
               const attendanceDiscountCeiling = organization["attendanceDiscountCeiling"] ? organization["attendanceDiscountCeiling"] : 1.00;
               const attendanceBigDiscountCeiling = organization["attendanceBigDiscountCeiling"] ? organization["attendanceBigDiscountCeiling"] : 0.00; // If no big discount settings are found, never offer big discounts
-              const currentAttendeesCount = object["yes_rsvp_count"];
-              const rsvpLimit = object["rsvp_limit"];
-              const percentageFilled = (currentAttendeesCount / rsvpLimit).toFixed(2);
-              const giveDiscount = percentageFilled > attendanceDiscountCeiling; // If a game is filled above the % specified, don't offer any discounts (the % is 100 if not specified, so as to always offer them)
-              const bigDiscount = percentageFilled <= attendanceBigDiscountCeiling; // If a game is filled below the % specified, offer a big discount (the % is 0 if not specified, so as never to offer them)
+              const currentAttendeesCount = parseFloat(object["yes_rsvp_count"]);
+              const rsvpLimit = parseFloat(object["rsvp_limit"]);
+              const percentageFilled = parseFloat((currentAttendeesCount / rsvpLimit).toFixed(2));
+              const giveDiscount = attendanceDiscountCeiling >= percentageFilled; // If a game's capacity is below the % specified, send out discounts (the % is 100 if not specified, so as to always offer them)
+              const bigDiscount = attendanceBigDiscountCeiling >= percentageFilled; // If a game's capacity is below the % specified, offer a big discount (the % is 0 if not specified, so as never to offer them)
               const originalPrice = parseFloat(object["fee"]["amount"].toFixed(2));
 
               // PART 2.1

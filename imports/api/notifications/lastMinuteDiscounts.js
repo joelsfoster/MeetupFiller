@@ -27,7 +27,7 @@ export const lastMinuteDiscounts = (emailAddress, discountIDs) => {
     const sampleDiscountID = discountIDs[0]; // Used by the Snooze function because we only want to publish Discount _ids in URLs, never Member _ids
     const sampleEventTime = DiscountLog.findOne({"_id": sampleDiscountID})["eventTime"];
     const sampleEventDate = sampleEventTime ? moment(sampleEventTime).format("MMM D") : undefined;
-    const emailSubjectDate = sampleEventDate ? "Events on " + sampleEventDate : "Upcoming events - " + moment().add(2, "days").format("MMM D");
+    const emailSubjectDate = sampleEventDate ? "Meetups on " + sampleEventDate : "Upcoming Meetups - " + moment().add(2, "days").format("MMM D");
     const discountBlocks = htmlBlocks.join("");
 
     const organizationID = DiscountLog.findOne({"_id": sampleDiscountID})["organizationID"];
@@ -63,29 +63,17 @@ export const lastMinuteDiscounts = (emailAddress, discountIDs) => {
 
 /*
 // Seed a test discount for Joel Foster
-const record1 = {
+const record = {
   "organizationID": "playsoccer2give",
-  "eventID": 242004432,
-  "eventName": "Monday game 645pm CO-ED Soccer @ LIC (7v7 game) for PS2G",
+  "eventID": 242338778,
+  "eventName": "Sunday Indoor Soccer @ W86th (2 hours 4v4) for Roundstar Foundation",
   "userID": 58124462,
-  "originalPrice": 8.00,
-  "discountAmount": 3.00,
+  "originalPrice": 7.00,
+  "discountAmount": 6.00,
 }
 
-const record2 = {
-  "organizationID": "playsoccer2give",
-  "eventID": 241984374,
-  "eventName": "Monday game 545pm CO-ED Soccer @ LIC (7v7 game) for PS2G",
-  "userID": 58124462,
-  "originalPrice": 8.00,
-  "discountAmount": 3.00,
-}
-
-DiscountLog.insert(record1, (error, response1) => {
-  DiscountLog.insert(record2, (error, response2) => {
-    lastMinuteDiscounts("joelsfoster@gmail.com", [response1, response2]);
-    console.log(response1);
-    console.log(response2);
-  });
+DiscountLog.insert(record, (error, response) => {
+  lastMinuteDiscounts("joelsfoster@gmail.com", [response]);
+  console.log(response);
 });
 */
