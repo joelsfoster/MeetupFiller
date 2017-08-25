@@ -16,7 +16,7 @@ export const sendLastMinuteDiscounts = () => {
     const unixDay = 86400000;
     const nowUnix = parseInt(moment.utc().format("x"));
     const yesterdayUnix = parseInt(nowUnix) - parseInt(unixDay);
-    console.log("Sending outstanding discounts for members in organizationID:" + organizationID +"...");
+    console.log("Sending discounts for members in organizationID:" + organizationID +"...");
 
     // ...find all members in that organization who have an email address and are not snoozed/unsubscribed.
     const members = Members.find({

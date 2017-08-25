@@ -9,7 +9,7 @@ const NotFound = () => (
       <h3>Click <a href="https://www.meetup.com">here</a> to go back to Meetup.</h3>
     </Alert>
     <br />
-    <img src="images/404-fail.gif" alt="404-fail" />
+    <img src="img/404-fail.gif" alt="404-fail" />
   </div>
 );
 

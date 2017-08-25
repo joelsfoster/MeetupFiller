@@ -22,7 +22,7 @@ Meteor.methods({
         const originalPrice = discountLog["originalPrice"].toFixed(2);
         const discountAmount = discountLog["discountAmount"].toFixed(2);
         const discountedPrice = (originalPrice - discountAmount).toFixed(2);
-        const paypalFee = ((discountedPrice * .029) + .30).toFixed(2);
+        const paypalFee = ((discountedPrice * .029) + .30).toFixed(2); // Paypal's 2.9% + $0.30 fee
         const meetupFillerFee = (discountedPrice * .18).toFixed(2); // 18% fee
         const amountToPayout = (discountedPrice - paypalFee - meetupFillerFee).toFixed(2);
 
