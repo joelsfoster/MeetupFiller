@@ -16,6 +16,7 @@ export const sendLastMinuteDiscounts = () => {
     const unixDay = 86400000;
     const nowUnix = parseInt(moment.utc().format("x"));
     const yesterdayUnix = parseInt(nowUnix) - parseInt(unixDay);
+    console.log("Sending discounts for members in organizationID:" + organizationID +"...");
 
     // ...find all members in that organization who have an email address and are not snoozed/unsubscribed.
     const members = Members.find({
@@ -23,8 +24,6 @@ export const sendLastMinuteDiscounts = () => {
       $or: [ { "askedEmail": { $ne: "" || undefined } }, { "paymentEmail": { $ne: "" || undefined } } ],
       $or: [ { "snoozeUntil": undefined }, { "snoozeUntil": { $lte: parseInt(nowUnix) } } ]
     }).fetch(); // Refactor to first find recent new discounts and what members they belong to, to prevent going through the whole userbase
-
-    console.log("Sending lastMinuteDiscounts for " + organizationID + "...");
 
     // Then, for each member, find all their discounts in the DiscountLog that were created in the last 24 hours.
     members.forEach( (member) => {

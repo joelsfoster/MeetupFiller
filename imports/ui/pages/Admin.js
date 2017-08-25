@@ -22,9 +22,10 @@ export default class Admin extends React.Component {
         Meteor.call('uploadPaypalMembers', results, (error, response) => {
           if (error) {
             console.log("Error at uploadPaypalMembers");
+            alert("Error at uploadPaypalMembers. File did not upload.");
             console.warn(error.reason);
           } else {
-            console.log('Uploading data from "' + this.state.file.name + '"...');
+            alert("File successfully uploaded!");
           }
         });
     	}

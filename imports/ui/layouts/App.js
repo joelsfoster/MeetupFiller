@@ -7,9 +7,9 @@ import AppNavigation from '../components/AppNavigation.js';
 const App = ({ children }) => (
   <div>
     { /* <AppNavigation /> */ }
-    <Grid>
+    { /* <Grid> */ }
       { children }
-    </Grid>
+    { /* </Grid> */ }
   </div>
 );
 

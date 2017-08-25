@@ -46,6 +46,8 @@ export const logLastMinuteDiscounts = () => {
             const memberBeenAwayDaysSetting = organization["memberBeenAwayDays"];
             const memberBeenAwayDays = memberBeenAwayDaysSetting > 0 ? memberBeenAwayDaysSetting : 0; // If no limit was set on how long a member has to be away to be given a discount, set days to 0
             const lastTimeSeen = parseInt(nowUnix) - (parseInt(memberBeenAwayDays) * parseInt(unixDay));
+
+            console.log("lastTimeSeen $lte=", lastTimeSeen);
             const members = Members.find({
               "lastSeen": { $lte: parseInt(lastTimeSeen) },
               $or: [ { "askedEmail": { $ne: "" || undefined } }, { "paymentEmail": { $ne: "" || undefined } } ],
@@ -75,14 +77,14 @@ export const logLastMinuteDiscounts = () => {
                   }
                 });
               } else {
-                console.log("Error: Did not send lastMinuteDiscounts for " + userID + ":" + member["askedEmail"] + ", DiscountLog indicates it was already logged");
+                console.log("Error: Did not send lastMinuteDiscounts for " + eventID + ":" + userID + ", DiscountLog indicates it was already logged");
               }
             });
           } // End of logDiscounts function definition.
 
 
           // PART 2:
-          // We define the logic that determines if a discount should be sent out
+          // We define the logic that determines if a discount should be logged
           // If a game starts between the next 24-48 hours...
           if (object["time"] >= tomorrowUnix && object["time"] <= dayAfterTomorrowUnix) {
 
@@ -92,17 +94,16 @@ export const logLastMinuteDiscounts = () => {
               // ...then use the logic specified by the account to determine how much discount to offer based off original price and how empty the event is...
               const attendanceDiscountCeiling = organization["attendanceDiscountCeiling"] ? organization["attendanceDiscountCeiling"] : 1.00;
               const attendanceBigDiscountCeiling = organization["attendanceBigDiscountCeiling"] ? organization["attendanceBigDiscountCeiling"] : 0.00; // If no big discount settings are found, never offer big discounts
-              const currentAttendeesCount = object["yes_rsvp_count"];
-              const rsvpLimit = object["rsvp_limit"];
-              const percentageFilled = (currentAttendeesCount / rsvpLimit).toFixed(2);
-              const giveDiscount = percentageFilled > attendanceDiscountCeiling; // If a game is filled above the % specified, don't offer any discounts (the % is 100 if not specified, so as to always offer them)
-              const bigDiscount = percentageFilled <= attendanceBigDiscountCeiling; // If a game is filled below the % specified, offer a big discount (the % is 0 if not specified, so as never to offer them)
+              const currentAttendeesCount = parseFloat(object["yes_rsvp_count"]);
+              const rsvpLimit = parseFloat(object["rsvp_limit"]);
+              const percentageFilled = parseFloat((currentAttendeesCount / rsvpLimit).toFixed(2));
+              const giveDiscount = attendanceDiscountCeiling >= percentageFilled; // If a game's capacity is below the % specified, send out discounts (the % is 100 if not specified, so as to always offer them)
+              const bigDiscount = attendanceBigDiscountCeiling >= percentageFilled; // If a game's capacity is below the % specified, offer a big discount (the % is 0 if not specified, so as never to offer them)
               const originalPrice = parseFloat(object["fee"]["amount"].toFixed(2));
 
               // PART 2.1
               // If the game should be sent a discount but doesn't qualify for a big discount...
               if (giveDiscount && !bigDiscount) {
-
                 const flatDiscountsNormal = organization["flatDiscountsNormal"];
 
                 // ...and this organization has specified normal discount amounts...
@@ -122,7 +123,6 @@ export const logLastMinuteDiscounts = () => {
               // PART 2.2
               // If the game qualifies for a bigDiscount...
               } else if (giveDiscount && bigDiscount) {
-
                 const flatDiscountsBig = organization["flatDiscountsBig"];
 
                 // ...and this organization has specified big discount amounts...
@@ -140,7 +140,7 @@ export const logLastMinuteDiscounts = () => {
                 }
 
               // PART 2.3
-              // If the game doesn't qualify for a discount because it's almost full, don't send any discount
+              // If the game doesn't qualify for a discount because it's almost full, don't log any discount
               } else {
                 console.log(organizationID + ":" + eventID + " filled above capacity ceiling specified (" + (attendanceDiscountCeiling * 100).toFixed(0) + "%), no discount offered.");
               }

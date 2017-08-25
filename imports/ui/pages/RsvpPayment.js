@@ -37,7 +37,7 @@ export default class RsvpPayment extends React.Component {
         Meteor.call('generatePaypalPortal', _id, (error, url) => {
           if (error) {
             console.log("Error at generatePaypalPortal");
-            console.warn(error.reason);
+            console.log(error.reason);
             failureRedirect();
           } else {
 
@@ -45,7 +45,7 @@ export default class RsvpPayment extends React.Component {
             Meteor.call('postMeetupRsvp', organizationID, eventID, userID, rsvpStatus, (error, response) => {
               if (error) {
                 console.log("Error at postMeetupRsvp at RsvpPayment");
-                console.warn(error.reason);
+                console.log(error.reason);
                 failureRedirect();
               } else {
 
@@ -53,7 +53,7 @@ export default class RsvpPayment extends React.Component {
                 Meteor.call('timedRemoveMeetupRsvp', organizationID, eventID, userID, (error, response) => {
                   if (error) {
                     console.log("Error at timedRemoveMeetupRsvp");
-                    console.warn(error.reason);
+                    console.log(error.reason);
                     failureRedirect();
                   } else {
 

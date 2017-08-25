@@ -37,7 +37,7 @@ export const sendThankYouComeAgain = () => {
           const notificationRecord = {
             "notificationName": "thankYouComeAgain",
             "organizationID": organizationID,
-            "eventID": eventID,
+            "eventID": Array.of(eventID),
             "userID": userID,
             "emailAddress": emailAddress
           }
@@ -74,7 +74,5 @@ export const sendThankYouComeAgain = () => {
         }
       });
     });
-  } else {
-    console.log("thankYouComeAgain: No events yesterday");
   }
 };

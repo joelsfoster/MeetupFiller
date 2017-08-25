@@ -1,7 +1,7 @@
 {
   "name": "MeetupFiller",
   "version": "1.0.0",
-  "description": "An app made by Joel Foster.",
+  "description": "Never host an unfilled Meetup again",
   "scripts": {
     "start": "meteor --settings settings-development.json",
     "staging": "meteor deploy staging.meteor.com --settings settings-development.json",
@@ -63,14 +63,17 @@
     "babel-runtime": "^6.23.0",
     "bcrypt": "^0.8.7",
     "body-parser": "^1.17.1",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^4.0.0-beta",
     "find-emails-in-string": "^1.0.1",
-    "jquery": "^2.2.4",
+    "font-awesome": "4.7.0",
+    "jquery": "^3.2.1",
     "jquery-validation": "^1.16.0",
+    "jquery.easing": "^1.4.1",
     "meteor-node-stubs": "^0.2.6",
     "moment": "^2.17.1",
     "paypal-resk-sdk": "^1.7.0",
     "paypal-rest-sdk": "^1.7.1",
+    "popper.js": "^1.12.3",
     "react": "^15.4.2",
     "react-addons-pure-render-mixin": "^15.4.2",
     "react-bootstrap": "^0.30.8",
@@ -78,6 +81,7 @@
     "react-komposer": "^1.13.1",
     "react-router": "^3.0.2",
     "react-router-bootstrap": "^0.23.1",
-    "rsvp": "^3.3.3"
+    "rsvp": "^3.3.3",
+    "simple-line-icons": "2.4.1"
   }
 }
