@@ -21,8 +21,8 @@ export const sendLastMinuteDiscounts = () => {
     // ...find all members in that organization who have an email address and are not snoozed/unsubscribed.
     const members = Members.find({
       "organizationID": organizationID,
-      $or: [ { "askedEmail": { $ne: "" || undefined } }, { "paymentEmail": { $ne: "" || undefined } } ],
-      $or: [ { "snoozeUntil": undefined }, { "snoozeUntil": { $lte: parseInt(nowUnix) } } ]
+      "snoozeUntil": { $not: { $gte: parseInt(nowUnix) } }, // $not also returns undefined values
+      $or: [ { "askedEmail": { $ne: "" || undefined } }, { "paymentEmail": { $ne: "" || undefined } } ]
     }).fetch(); // Refactor to first find recent new discounts and what members they belong to, to prevent going through the whole userbase
 
     // Then, for each member, find all their discounts in the DiscountLog that were created in the last 24 hours.

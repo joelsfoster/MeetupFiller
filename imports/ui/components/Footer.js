@@ -9,7 +9,7 @@ const Footer = React.createClass({
         <div className="container">
           <img src="img/made_in_nyc.png" className="img-fluid" alt width="82"/>
           <p><br /></p>
-          <p>© 2017 MeetupFiller. All Rights Reserved.</p>
+          <p>© 2017 MeetupFiller</p>
           { /*
           <ul className="list-inline">
             <li className="list-inline-item">

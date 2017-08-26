@@ -8,8 +8,8 @@ const Features = React.createClass({
       <section className="features" id="features">
         <div className="container">
           <div className="section-heading text-center">
-            <h2>Completely Automated</h2>
-            <p className="text-muted">Detects open spots in upcoming events, then sends individual members special discounts via email</p>
+            <h2>Automated Discounts System</h2>
+            <p className="text-muted">Detects open spots in upcoming events, then sends eligible members an email with a discounted RSVP link</p>
             <hr />
           </div>
           <div className="row">
@@ -18,7 +18,6 @@ const Features = React.createClass({
                 <div className="device-mockup iphone6_plus portrait white">
                   <div className="device">
                     <div className="screen">
-                      {/* Demo image for screen mockup, you can put an image here, some HTML, an animation, video, or anything else! */}
                       <img src="img/filled_meetup.png" className="img-fluid" alt />
                     </div>
                   </div>
@@ -30,32 +29,32 @@ const Features = React.createClass({
                 <div className="row">
                   <div className="col-lg-6">
                     <div className="feature-item">
-                      <i className="icon-screen-smartphone text-primary" />
-                      <h3>Device Mockups</h3>
-                      <p className="text-muted">Ready to use HTML/CSS device mockups, no Photoshop required!</p>
+                      <i className="icon-wrench text-primary icon" />
+                      <h3>Total Flexibility</h3>
+                      <p className="text-muted">Set up and customize your group's discounting strategy, then enjoy full hands-off automation</p>
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="feature-item">
-                      <i className="icon-camera text-primary" />
-                      <h3>Flexible Use</h3>
-                      <p className="text-muted">Put an image, video, animation, or anything else in the screen!</p>
+                      <i className="icon-user-following text-primary icon" />
+                      <h3>Member-Friendly</h3>
+                      <p className="text-muted">Discounts appear sent from you, with the event's information and a "Click to RSVP using this discount" link</p>
                     </div>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-lg-6">
                     <div className="feature-item">
-                      <i className="icon-present text-primary" />
-                      <h3>Free to Use</h3>
-                      <p className="text-muted">As always, this theme is free to download and use for any purpose!</p>
+                      <i className="icon-lock text-primary icon" />
+                      <h3>Secure Payments</h3>
+                      <p className="text-muted">Members pay through PayPal (same experience as Meetup's), and the funds are sent to your PayPal account weekly</p>
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="feature-item">
-                      <i className="icon-lock-open text-primary" />
-                      <h3>Open Source</h3>
-                      <p className="text-muted">Since this theme is MIT licensed, you can use it commercially!</p>
+                      <i className="icon-wallet text-primary icon" />
+                      <h3>Guaranteed Profit</h3>
+                      <p className="text-muted">We only charge a percentage of the revenue we generate for you, so you'll only ever make money using us</p>
                     </div>
                   </div>
                 </div>
