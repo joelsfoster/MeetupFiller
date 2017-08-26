@@ -50,3 +50,22 @@ section {
         font-size: 50px;
     }
 }
+
+.logo {
+  h1 {
+    color: black;
+    background-color: transparent;
+    font-family: 'Gill Sans';
+    font-size: 48px;
+    font-weight: 600;
+    position: absolute;
+    padding: 8px 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    @media (max-width: 992px) {
+      text-align: center;
+    }
+  }
+}

@@ -72,12 +72,16 @@ export default class RsvpPayment extends React.Component {
   render() {
     return (
       <div className="RsvpPayment">
-        <Loading />
-        <h2>
-          <p>Meetup discount applied!</p>
-          <p>You have 20 minutes to complete your payment.</p>
-          <p>Redirecting to PayPal...</p>
-        </h2>
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-12 my-auto">
+                <Loading />
+                <h3>Meetup discount applied!</h3>
+                <h3>You have 20 minutes to complete your payment.</h3>
+                <h3>Redirecting to PayPal...</h3>
+              </div>
+            </div>
+          </div>
       </div>
     );
   }

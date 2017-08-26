@@ -4,13 +4,18 @@ const MastHead = React.createClass({
   render: () => {
     return (
 
-      <header className="masthead">
+      <header className="masthead" id="#">
         <div className="container h-100">
           <div className="row h-100">
+            { /*
+            <div className="logo">
+              <h1>meetupfiller</h1>
+            </div>
+            */ }
             <div className="col-lg-7 my-auto">
               <div className="header-content mx-auto">
-                <h1 className="mb-5"><b>Unfilled Meetups are costing you.</b><br />Prevent lost dollars by selling empty spots at a discount!</h1>
-                <a href="#cta" className="btn btn-outline btn-xl js-scroll-trigger">Fill your Meetups now</a>
+                <h1 className="mb-5"><b>Unfilled Meetups are costing you.</b><br />Prevent lost dollars by selling empty spots at a discount</h1>
+                <a href="#features" className="btn btn-outline btn-xl js-scroll-trigger">Learn More</a>
               </div>
             </div>
             <div className="col-lg-5 my-auto">

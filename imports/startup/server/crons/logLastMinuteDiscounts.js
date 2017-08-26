@@ -46,12 +46,10 @@ export const logLastMinuteDiscounts = () => {
             const memberBeenAwayDaysSetting = organization["memberBeenAwayDays"];
             const memberBeenAwayDays = memberBeenAwayDaysSetting > 0 ? memberBeenAwayDaysSetting : 0; // If no limit was set on how long a member has to be away to be given a discount, set days to 0
             const lastTimeSeen = parseInt(nowUnix) - (parseInt(memberBeenAwayDays) * parseInt(unixDay));
-
-            console.log("lastTimeSeen $lte=", lastTimeSeen);
             const members = Members.find({
               "lastSeen": { $lte: parseInt(lastTimeSeen) },
-              $or: [ { "askedEmail": { $ne: "" || undefined } }, { "paymentEmail": { $ne: "" || undefined } } ],
-              $or: [ { "snoozeUntil": undefined }, { "snoozeUntil": { $lte: parseInt(nowUnix) } } ]
+              "snoozeUntil": { $not: { $gte: parseInt(nowUnix) } }, // $not also returns undefined values
+              $or: [ { "askedEmail": { $ne: "" || undefined } }, { "paymentEmail": { $ne: "" || undefined } } ]
             }).fetch();
 
             // ...then announce that we're starting the process...
