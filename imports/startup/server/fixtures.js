@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
-import { getEvents } from './crons/getEvents';
-import { backfillData } from './crons/getMembers';
+import { runGetEvents } from './crons/getEvents';
+import { runGetMembers } from './crons/getMembers';
 import Events from '../../api/events/events';
 import Members from '../../api/members/members';
 import NotificationLog from '../../api/notificationLog/notificationLog';
@@ -116,8 +116,8 @@ if (!Meteor.isProduction) {
   }
 
   const seedData = () => {
-    getEvents();
-    Meteor.setTimeout(backfillData, 5000);
+    runGetEvents();
+    Meteor.setTimeout(runGetMembers, 5000);
   }
 
   const reset = () => {

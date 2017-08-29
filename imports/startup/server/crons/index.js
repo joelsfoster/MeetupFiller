@@ -1,6 +1,6 @@
 import { SyncedCron } from 'meteor/percolate:synced-cron'; // http://bunkat.github.io/later/parsers.html#text
-import { getEvents } from './getEvents';
-import { backfillData } from './getMembers';
+import { runGetEvents } from './getEvents';
+import { runGetMembers } from './getMembers';
 import { sendThankYouComeAgain } from './thankYouComeAgain';
 import { logLastMinuteDiscounts } from './logLastMinuteDiscounts';
 import { payoutOrganizations } from './payoutOrganizations';
@@ -18,17 +18,17 @@ SyncedCron.add({
     return parser.text('at 3:40 am'); // This is UTC time -> 11:40pm EST
   },
   job() {
-    getEvents();
+    runGetEvents();
   },
 });
 
 SyncedCron.add({
-  name: "getMembers & backfillData",
+  name: "getMembers",
   schedule(parser) {
     return parser.text('at 3:45 am'); // This is UTC time -> 11:45pm EST
   },
   job() {
-    backfillData();
+    runGetMembers();
   },
 });
 
