@@ -8,8 +8,8 @@ const Features = React.createClass({
       <section className="features" id="features">
         <div className="container">
           <div className="section-heading text-center">
-            <h2>Automated Discounts System</h2>
-            <p className="text-muted">Detects open spots in upcoming events, then sends eligible members an email with a discounted RSVP link</p>
+            <h2>Automated Discounting System</h2>
+            <p className="text-muted">MeetupFiller detects open spots in upcoming events, then emails eligible members a discounted RSVP link</p>
             <hr />
           </div>
           <div className="row">
@@ -47,14 +47,14 @@ const Features = React.createClass({
                     <div className="feature-item">
                       <i className="icon-lock text-primary icon" />
                       <h3>Secure Payments</h3>
-                      <p className="text-muted">Members pay through PayPal (same experience as Meetup's), and the funds are sent to your PayPal account weekly</p>
+                      <p className="text-muted">Members pay through PayPal (same experience as Meetup's), which is then sent to your PayPal account weekly</p>
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="feature-item">
                       <i className="icon-wallet text-primary icon" />
                       <h3>Guaranteed Profit</h3>
-                      <p className="text-muted">We only charge a percentage of the revenue we generate for you, so you'll only ever make money using us</p>
+                      <p className="text-muted">We only charge a percentage of the revenue we generate for you, so you'll only ever make money</p>
                     </div>
                   </div>
                 </div>
