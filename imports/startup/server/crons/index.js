@@ -6,6 +6,7 @@ import { logLastMinuteDiscounts } from './logLastMinuteDiscounts';
 import { payoutOrganizations } from './payoutOrganizations';
 import { sendLastMinuteDiscounts } from './sendLastMinuteDiscounts';
 import { sendWeeklyRecap } from './weeklyRecap';
+import './prospector.js';
 
 
 // Schedule the crons to be run

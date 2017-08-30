@@ -1,5 +1,6 @@
 import { thankYouComeAgain } from '../../../api/notifications/thankYouComeAgain';
 import Events from '../../../api/events/events';
+import AccountSettings from '../../../api/accountSettings/accountSettings';
 import Members from '../../../api/members/members';
 import NotificationLog from '../../../api/notificationLog/notificationLog';
 import moment from 'moment';
@@ -18,7 +19,7 @@ export const sendThankYouComeAgain = () => {
 
     // Grab all events with a start time within the last 24 hours of the moment run
     const yesterdaysEvents = Events.find(
-      { "organizationID": organizationID, "eventTime": { $gte : parseInt(yesterdayUnix), $lt: parseInt(nowUnix) } },      
+      { "organizationID": organizationID, "eventTime": { $gte : parseInt(yesterdayUnix), $lt: parseInt(nowUnix) } },
       { fields: { "organizationID": 1, "eventName": 1, "eventID": 1, "eventTime": 1, "eventMemberIDs": 1 } }
     ).fetch();
 

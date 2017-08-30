@@ -3,10 +3,10 @@ import Events from '../../../api/events/events';
 import AccountSettings from '../../../api/accountSettings/accountSettings';
 
 
-const getEvents = (organizationID, meetupAPIKey) => {
+export const getEvents = (organizationID, meetupAPIKey) => {
   const MAX_SCRAPES = 200; // Meetup's max is 200. If this number exceeds count of games today, it will continue into the past. If you want to try implementing "scroll", this is the <moment.js> format required: "YYYY-MM-DDTHH:mm:ss.0Z"
-  const url = 'https://api.meetup.com/' + organizationID + '/events?&sign=true&photo-host=public&page=' + MAX_SCRAPES + '&desc=true&status=past&offset=0&omit=manual_attendance_count,created,duration,fee,id,rsvp_limit,status,updated,utc_offset,waitlist_count,yes_rsvp_count,venue,group,description,how_to_find_us,visibility&key=' + meetupAPIKey;
-  // https://api.meetup.com/playsoccer2give/events?&sign=true&photo-host=public&page=200&desc=true&status=past&offset=0&omit=manual_attendance_count,created,duration,fee,id,rsvp_limit,status,updated,utc_offset,waitlist_count,yes_rsvp_count,venue,group,description,how_to_find_us,visibility&key=
+  const url = 'https://api.meetup.com/' + organizationID + '/events?&sign=true&photo-host=public&page=' + MAX_SCRAPES + '&desc=true&status=past&offset=0&omit=fee.accepts,fee.currency,fee.description,fee.label,fee.required,manual_attendance_count,created,duration,id,status,updated,utc_offset,rsvp_open_offset,waitlist_count,venue,group,description,how_to_find_us,visibility&key=' + meetupAPIKey;
+  // https://api.meetup.com/playsoccer2give/events?&sign=true&photo-host=public&page=200&desc=true&status=past&offset=0&omit=fee.accepts,fee.currency,fee.description,fee.label,fee.required,manual_attendance_count,created,duration,id,status,updated,utc_offset,rsvp_open_offset,waitlist_count,venue,group,description,how_to_find_us,visibility&key=
 
   // ...grab the past 200 events...
   HTTP.call( 'GET', url, {}, function( error, response ) {
@@ -27,7 +27,10 @@ const getEvents = (organizationID, meetupAPIKey) => {
             "organizationID": organizationID,
             "eventID": eventID,
             "eventName": object["name"],
-            "eventTime": parseInt(object["time"])
+            "eventTime": parseInt(object["time"]),
+            "eventCapacity": parseInt(object["rsvp_limit"]),
+            "eventAttendance": parseInt(object["yes_rsvp_count"]),
+            "eventPrice": parseFloat(object["fee"]["amount"]).toFixed(2)
           }, (error, response) => {
             if (error) {
               console.log(error)

@@ -7,7 +7,7 @@ import moment from 'moment';
 import findEmailsInString from 'find-emails-in-string';
 
 
-const getMembers = (organizationID, meetupAPIKey) => {
+export const getMembers = (organizationID, meetupAPIKey) => {
 
   // Find all unscraped events in this organization.
   const unscrapedEvents = Events.find({ "organizationID": organizationID, "eventMemberIDs": undefined }).fetch();
@@ -115,7 +115,7 @@ const getMembers = (organizationID, meetupAPIKey) => {
 
     // We put a timed delay here because Meetup throttles API calls if it gets too many too quickly
     api_counter += 1;
-    const MILLISECONDS_BETWEEN_CALLS = 550; // Keeping it under 2 calls a second
+    const MILLISECONDS_BETWEEN_CALLS = 550; // Keeping it at a little more than 1 call a second
     Meteor.setTimeout(delayedFunction, MILLISECONDS_BETWEEN_CALLS * api_counter);
   });
 };

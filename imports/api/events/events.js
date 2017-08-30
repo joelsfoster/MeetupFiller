@@ -39,8 +39,24 @@ Events.schema = new SimpleSchema({
   "eventMemberIDs": {
     type: [ Number ],
     label: "eventMemberIDs",
-    optional: true
-  }
+    optional: true,
+  },
+  "eventCapacity": {
+    type: Number,
+    label: "eventCapacity",
+    optional: true,
+  },
+  "eventAttendance": {
+    type: Number,
+    label: "eventAttendance",
+    optional: true,
+  },
+  "eventPrice": {
+    type: Number,
+    label: "eventPrice",
+    decimal: true,
+    optional: true,
+  },
 });
 
 // Attach the schema to the collection so that it is applied. This is actually a Collection2 method.
