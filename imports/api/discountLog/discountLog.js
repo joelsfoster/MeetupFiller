@@ -46,13 +46,11 @@ DiscountLog.schema = new SimpleSchema({
     type: Number,
     decimal: true,
     label: "originalPrice",
-    decimal: true
   },
   "discountAmount": {
     type: Number,
     decimal: true,
     label: "discountAmount",
-    decimal: true
   },
   "rsvpTime": {
     type: Number,

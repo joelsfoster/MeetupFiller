@@ -66,7 +66,7 @@ export default class CallToAction extends React.Component {
         <div className="thank-you-message">
           <h2>
             Thank you so much!<br />
-            We've sent you a confirmation email, and will be in touch shortly.<br />
+            We've sent you a confirmation email and will be in touch shortly.<br />
           </h2>
         </div>
       )
