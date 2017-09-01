@@ -1,0 +1,55 @@
+// Styling for the features section
+section.testimonials-and-pricing {
+    background-color: forestgreen; // $theme-primary;
+    padding-bottom: 0px;
+    color: lightgrey;
+
+    hr {
+      border-color: lightgrey;
+    }
+
+    .section-heading {
+        margin-bottom: 30px;
+    }
+
+    .testimonial {
+        max-width: 400px;
+        margin: 0 auto;
+        text-align: left;
+        font-size: 18px;
+        .testimonial-signature {
+          padding-top: 15px;
+          text-align: center;
+          padding-bottom: 30px;
+        }
+    }
+
+    .img-fluid {
+      max-width: 50%;
+      height: auto;
+      margin-top: 30px;
+      margin-bottom: 50px;
+    }
+
+    .pricing {
+      border: lightgrey solid 1px;
+      border-radius: 50px;
+      line-height: 40px;
+      width: 300px;
+      margin: auto;
+      margin-bottom: 50px;
+      h2 {
+        margin-bottom: 0px;
+      }
+      .price {
+        text-align: center;
+        padding: 20px;
+        small {
+          padding-top: 0px;
+        }
+      }
+      ul {
+        margin-left: inherit;
+      }
+    }
+}

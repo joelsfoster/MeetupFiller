@@ -20,17 +20,22 @@ export const getEvents = (organizationID, meetupAPIKey) => {
         const eventURL = object["link"];
         const eventURLSplitArray = eventURL.split("/");
         const eventID = parseInt(eventURLSplitArray[5]); // Example URL: https://www.meetup.com/PlaySoccer2Give/events/241664470/
+        const eventName = object["name"];
+        const eventTime = parseInt(object["time"]);
+        const eventAttendance = object["yes_rsvp_count"] ? parseInt(object["yes_rsvp_count"]) : 0;
+        const eventCapacity = object["rsvp_limit"] ? parseInt(object["rsvp_limit"]) : eventAttendance; // If no capacity, use attendance
+        const eventPrice = (object["fee"] && object["fee"]["amount"]) ? parseFloat(object["fee"]["amount"]).toFixed(2) : 0;
 
         // ...and add each event to the database if it doesn't already exist
         if (!Events.findOne({"organizationID": organizationID, "eventID": eventID})) {
           Events.insert({
             "organizationID": organizationID,
             "eventID": eventID,
-            "eventName": object["name"],
-            "eventTime": parseInt(object["time"]),
-            "eventCapacity": parseInt(object["rsvp_limit"]),
-            "eventAttendance": parseInt(object["yes_rsvp_count"]),
-            "eventPrice": parseFloat(object["fee"]["amount"]).toFixed(2)
+            "eventName": eventName,
+            "eventTime": eventTime,
+            "eventAttendance": eventAttendance,
+            "eventCapacity": eventCapacity,
+            "eventPrice": eventPrice
           }, (error, response) => {
             if (error) {
               console.log(error)
