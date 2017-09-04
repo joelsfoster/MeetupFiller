@@ -14,7 +14,7 @@ const MastHead = React.createClass({
             */ }
             <div className="col-lg-7 my-auto">
               <div className="header-content mx-auto">
-                <h1 className="mb-5"><b>Unfilled Meetups are costing you.</b><br />Prevent lost dollars by selling empty spots at a discount</h1>
+                <h1 className="mb-5"><b>Build your community</b><br />Bring infrequent visitors back by selling empty spots at a discount</h1>
                 <a href="#features" className="btn btn-outline btn-xl js-scroll-trigger">Learn More</a>
               </div>
             </div>
