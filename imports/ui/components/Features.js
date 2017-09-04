@@ -8,8 +8,9 @@ const Features = React.createClass({
       <section className="features" id="features">
         <div className="container">
           <div className="section-heading text-center">
-            <h2>Automated Discounting System</h2>
-            <p className="text-muted">MeetupFiller detects open spots in upcoming events, then emails eligible members a discounted RSVP link</p>
+            <hr />
+            <h2>MeetupFiller Retains Your Members</h2>
+            <p className="text-muted">Automatically detects open spots in upcoming events, then sends reminder emails with a link to RSVP using a discount</p>
             <hr />
           </div>
           <div className="row">
@@ -30,15 +31,15 @@ const Features = React.createClass({
                   <div className="col-lg-6">
                     <div className="feature-item">
                       <i className="icon-wrench text-primary icon" />
-                      <h3>Total Flexibility</h3>
-                      <p className="text-muted">Set up and customize your group's discounting strategy, then enjoy full hands-off automation</p>
+                      <h3>Customizable Discounts</h3>
+                      <p className="text-muted">Target infrequent visitors with special discounts to bring them back until they become regulars</p>
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="feature-item">
                       <i className="icon-user-following text-primary icon" />
-                      <h3>Member-Friendly</h3>
-                      <p className="text-muted">Discounts appear sent from you, with the event's information and a "Click to RSVP using this discount" link</p>
+                      <h3>Totally Automated</h3>
+                      <p className="text-muted">Spend your time focusing on your events, instead of worrying about getting people to attend them</p>
                     </div>
                   </div>
                 </div>
@@ -47,14 +48,14 @@ const Features = React.createClass({
                     <div className="feature-item">
                       <i className="icon-lock text-primary icon" />
                       <h3>Secure Payments</h3>
-                      <p className="text-muted">Members pay through PayPal (same experience as Meetup's), which is then sent to your PayPal account weekly</p>
+                      <p className="text-muted">Members RSVP through PayPal (same experience as Meetup), which is then paid out to your PayPal account</p>
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="feature-item">
                       <i className="icon-wallet text-primary icon" />
                       <h3>Guaranteed Profit</h3>
-                      <p className="text-muted">We only charge a percentage of the revenue we generate for you, so you'll only ever make money</p>
+                      <p className="text-muted">MeetupFiller only takes a percentage of the revenue it makes you, so you only pay if it works!</p>
                     </div>
                   </div>
                 </div>

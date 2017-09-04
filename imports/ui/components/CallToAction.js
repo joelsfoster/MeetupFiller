@@ -45,7 +45,7 @@ export default class CallToAction extends React.Component {
       return (
         <div className="default-message">
           <h2>
-            Maximize your Meetup's potential.<br />
+            Turn your visitors into regulars.<br />
             Get started now!
           </h2>
           <div className="form">

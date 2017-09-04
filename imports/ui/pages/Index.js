@@ -3,6 +3,7 @@ import { Grid, Row, Col, Button } from 'react-bootstrap';
 import NavBar from '../components/NavBar.js';
 import MastHead from '../components/MastHead.js';
 import DownloadNow from '../components/DownloadNow.js';
+import Statistics from '../components/Statistics.js';
 import Features from '../components/Features.js';
 import TestimonialsAndPricing from '../components/TestimonialsAndPricing.js';
 import CallToAction from '../components/CallToAction.js';
@@ -14,6 +15,7 @@ const Index = () => (
   <div className="index">
     { /* <NavBar /> */ }
     <MastHead />
+    <Statistics />
     <Features />
     <TestimonialsAndPricing />
     { /* <DownloadNow /> */ }

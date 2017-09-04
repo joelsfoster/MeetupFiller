@@ -1,11 +1,10 @@
-// Styling for the features section
 section.testimonials-and-pricing {
     background-color: forestgreen; // $theme-primary;
     padding-bottom: 0px;
-    color: lightgrey;
+    color: mintcream;
 
     hr {
-      border-color: lightgrey;
+      border-color: mintcream;
     }
 
     .section-heading {
@@ -17,8 +16,13 @@ section.testimonials-and-pricing {
         margin: 0 auto;
         text-align: left;
         font-size: 18px;
+        line-height: 40px;
+        @media (max-width: 768px) {
+          font-size: 16px;
+          line-height: 36px;
+        }
         .testimonial-signature {
-          padding-top: 15px;
+          padding-top: 30px;
           text-align: center;
           padding-bottom: 30px;
         }
@@ -43,7 +47,7 @@ section.testimonials-and-pricing {
       }
       .price {
         text-align: center;
-        padding: 20px;
+        padding: 15px;
         small {
           padding-top: 0px;
         }

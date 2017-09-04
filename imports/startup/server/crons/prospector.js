@@ -18,7 +18,7 @@ const scrapeOrganization = (organizationID, meetupAPIKey) => {
   }
 };
 
-// scrapeOrganization("LongIslandSoccer", "2422295b57301f1113486a2a6a4094");
+// scrapeOrganization("grandfc", "2422295b57301f1113486a2a6a4094");
 
 
 const runAnalysis = (organizationID) => {
@@ -87,4 +87,4 @@ const runAnalysis = (organizationID) => {
   }
 }
 
-// runAnalysis("LongIslandSoccer"); 
+// runAnalysis("grandfc");

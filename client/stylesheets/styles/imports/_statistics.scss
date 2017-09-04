@@ -1,0 +1,31 @@
+// Styling for the statistics section
+section.statistics {
+  padding-bottom: 0px;
+    .section-heading {
+        margin-bottom: 50px;
+        h2 {
+            margin-top: 0;
+            font-size: 48px;
+        }
+        p {
+            margin-bottom: 0;
+        }
+    }
+    .info-block {
+        max-width: 325px;
+        margin: 0 auto;
+    }
+    .info-block {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        text-align: center;
+        h3 {
+            font-size: 30px;
+        }
+    }
+    .statistics-mobile {
+      padding-left: 0px;
+      padding-right: 0px;
+      padding-bottom: 40px;
+    }
+}
