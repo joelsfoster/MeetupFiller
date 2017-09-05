@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Meteor } from 'meteor/meteor';
+import { Bert } from 'meteor/themeteorchef:bert';
 
 
 export default class CallToAction extends React.Component {
@@ -30,12 +31,26 @@ export default class CallToAction extends React.Component {
     this.setState({url: event.target.value});
   }
 
+  // On submit, if all fields are filled in, send a confirmation email
   handleSubmit(event) {
     if (this.state.name !== "" && (this.state.email !== "" && this.state.url !== "")) {
-      console.log("Successfully submitted:", this.state.name, this.state.email, this.state.url);
-      this.setState({thankYouMessage: true});
+      const name = this.state.name;
+      const email = this.state.email;
+      const url = this.state.url;
+
+      Meteor.call('signupConfirmationEmail', name, email, url, (error, response) => {
+        if (error) {
+          console.log("Error at signupConfirmationEmail");
+          console.log(error.reason);
+        } else {
+          this.setState({thankYouMessage: true});
+        }
+      });
     } else {
-      console.warn("Not all fields filled out");
+      Bert.alert({
+        message: "Whoops! Not all fields are filled out.",
+        type: 'warning',
+      });
       event.preventDefault();
     }
   }
@@ -45,7 +60,7 @@ export default class CallToAction extends React.Component {
       return (
         <div className="default-message">
           <h2>
-            Turn your visitors into regulars.<br />
+            Grow your community.<br />
             Get started now!
           </h2>
           <div className="form">

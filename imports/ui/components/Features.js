@@ -10,7 +10,10 @@ const Features = React.createClass({
           <div className="section-heading text-center">
             <hr />
             <h2>MeetupFiller Retains Your Members</h2>
-            <p className="text-muted">Automatically detects open spots in upcoming events, then sends reminder emails with a link to RSVP using a discount</p>
+            <p className="text-muted">
+              Automatically detects open spots in upcoming events, then sends discount emails that members can use to RSVP.<br />
+              These "last-minute discounts" keep Meetups filled, leading to a better newcomer experience and higher member attendance.
+            </p>
             <hr />
           </div>
           <div className="row">
@@ -32,7 +35,7 @@ const Features = React.createClass({
                     <div className="feature-item">
                       <i className="icon-wrench text-primary icon" />
                       <h3>Customizable Discounts</h3>
-                      <p className="text-muted">Target infrequent visitors with special discounts to bring them back until they become regulars</p>
+                      <p className="text-muted">Target infrequent visitors with private custom prices, so your regulars don't pay less than usual</p>
                     </div>
                   </div>
                   <div className="col-lg-6">
