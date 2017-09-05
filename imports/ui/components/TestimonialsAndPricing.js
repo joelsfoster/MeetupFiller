@@ -14,7 +14,7 @@ const TestimonialsAndPricing = React.createClass({
                 <hr />
               </div>
               <div className="testimonial">
-                <i>"These past 2 months, MeetupFiller brought in over 40 RSVPs for us and really bumped up our summer numbers. It's a fantastic tool and I absolutely recommend it to any organization using Meetup."</i>
+                <i>"These past 2 months, MeetupFiller brought in over 40 RSVPs for us and really bumped up our summer numbers. It's a fantastic tool and I absolutely recommend it to any organization."</i>
                 <div className="testimonial-signature">
                   <h6><i>Caleb Olson - National Director, Play Soccer 2 Give</i></h6>
                   <div className="logo">

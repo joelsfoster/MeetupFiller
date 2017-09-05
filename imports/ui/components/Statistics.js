@@ -13,7 +13,7 @@ const Statistics = React.createClass({
               Attracting new members is not the problem.<br />
               Getting them to come back is.
             </h2>
-            <p className="text-muted">Over 35% of all Meetup members attend a group's event once, and never return</p>
+            <p className="text-muted">One in three Meetup visitors never come back for a second event</p>
             <hr />
           </div>
           <div className="row">
@@ -21,8 +21,8 @@ const Statistics = React.createClass({
               <div className="container-fluid">
                 <div className="row">
                   <div className="info-block">
-                    <h3>Your Meetup Looks Like This</h3>
-                    <p className="text-muted">In the past year, over 70% of your members attended 5 or fewer events</p>
+                    <h3>Meetups Need to Become More "Sticky"</h3>
+                    <p className="text-muted">Even in the most popular groups, over 80% of members attend fewer than 5 events a year!</p>
                   </div>
                 </div>
                 <MediaQuery maxDeviceWidth={992}>
@@ -32,8 +32,8 @@ const Statistics = React.createClass({
                 </MediaQuery>
                 <div className="row">
                   <div className="info-block">
-                    <h3>Regulars Keep Meetups Alive</h3>
-                    <p className="text-muted">One regular member benefits your community more than 10 visitors</p>
+                    <h3>Regulars Keep Communities Alive</h3>
+                    <p className="text-muted">A friendly environment and strong culture are what newcomers say bring them back</p>
                   </div>
                 </div>
               </div>
