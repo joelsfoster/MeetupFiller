@@ -1,6 +1,8 @@
 .DS_Store
 settings-production.json
 settings-development.json
+settings.json
+mup.js
 npm-debug.log
 
 private/scrapers/
