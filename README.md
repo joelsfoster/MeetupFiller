@@ -19,3 +19,4 @@ If a user has provided their email address and hasn't been to a Meetup in a whil
 This was the very first app I ever wrote. Back then, I didn't know how to use anything other than Meteor.js (there's a massive amount of useless boilerplate still in here), nor did I know how to use Git properly. So, prepare yourself to read some poorly-organized (although well-commented) code. I didn't use promises or async/await so there's a lot of callback hell. I violated DRY a lot. I made a lot of poor structuring decisions. I've become a MUCH better developer since then and pride myself in writing clean, well-organized, well-commented, well-structured, efficient, secure code.
 
 **Most app logic can be found in imports/startup/server/crons/**
+
