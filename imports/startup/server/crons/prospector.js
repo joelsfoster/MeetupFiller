@@ -1,3 +1,4 @@
+/*
 import { Meteor } from 'meteor/meteor';
 import { getEvents } from './getEvents';
 import { getMembers } from './getMembers';
@@ -18,7 +19,7 @@ const scrapeOrganization = (organizationID, meetupAPIKey) => {
   }
 };
 
-// scrapeOrganization("grandfc", "2422295b57301f1113486a2a6a4094");
+// scrapeOrganization("grandfc", "");
 
 
 const runAnalysis = (organizationID) => {
@@ -88,3 +89,4 @@ const runAnalysis = (organizationID) => {
 }
 
 // runAnalysis("grandfc");
+*/

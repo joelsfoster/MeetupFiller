@@ -1,7 +1,7 @@
 {
   "name": "MeetupFiller",
   "version": "1.0.0",
-  "description": "Never host an unfilled Meetup again",
+  "description": "Bring visitors back. Build your community.",
   "scripts": {
     "start": "meteor --settings settings-development.json",
     "staging": "meteor deploy staging.meteor.com --settings settings-development.json",
@@ -71,7 +71,7 @@
     "jquery.easing": "^1.4.1",
     "meteor-node-stubs": "^0.2.6",
     "moment": "^2.17.1",
-    "paypal-resk-sdk": "^1.7.0",
+    "paypal-permissions-sdk": "^1.0.8",
     "paypal-rest-sdk": "^1.7.1",
     "popper.js": "^1.12.3",
     "react": "^15.4.2",
