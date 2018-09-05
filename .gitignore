@@ -4,6 +4,7 @@ settings-development.json
 settings.json
 mup.js
 npm-debug.log
+node_modules
 
 private/scrapers/
 imports/startup/server/fixtures/LegacyData.json

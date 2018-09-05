@@ -1,12 +1,16 @@
 const HTTP = require ('sync-request');
 const jsonexport = require ('jsonexport');
 const fs = require('fs');
+import AccountSettings from '../../imports/api/accountSettings/accountSettings';
+
+const organizations = AccountSettings.find().fetch();
+const meetupAPIKey = organizations[0]["meetupAPIKey"];
 
 // Get event data of past games and store in JSON
 const count_of_games_to_scrape = 200;
 const OFFSET = 0; // Doesn't work conveniently, just leave it as 0
 const lookback_date = '2015-08-18'; // YYYY-MM-DD Make sure to overlap by one day later than the last run so as to not miss anything
-const get_past_game_ids = 'https://api.meetup.com/playsoccer2give/events?&sign=true&photo-host=public&page=' + count_of_games_to_scrape + '&desc=true&scroll=since:' + lookback_date + 'T19:45:00.000-04:00&status=past&offset=' + OFFSET + '&omit=name,created,duration,fee,id,rsvp_limit,status,time,updated,utc_offset,waitlist_count,yes_rsvp_count,venue,group,description,how_to_find_us,visibility&key=282a2c7858483325b5b6c5510422e5b';
+const get_past_game_ids = 'https://api.meetup.com/playsoccer2give/events?&sign=true&photo-host=public&page=' + count_of_games_to_scrape + '&desc=true&scroll=since:' + lookback_date + 'T19:45:00.000-04:00&status=past&offset=' + OFFSET + '&omit=name,created,duration,fee,id,rsvp_limit,status,time,updated,utc_offset,waitlist_count,yes_rsvp_count,venue,group,description,how_to_find_us,visibility&key=' + meetupAPIKey;
 const event_data = HTTP('GET', get_past_game_ids);
 const event_json = JSON.parse(event_data.getBody('utf-8'));
 console.log("Scrapping the past " + count_of_games_to_scrape + " games, from " + lookback_date + " backwards.");
@@ -26,7 +30,7 @@ event_urls.forEach( (url) => {
 // Use those event IDs to produce an array of all GET requests to call
 let all_get_requests = [];
 event_ids.forEach( (event_id) => {
-  let url = 'https://api.meetup.com/playsoccer2give/events/' + event_id + '/rsvps?&sign=true&photo-host=public&fields=answers&omit=created,updated,response,guests,event.id,event.yes_rsvp_count,event.utc_offset,member.bio,member.photo,group,member.role,member.event_context,member.title,venue,answers.question_id,answers.updated,answers.question&key=282a2c7858483325b5b6c5510422e5b';
+  let url = 'https://api.meetup.com/playsoccer2give/events/' + event_id + '/rsvps?&sign=true&photo-host=public&fields=answers&omit=created,updated,response,guests,event.id,event.yes_rsvp_count,event.utc_offset,member.bio,member.photo,group,member.role,member.event_context,member.title,venue,answers.question_id,answers.updated,answers.question&key=' + meetupAPIKey;
   all_get_requests.push({
     url: url,
     event_id: event_id
